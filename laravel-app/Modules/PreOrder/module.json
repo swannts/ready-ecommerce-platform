@@ -1,0 +1,16 @@
+{
+    "name": "PreOrder",
+    "alias": "preorder",
+    "author": "RazinSoft",
+    "display_name": "Pre Order Extension",
+    "description": "Pre Order Extension - Accept and manage customer pre-orders for upcoming products",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\PreOrder\\App\\Providers\\PreOrderServiceProvider"
+    ],
+    "files": [],
+    "version": "1.0.0",
+    "is_verified": true,
+    "license_key": ""
+}
