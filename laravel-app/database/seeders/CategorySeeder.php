@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\SubCategory;
 use App\Models\User;
+use App\Support\DemoCatalogImages;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -398,6 +399,8 @@ class CategorySeeder extends Seeder
                 'slug' => Str::slug($categoryName),
                 'description' => $this->categoryDescription($categoryName),
                 'description_ar' => $this->categoryDescriptionArabic($categoryName),
+                'category_thumbnail' => DemoCatalogImages::forCategory($categoryName),
+                'icon' => DemoCatalogImages::forCategory($categoryName),
                 'status' => true,
                 'order_by' => $order,
             ]);

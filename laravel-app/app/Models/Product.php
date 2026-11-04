@@ -7,6 +7,7 @@ use App\Models\Concerns\HasUniqueSlug;
 use Illuminate\Support\Collection;
 use App\Models\Scopes\PreOderProduct;
 use App\Models\Scopes\hasSubscription;
+use App\Support\PublicAssetUrl;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
@@ -145,6 +146,10 @@ class Product extends Model
             $thumbnail = Storage::url($this->product_thumbnail);
         } elseif ($this->media && Storage::exists($this->media->src)) {
             $thumbnail = Storage::url($this->media->src);
+        } elseif ($publicThumbnail = PublicAssetUrl::resolve($this->product_thumbnail)) {
+            $thumbnail = $publicThumbnail;
+        } elseif ($publicMedia = PublicAssetUrl::resolve($this->media?->src)) {
+            $thumbnail = $publicMedia;
         }
 
         return new Attribute(

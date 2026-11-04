@@ -1,0 +1,87 @@
+name: ricemart-ecommerce
+
+services:
+  # ========================================================
+  # FRONTEND: Next.js App Router (RiceMart UI)
+  # ========================================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ricemart-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: "0.0.0.0"
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - ricemart-network
+
+  # ========================================================
+  # BACKEND: Laravel 13 Core & Multi-Vendor Marketplace API
+  # ========================================================
+  backend:
+    build:
+      context: ./laravel-app
+      dockerfile: Dockerfile
+    container_name: ricemart-backend
+    restart: unless-stopped
+    env_file:
+      - ./laravel-app/.env.docker
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:8000
+      DB_HOST: mysql
+      DB_PORT: 3306
+    volumes:
+      # Persistent storage for uploaded media and customer documents
+      - backend_storage:/var/www/html/storage/app/public
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - ricemart-network
+
+  # ========================================================
+  # DATABASE: MySQL 8.4 Server
+  # ========================================================
+  mysql:
+    image: mysql:8.4
+    container_name: ricemart-mysql
+    restart: unless-stopped
+    env_file:
+      - ./laravel-app/.env.docker
+    ports:
+      - "3306:3306"
+    volumes:
+      # Crucial: Preserves database data across container recreations
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - ricemart-network
+
+volumes:
+  mysql_data:
+    name: ricemart_mysql_data
+  backend_storage:
+    name: ricemart_backend_storage
+
+networks:
+  ricemart-network:
+    name: ricemart_network
+    driver: bridge
+

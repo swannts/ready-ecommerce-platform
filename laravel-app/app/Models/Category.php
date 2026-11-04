@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUniqueSlug;
+use App\Support\PublicAssetUrl;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -81,8 +82,12 @@ class Category extends Model
         $thumbnail = asset('default/default.jpg');
         if ($this->category_thumbnail && Storage::exists($this->category_thumbnail)) {
             $thumbnail = Storage::url($this->category_thumbnail);
+        } elseif ($publicThumbnail = PublicAssetUrl::resolve($this->category_thumbnail)) {
+            $thumbnail = $publicThumbnail;
         } elseif ($this->media && Storage::exists($this->media->src)) {
             $thumbnail = Storage::url($this->media->src);
+        } elseif ($publicMedia = PublicAssetUrl::resolve($this->media?->src)) {
+            $thumbnail = $publicMedia;
         }
 
         return Attribute::make(
@@ -97,6 +102,10 @@ class Category extends Model
 
                 if ($icon && Storage::exists($icon)) {
                     return Storage::url($icon);
+                }
+
+                if ($publicIcon = PublicAssetUrl::resolve($icon)) {
+                    return $publicIcon;
                 }
 
                 return asset('default/default.jpg');

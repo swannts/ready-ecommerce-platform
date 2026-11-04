@@ -1,0 +1,18 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgM" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F9F6F0"/>
+      <stop offset="100%" stop-color="#E8DFCF"/>
+    </radialGradient>
+    <linearGradient id="sackM" x1="0%" y1="0%" x2="100%" y2="80%">
+      <stop offset="0%" stop-color="#CBB597"/>
+      <stop offset="100%" stop-color="#9E805B"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="16" fill="url(#bgM)"/>
+  <path d="M140 130 C150 100, 250 100, 260 130 C275 160, 280 230, 260 250 C240 265, 160 265, 140 250 C120 230, 125 160, 140 130 Z" fill="url(#sackM)"/>
+  <path d="M145 140 Q200 150 255 140" stroke="#684A28" stroke-width="5" stroke-linecap="round"/>
+  <rect x="165" y="175" width="70" height="42" rx="4" fill="#FAF6EF" opacity="0.9"/>
+  <text x="200" y="195" font-family="serif" font-size="10" font-weight="bold" fill="#183A20" text-anchor="middle">MINIKET</text>
+  <text x="200" y="208" font-family="sans-serif" font-size="8" fill="#B88A35" text-anchor="middle">GRADE A+</text>
+</svg>

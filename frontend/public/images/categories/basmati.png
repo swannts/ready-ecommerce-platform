@@ -1,0 +1,37 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FBF8F1"/>
+      <stop offset="100%" stop-color="#EFE6D5"/>
+    </radialGradient>
+    <linearGradient id="bowl" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8C532B"/>
+      <stop offset="100%" stop-color="#4E2B12"/>
+    </linearGradient>
+    <linearGradient id="grain" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#EDE6D6"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="16" fill="url(#bgGlow)"/>
+  <!-- Bowl Base -->
+  <ellipse cx="200" cy="180" rx="110" ry="50" fill="url(#bowl)"/>
+  <ellipse cx="200" cy="172" rx="100" ry="42" fill="#3B1E0A"/>
+  <!-- Fluffy White Basmati Heap -->
+  <ellipse cx="200" cy="160" rx="92" ry="38" fill="url(#grain)"/>
+  <!-- Extra-long slender grains -->
+  <g fill="#DCD3BE" opacity="0.85">
+    <ellipse cx="160" cy="155" rx="14" ry="4" transform="rotate(-20 160 155)"/>
+    <ellipse cx="190" cy="150" rx="16" ry="4.2" transform="rotate(15 190 150)"/>
+    <ellipse cx="225" cy="152" rx="15" ry="4.2" transform="rotate(-10 225 152)"/>
+    <ellipse cx="245" cy="162" rx="14" ry="3.8" transform="rotate(30 245 162)"/>
+    <ellipse cx="175" cy="168" rx="15" ry="4" transform="rotate(5 175 168)"/>
+    <ellipse cx="210" cy="165" rx="16" ry="4" transform="rotate(-25 210 165)"/>
+  </g>
+  <!-- Decorative Golden Wheat Sprig -->
+  <path d="M120 220 Q110 130 155 80" stroke="#B88A35" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="152" cy="85" rx="8" ry="3.5" fill="#B88A35" transform="rotate(40 152 85)"/>
+  <ellipse cx="144" cy="98" rx="8" ry="3.5" fill="#B88A35" transform="rotate(-30 144 98)"/>
+  <ellipse cx="138" cy="114" rx="8" ry="3.5" fill="#B88A35" transform="rotate(45 138 114)"/>
+</svg>
+

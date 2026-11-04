@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Media;
 use App\Models\Product;
 use App\Models\User;
+use App\Support\DemoCatalogImages;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -46,6 +47,11 @@ class ProductSeeder extends Seeder
                         'short_description_ar' => 'وصف عربي مختصر للمنتج يوضح أهم المزايا بسرعة.',
                         'description_ar' => 'هذا وصف عربي تجريبي للمنتج يساعد في اختبار الواجهة وعرض المحتوى متعدد اللغات.',
                         'unit_id' => $units->random()?->id,
+                    ]);
+
+                    $product->media?->update([
+                        'src' => DemoCatalogImages::forCategory($category->name),
+                        'extention' => 'jpg',
                     ]);
 
                     // for ($k = 0; $k < 4; $k++) {

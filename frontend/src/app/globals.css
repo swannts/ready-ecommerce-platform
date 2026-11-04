@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme {
+  --color-forest: #183A20;
+  --color-forest-dark: #102C1B;
+  --color-forest-light: #25522F;
+  --color-harvest: #B88A35;
+  --color-harvest-light: #D4A74F;
+  --color-harvest-dark: #966E26;
+  --color-cream: #FAF6EF;
+  --color-ivory: #FFFDF8;
+  --color-charcoal: #19221B;
+  --color-muted-gray: #686C64;
+  --color-warm-border: #E7E1D7;
+
+  --font-serif: var(--font-playfair), "Playfair Display", Georgia, serif;
+  --font-sans: var(--font-inter), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+:root {
+  --background: #FAF6EF;
+  --foreground: #19221B;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Custom smooth transitions and typography helpers */
+h1, h2, h3, h4, .font-serif {
+  font-family: var(--font-serif);
+}
+
+::selection {
+  background-color: #B88A35;
+  color: #FFFDF8;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF6EF;
+}
+::-webkit-scrollbar-thumb {
+  background: #D7CEBE;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B88A35;
+}
