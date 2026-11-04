@@ -4,14 +4,15 @@ The web installation wizard and web based root account setup have been removed. 
 
 ## Docker development setup
 
-From this directory:
+Create the Docker environment file from the development defaults, then start the services:
 
 ```sh
+cp .env.docker.example .env.docker
 docker compose up -d --build
 docker compose exec app php artisan app:install
 ```
 
-The installer runs the migrations and required default seeders, then prompts for the root administrator name, email, phone number, and password. Password input is hidden. It does not create demo users or demo orders. Open <http://localhost:8000> after the command completes.
+Compose loads `.env.docker` for both services. The installer runs the migrations and required default seeders, then prompts for the root administrator name, email, phone number, and password. Password input is hidden. It does not create demo users or demo orders. Open <http://localhost:8000> after the command completes.
 
 ## Install without Docker
 
