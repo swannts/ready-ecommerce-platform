@@ -1,0 +1,15 @@
+{
+    "The name field is required.": "নামের ঘরটি পূরণ করা আবশ্যক।",
+    "The name may not be greater than 191 characters.": "নাম ১৯১ অক্ষরের বেশি হতে পারবে না।",
+    "The slug has already been taken.": "এই স্লাগটি ইতিমধ্যে ব্যবহৃত হয়েছে।",
+    "The description field is required.": "বিবরণের ঘরটি পূরণ করা আবশ্যক।",
+    "The short description field is required.": "সংক্ষিপ্ত বিবরণের ঘরটি পূরণ করা আবশ্যক।",
+    "The category field is required.": "ক্যাটাগরির ঘরটি পূরণ করা আবশ্যক।",
+    "The selected category is invalid.": "নির্বাচিত ক্যাটাগরিটি সঠিক নয়।",
+    "The price field is required.": "মূল্যের ঘরটি পূরণ করা আবশ্যক।",
+    "The price must be a number.": "মূল্যটি সংখ্যা হতে হবে।",
+    "The quantity field is required.": "পরিমাণের ঘরটি পূরণ করা আবশ্যক।",
+    "The quantity must be an integer.": "পরিমাণটি পূর্ণসংখ্যা হতে হবে।",
+    "The thumbnail is required.": "থাম্বনেইল আবশ্যক।",
+    "The thumbnail must be an image.": "থাম্বনেইলটি ছবি হতে হবে।"
+}

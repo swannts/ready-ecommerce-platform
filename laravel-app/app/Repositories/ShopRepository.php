@@ -46,6 +46,7 @@ class ShopRepository extends Repository
             'user_id' => $user->id,
             'name' => $request->shop_name,
             'name_ar' => $request->name_ar,
+            'name_bn' => $request->name_bn,
             'logo_id' => $thumbnail ? $thumbnail->id : null,
             'banner_id' => $banner ? $banner->id : null,
             'delivery_charge' => $request->delivery_charge ?? 0,
@@ -75,6 +76,8 @@ class ShopRepository extends Repository
         self::update($shop, [
             'name' => $request->shop_name,
             'name_ar' => $request->name_ar ?? $shop->name_ar,
+            'name_bn' => $request->name_bn ?? $shop->name_bn,
+            'name_bn' => $request->name_bn ?? $shop->name_bn,
             'logo_id' => $thumbnail ? $thumbnail->id : null,
             'banner_id' => $banner ? $banner->id : null,
             'delivery_charge' => $request->delivery_charge ?? 0,

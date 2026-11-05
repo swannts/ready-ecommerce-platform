@@ -1,0 +1,6 @@
+graphify-out/
+.idea/
+.vscode/
+*.log
+frontend/.next/
+frontend/node_modules/

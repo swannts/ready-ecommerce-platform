@@ -28,8 +28,10 @@ class ShopController extends Controller
         $skip = ($page * $perPage) - $perPage;
 
         $shops = ShopRepository::query()->isActive();
-        $shops = $shops->whereHas('products', function ($query) {
-            return $query->isActive();
+        $shops = $shops->where(function ($query) {
+            $query->whereHas('products', function ($productQuery) {
+                return $productQuery->isActive();
+            })->orWhereNotNull('supplier_slug');
         });
 
         $total = $shops->count();

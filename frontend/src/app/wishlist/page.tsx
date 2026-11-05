@@ -20,18 +20,19 @@ import {
   clearWishlist,
 } from "@/store/slices/wishlistSlice";
 import { addToCart } from "@/store/slices/cartSlice";
-import { mockProducts } from "@/data/products";
 import { formatCurrency } from "@/lib/currency";
+import { RiceProduct } from "@/types/product";
 
 export default function WishlistPage() {
   const dispatch = useAppDispatch();
   const wishlistIds = useAppSelector(selectWishlistIds);
+  const products = useAppSelector((state) => state.products.items);
 
-  const savedProducts = mockProducts.filter((product) =>
+  const savedProducts = products.filter((product) =>
     wishlistIds.includes(product.id)
   );
 
-  const handleMoveToCart = (product: (typeof mockProducts)[0]) => {
+  const handleMoveToCart = (product: RiceProduct) => {
     const pkg = product.packagingOptions[0] || {
       size: "5 kg Sack",
       weightKg: 5,
@@ -173,7 +174,7 @@ export default function WishlistPage() {
                       <span>Add to Cart</span>
                     </button>
                     <Link
-                      href={`/shop`}
+                      href={`/shop/${product.slug}`}
                       className="px-3.5 py-2.5 rounded-xl border border-[#E7E1D7] hover:bg-[#FAF6EF] text-xs font-semibold text-[#19221B] transition-colors"
                     >
                       Details

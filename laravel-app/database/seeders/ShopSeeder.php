@@ -2,40 +2,94 @@
 
 namespace Database\Seeders;
 
+use App\Models\Media;
 use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class ShopSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    private const SUPPLIERS = [
+        [
+            'code' => 'sup-golden-harvest', 'slug' => 'golden-harvest-rice-mills', 'name' => 'Golden Harvest Agro Mills',
+            'type' => 'Mill', 'address' => 'Dinajpur, Northern Division', 'country' => 'Bangladesh',
+            'verified' => true, 'established' => 1988, 'capacity' => 1200,
+            'rating' => 4.9, 'review_count' => 0,
+            'certifications' => ['HACCP Certified', 'ISO 22000', 'Organic Certified'],
+        ],
+        [
+            'code' => 'sup-heritage-grain', 'slug' => 'heritage-grain-cooperative', 'name' => 'Heritage Valley Farmer Cooperative',
+            'type' => 'Farmer Cooperative', 'address' => 'Barisal River Delta', 'country' => 'Bangladesh',
+            'verified' => true, 'established' => 2004, 'capacity' => 650,
+            'rating' => 4.8, 'review_count' => 0,
+            'certifications' => ['Fair Trade', 'Non-GMO Project', 'GAP Standard'],
+        ],
+        [
+            'code' => 'sup-royal-basmati', 'slug' => 'royal-indus-mills', 'name' => 'Royal Indus Premium Grain Export',
+            'type' => 'Distributor', 'address' => 'Punjab Agricultural Belt', 'country' => 'India / Regional Hub',
+            'verified' => true, 'established' => 1976, 'capacity' => 3000,
+            'rating' => 4.95, 'review_count' => 0,
+            'certifications' => ['BRCGS Food Safety', 'FDA Registered', 'Halal Certified'],
+        ],
+    ];
+
     public function run(): void
     {
-        // Root Shop
         $this->call(RootAdminShopSeeder::class);
 
-        // Test shop for testing
-        $user = User::factory()->create([
-            'name' => 'Test Shop',
-            'phone' => '01100000001',
-            'email' => 'shop@readyecommerce.com',
-            'is_active' => true,
-        ]);
+        foreach (self::SUPPLIERS as $supplier) {
+            $email = Str::slug($supplier['name']).'@ricemart.local';
+            $user = User::firstOrCreate(
+                ['email' => $email],
+                [
+                    'name' => $supplier['name'],
+                    'phone' => 'rice-'.substr(sha1($supplier['slug']), 0, 8),
+                    'password' => Hash::make(Str::random(40)),
+                    'is_active' => true,
+                ]
+            );
 
-        $shop = Shop::factory()->create([
-            'name' => 'Demo Shop',
-            'name_ar' => 'متجر تجريبي',
-            'user_id' => $user->id,
-        ]);
-        $shop->user->assignRole('shop');
+            $user->assignRole('shop');
 
-        // Create 10 shops
-        for ($i = 1; $i <= 10; $i++) {
-            $shop = Shop::factory()->create();
+            $logo = Media::firstOrCreate(
+                ['src' => 'rice-catalog/mill-facility.svg'],
+                ['type' => 'image', 'name' => 'RiceMart supplier', 'extention' => 'svg']
+            );
+            $banner = Media::firstOrCreate(
+                ['src' => 'rice-catalog/hero-rice-composition.svg'],
+                ['type' => 'image', 'name' => 'RiceMart rice catalog', 'extention' => 'svg']
+            );
 
-            $shop->user->assignRole('shop');
+            Shop::withTrashed()->updateOrCreate(
+                ['supplier_slug' => $supplier['slug']],
+                [
+                    'user_id' => $user->id,
+                    'name' => $supplier['name'],
+                    'name_ar' => $supplier['name'],
+                    'supplier_code' => $supplier['code'],
+                    'logo_id' => $logo->id,
+                    'banner_id' => $banner->id,
+                    'supplier_type' => $supplier['type'],
+                    'address' => $supplier['address'],
+                    'country' => $supplier['country'],
+                    'supplier_verified' => $supplier['verified'],
+                    'supplier_rating' => $supplier['rating'],
+                    'supplier_review_count' => $supplier['review_count'],
+                    'established_year' => $supplier['established'],
+                    'capacity_metric_tons_monthly' => $supplier['capacity'],
+                    'certifications' => $supplier['certifications'],
+                    'description' => $supplier['name'],
+                    'status' => true,
+                    'delivery_charge' => 0,
+                    'min_order_amount' => 1,
+                    'opening_time' => '00:00:00',
+                    'closing_time' => '23:59:59',
+                    'estimated_delivery_time' => 3,
+                    'deleted_at' => null,
+                ]
+            );
         }
     }
 }

@@ -23,15 +23,17 @@ import {
   setSearchQuery,
   setSortBy,
   resetFilters,
+  setSupplierFilter,
 } from "@/store/slices/productsSlice";
 import { addToCart } from "@/store/slices/cartSlice";
 import { selectWishlistIds, toggleWishlist } from "@/store/slices/wishlistSlice";
 import { formatCurrency } from "@/lib/currency";
 import { RiceProduct } from "@/types/product";
+import { ProductGridSkeleton } from "@/components/ui/Skeleton";
 
 export default function ShopPage() {
   const dispatch = useAppDispatch();
-  const { filteredItems, categories, status, filters } = useAppSelector(
+  const { filteredItems, categories, status, filters, error } = useAppSelector(
     (state) => state.products
   );
   const wishlistIds = useAppSelector(selectWishlistIds);
@@ -43,6 +45,14 @@ export default function ShopPage() {
   useEffect(() => {
     dispatch(fetchProducts(filters));
   }, [dispatch, filters]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const category = params.get("category") || undefined;
+    const supplier = params.get("supplier") || undefined;
+    if (category) dispatch(setCategoryFilter(category));
+    if (supplier) dispatch(setSupplierFilter(supplier));
+  }, [dispatch]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,7 +104,7 @@ export default function ShopPage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
           <div>
             <span className="text-xs font-bold uppercase tracking-widest text-[#B88A35]">
-              Marketplace Catalog (Redux Managed)
+            Live Marketplace Catalog
             </span>
             <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#19221B] mt-1">
               All Rice Varieties & Packaging
@@ -208,12 +218,9 @@ export default function ShopPage() {
 
         {/* Catalog Grid */}
         {status === "loading" ? (
-          <div className="py-20 text-center">
-            <div className="inline-block w-8 h-8 border-3 border-[#183A20] border-t-transparent rounded-full animate-spin mb-3" />
-            <p className="text-sm font-semibold text-[#183A20]">
-              Fetching catalog via Redux Thunk...
-            </p>
-          </div>
+          <ProductGridSkeleton />
+        ) : status === "failed" ? (
+          <div className="py-16 text-center text-sm text-red-700">Could not load products from the marketplace API. {error}</div>
         ) : filteredItems.length === 0 ? (
           <div className="bg-[#FFFDF8] rounded-3xl border border-[#E7E1D7] p-12 text-center max-w-lg mx-auto">
             <h3 className="font-serif text-xl font-bold text-[#19221B] mb-2">

@@ -16,15 +16,17 @@ class RootAdminShopSeeder extends Seeder
     {
         $rootUser = User::role(Roles::ROOT->value)->first();
 
-        Shop::factory()->create([
-            'user_id' => $rootUser->id,
-            'name' => 'My Shop',
-            'name_ar' => 'متجري',
-            'delivery_charge' => 0,
-            'description' => 'My Shop Description',
-            'status' => true,
-            'min_order_amount' => 1,
-        ]);
+        Shop::firstOrCreate(
+            ['user_id' => $rootUser->id],
+            [
+                'name' => 'My Shop',
+                'name_ar' => 'متجري',
+                'delivery_charge' => 0,
+                'description' => 'My Shop Description',
+                'status' => true,
+                'min_order_amount' => 1,
+            ]
+        );
 
         $rootUser->assignRole(Roles::SHOP->value);
     }

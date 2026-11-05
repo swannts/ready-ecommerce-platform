@@ -11,11 +11,12 @@ import {
   ArrowRight,
   Check,
 } from "lucide-react";
-import { mockProducts } from "@/data/products";
 import { formatCurrency } from "@/lib/currency";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addToCart } from "@/store/slices/cartSlice";
 import { selectWishlistIds, toggleWishlist } from "@/store/slices/wishlistSlice";
+import { RiceProduct } from "@/types/product";
+import { ProductGridSkeleton } from "@/components/ui/Skeleton";
 
 export const FeaturedProductsSection: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -23,13 +24,16 @@ export const FeaturedProductsSection: React.FC = () => {
   const [addedProductId, setAddedProductId] = useState<string | null>(null);
 
   const wishlist = useAppSelector(selectWishlistIds);
+  const products = useAppSelector((state) => state.products.items);
+  const productStatus = useAppSelector((state) => state.products.status);
+  const visibleProducts = products.filter((product) => activeTab === "all" || (activeTab === "wholesale" ? product.wholesaleTiers.length > 0 : product.packagingOptions.length > 0)).slice(0, 4);
 
   const handleToggleWishlist = (id: string, e: React.MouseEvent) => {
     e.preventDefault();
     dispatch(toggleWishlist(id));
   };
 
-  const handleAddToCart = (product: (typeof mockProducts)[0]) => {
+  const handleAddToCart = (product: RiceProduct) => {
     const defaultPackage = product.packagingOptions[0] || {
       size: "5 kg Sack",
       weightKg: 5,
@@ -112,8 +116,8 @@ export const FeaturedProductsSection: React.FC = () => {
       </div>
 
       {/* Product Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {mockProducts.map((product) => {
+      {productStatus === "loading" && products.length === 0 ? <ProductGridSkeleton count={4} /> : <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {visibleProducts.map((product) => {
           const isWishlisted = wishlist.includes(product.id);
           const lowestWholesaleTier = product.wholesaleTiers[product.wholesaleTiers.length - 1];
 
@@ -270,7 +274,7 @@ export const FeaturedProductsSection: React.FC = () => {
             </div>
           );
         })}
-      </div>
+      </div>}
 
       {/* Explore More CTA */}
       <div className="mt-10 text-center">

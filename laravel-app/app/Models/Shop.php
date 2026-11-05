@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\SubscriptionStatus;
+use App\Support\PublicAssetUrl;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,11 @@ class Shop extends Model
     use HasFactory , SoftDeletes;
 
     protected $guarded = ['id'];
+
+    protected $casts = [
+        'certifications' => 'array',
+        'supplier_verified' => 'boolean',
+    ];
 
     /**
      * Get the shop user.
@@ -80,6 +86,8 @@ class Shop extends Model
         $logo = asset('default/default.jpg');
         if ($this->mediaLogo && Storage::exists($this->mediaLogo->src)) {
             $logo = Storage::url($this->mediaLogo->src);
+        } elseif ($publicLogo = PublicAssetUrl::resolve($this->mediaLogo?->src)) {
+            $logo = $publicLogo;
         }
 
         return Attribute::make(
@@ -95,6 +103,8 @@ class Shop extends Model
         $banner = asset('default/default.jpg');
         if ($this->mediaBanner && Storage::exists($this->mediaBanner->src)) {
             $banner = Storage::url($this->mediaBanner->src);
+        } elseif ($publicBanner = PublicAssetUrl::resolve($this->mediaBanner?->src)) {
+            $banner = $publicBanner;
         }
 
         return Attribute::make(

@@ -1,11 +1,21 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { suppliers } from "@/data/suppliers";
+import { getSuppliers } from "@/lib/api";
+import { Supplier } from "@/types/supplier";
+import { SupplierGridSkeleton } from "@/components/ui/Skeleton";
 import { ArrowLeft, CheckCircle2, Star, MapPin } from "lucide-react";
 
 export default function SuppliersPage() {
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    getSuppliers().then(setSuppliers).catch((reason: unknown) => setError(reason instanceof Error ? reason.message : "Unable to load suppliers.")).finally(() => setLoading(false));
+  }, []);
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF6EF]">
       <Header />
@@ -26,7 +36,7 @@ export default function SuppliersPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {loading ? <SupplierGridSkeleton /> : error ? <p role="alert" className="py-12 text-center text-red-700">Unable to load suppliers: {error}</p> : <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {suppliers.map((sup) => (
             <div
               key={sup.id}
@@ -86,7 +96,7 @@ export default function SuppliersPage() {
               </div>
             </div>
           ))}
-        </div>
+        </div>}
       </main>
       <Footer />
     </div>

@@ -27,6 +27,13 @@ class Product extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'packaging_options' => 'array',
+        'wholesale_tiers' => 'array',
+        'is_popular' => 'boolean',
+        'is_organic' => 'boolean',
+    ];
+
     protected $appends = ['thumbnail'];
 
     public function slugSourceValue(): ?string

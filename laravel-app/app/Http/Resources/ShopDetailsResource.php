@@ -30,23 +30,35 @@ class ShopDetailsResource extends JsonResource
             $shopStatus = 'Online';
         }
 
-        $isAr = (request()->header('accept-language') ?? 'en') !== 'en';
+        $isBn = $request->attributes->get('api_locale', 'en') === 'bn';
 
         return [
             'id' => $this->id,
-            'name' => ($isAr && !empty($this->name_ar)) ? $this->name_ar : $this->name,
+            'name' => $isBn ? ($this->name_bn ?: $this->name) : $this->name,
             'logo' => $this->logo,
             'banner' => $this->banner,
             'total_products' => (int) $this->products()->isActive()->count(),
             'total_categories' => (int) $this->categories()->active()->count(),
-            'rating' => (float) number_format($this->averageRating, 1, '.', ''),
+            'rating' => (float) ($this->supplier_rating ?? number_format($this->averageRating, 1, '.', '')),
             'total_reviews' => (int) $this->reviews->count(),
             'shop_status' => (string) $shopStatus,
             'short_description' => $this->short_description,
             'description' => $this->description,
             'banners' => BannerResource::collection($this->banners()->where('status', 1)->get()),
             'latitude' => $this->latitude ?? '',
-            'longitude' => $this->longitude ?? ''
+            'longitude' => $this->longitude ?? '',
+            'slug' => $this->supplier_slug,
+            'supplier_id' => $this->supplier_code,
+            'banner_image' => $this->banner,
+            'avatar_image' => $this->logo,
+            'type' => $this->supplier_type,
+            'location' => $this->address,
+            'country' => $this->country,
+            'verified' => (bool) $this->supplier_verified,
+            'established_year' => $this->established_year,
+            'review_count' => (int) $this->supplier_review_count,
+            'capacity_metric_tons_monthly' => $this->capacity_metric_tons_monthly,
+            'certifications' => $this->certifications ?? [],
         ];
     }
 }

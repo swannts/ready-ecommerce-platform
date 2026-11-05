@@ -16,9 +16,9 @@ class ProductDetailsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $this->load(['reviews', 'orders', 'colors', 'shop', 'sizes', 'unit', 'brand', 'flashSales']);
+        $this->load(['reviews', 'orders', 'colors', 'shop', 'sizes', 'unit', 'brand', 'flashSales', 'categories']);
 
-        $lang = request()->header('accept-language') ?? 'en';
+        $lang = $request->attributes->get('api_locale', 'en');
 
         $favorite = false;
         $user = Auth::guard('api')->user();
@@ -51,11 +51,11 @@ class ProductDetailsResource extends JsonResource
         $price = $this->price;
         $discountPrice = $flashSaleProduct ? $flashSaleProduct->pivot?->price : $this->discount_price;
 
-        $isAr = $lang !== 'en';
-        $name = ($isAr && !empty($this->name_ar)) ? $this->name_ar : $this->name;
-        $shortDescription = ($isAr && !empty($this->short_description_ar)) ? $this->short_description_ar : $this->short_description;
-        $description = ($isAr && !empty($this->description_ar)) ? $this->description_ar : $this->description;
-        $brandName = ($isAr && !empty($this->brand?->name_ar)) ? $this->brand->name_ar : $this->brand?->name;
+        $isBn = $lang === 'bn';
+        $name = $isBn ? ($this->name_bn ?: $this->name) : $this->name;
+        $shortDescription = $isBn ? ($this->short_description_bn ?: $this->short_description) : $this->short_description;
+        $description = $isBn ? ($this->description_bn ?: $this->description) : $this->description;
+        $brandName = $isBn ? ($this->brand?->name_bn ?: $this->brand?->name) : $this->brand?->name;
         $shop = $this->shop;
 
         $lastOnline = $this->last_online >= now() ? true : false;
@@ -75,8 +75,8 @@ class ProductDetailsResource extends JsonResource
             'discount_percentage' => (float) number_format($discountPercentage, 2, '.', ''),
             'discount_type' => $this->discount_type,
             'discount'   => (float) number_format($this->discount, 2, '.', ''),
-            'rating' => (float) $this->averageRating ?? 0.0,
-            'total_reviews' => (string) Number::abbreviate($this->reviews?->count(), maxPrecision: 2),
+            'rating' => (float) ($this->catalog_rating ?? $this->averageRating ?? 0.0),
+            'total_reviews' => (string) Number::abbreviate($this->catalog_review_count ?? $this->reviews?->count() ?? 0, maxPrecision: 2),
             'total_sold' => (string) number_format($totalSold, 0, '.', ','),
             'quantity' => (int) ($quantity ?? $this->quantity),
             'is_favorite' => (bool) $favorite,
@@ -84,11 +84,27 @@ class ProductDetailsResource extends JsonResource
             'sizes' => SizeResource::collection($this->sizes),
             'colors' => ColorResource::collection($this->colors),
             'brand' => $brandName,
+            'category_slug' => $this->categories->first()?->slug,
+            'supplier_id' => $this->shop?->supplier_code,
+            'supplier_name' => $this->shop?->name,
+            'supplier_verified' => (bool) $this->shop?->supplier_verified,
+            'images' => $this->thumbnails(),
+            'variety' => $this->variety,
+            'origin' => $this->origin,
+            'grain_type' => $this->grain_type,
+            'processing_type' => $this->processing_type,
+            'retail_price_per_kg' => $this->retail_price_per_kg !== null ? (float) $this->retail_price_per_kg : null,
+            'packaging_options' => $this->packaging_options ?? [],
+            'wholesale_tiers' => $this->wholesale_tiers ?? [],
+            'min_order_quantity_kg' => $this->min_order_quantity_kg,
+            'available_stock_kg' => $this->available_stock_kg,
+            'is_popular' => (bool) $this->is_popular,
+            'is_organic' => (bool) $this->is_organic,
             'unit' => $this->unit ? UnitResource::make($this->unit) : null,
             'description' => $description,
             'shop' => [
                 'id' => $shop?->id,
-                'name' => ($isAr && !empty($shop?->name_ar)) ? $shop->name_ar : $shop?->name,
+                'name' => $isBn ? ($shop?->name_bn ?: $shop?->name) : $shop?->name,
                 'logo' => $shop?->logo,
                 'rating' => (float) round($shop?->averageRating, 1),
                 'estimated_delivery_time' => (string) ($shop?->estimated_delivery_time ?? '2-4 days'),

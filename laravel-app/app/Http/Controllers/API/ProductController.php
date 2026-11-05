@@ -16,6 +16,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\FlashSale;
 use App\Models\SubCategory;
+use App\Models\Shop;
 use App\Models\User;
 use App\Models\Scopes\PreOderProduct;
 use App\Repositories\ProductRepository;
@@ -41,11 +42,24 @@ class ProductController extends Controller
 
         $search = $request->search;
         $shopID = $request->shop_id;
+        $supplierSlug = $request->supplier_slug ?? $request->supplier;
+        $shopID = $supplierSlug
+            ? (Shop::where('supplier_slug', $supplierSlug)->value('id') ?? 0)
+            : $shopID;
         $categoryID = $request->category_id;
         $subCategoryID = $request->sub_category_id;
+        $grainType = $request->grain_type;
+        $processingType = $request->processing_type;
 
         $rating = $request->rating; // 4.0
-        $sortType = $request->sort_type;
+        $sortType = $request->sort_type ?? $request->sort_by;
+        $sortType = match ($sortType) {
+            'price-asc' => 'low_to_high',
+            'price-desc' => 'high_to_low',
+            'rating' => 'top_rated',
+            'featured' => 'featured',
+            default => $sortType,
+        };
         $minPrice = $request->min_price;
         $maxPrice = $request->max_price;
         $brandID = $request->brand_id;
@@ -122,8 +136,14 @@ class ProductController extends Controller
                 return $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%')
                         ->orWhere('short_description', 'like', '%' . $search . '%')
-                        ->orWhere('code', 'like', '%' . $search . '%');
+                        ->orWhere('code', 'like', '%' . $search . '%')
+                        ->orWhere('variety', 'like', '%' . $search . '%')
+                        ->orWhere('origin', 'like', '%' . $search . '%');
                 });
+            })->when($grainType, function ($query) use ($grainType) {
+                return $query->where('grain_type', $grainType);
+            })->when($processingType, function ($query) use ($processingType) {
+                return $query->where('processing_type', $processingType);
             })->when($brandID, function ($query) use ($brandID) {
                 return $query->where('brand_id', $brandID);
             })->when($isPreorder, function ($query) use ($isPreorder) {
@@ -153,11 +173,15 @@ class ProductController extends Controller
                 $ratingValue = floatval($rating);
                 $upperBound = $ratingValue + 1;
 
-                return $query->havingRaw('average_rating >= ' . $rating . ' AND average_rating < ' . $upperBound);
+                return $query->havingRaw('COALESCE(catalog_rating, average_rating, 0) >= ? AND COALESCE(catalog_rating, average_rating, 0) < ?', [$ratingValue, $upperBound]);
             })->when($sortType == 'top_selling', function ($query) {
                 return $query->orderByDesc('orders_count');
             })->when($sortType == 'popular_product', function ($query) {
                 return $query->orderByDesc('orders_count')->orderByDesc('average_rating');
+            })->when($sortType == 'top_rated', function ($query) {
+                return $query->orderByRaw('COALESCE(catalog_rating, average_rating, 0) DESC');
+            })->when($sortType == 'featured', function ($query) {
+                return $query->orderByDesc('is_popular')->orderByDesc('catalog_rating');
             })->when($sortType == 'newest' || $sortType == 'just_for_you', function ($query) {
                 return $query->orderBy('id', 'desc');
             })->when($minPrice || $maxPrice, function ($query) use ($minPrice, $maxPrice) {

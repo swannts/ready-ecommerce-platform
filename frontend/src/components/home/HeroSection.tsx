@@ -13,15 +13,18 @@ import {
   Sparkles,
   ArrowRight,
 } from "lucide-react";
-import { mockProducts } from "@/data/products";
+import { useAppSelector } from "@/store/hooks";
+import { useLocale } from "@/lib/i18n";
 
 export const HeroSection: React.FC = () => {
+  const products = useAppSelector((state) => state.products.items);
+  const { t } = useLocale();
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
   // Quick suggestion matches
   const suggestions = query.trim()
-    ? mockProducts
+    ? products
         .filter(
           (p) =>
             p.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -43,14 +46,14 @@ export const HeroSection: React.FC = () => {
             {/* Tagline Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#183A20]/10 text-[#183A20] text-xs font-bold tracking-widest uppercase mb-4 sm:mb-6 w-fit border border-[#183A20]/15">
               <Sparkles className="w-3.5 h-3.5 text-[#B88A35]" />
-              <span>From Farm to Your Business</span>
+              <span>{t("From Farm to Your Business")}</span>
             </div>
 
             {/* Main Editorial Serif Heading */}
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-[#19221B] leading-[1.12] tracking-tight mb-5">
-              The Complete <br />
+              {t("The Complete")} <br />
               <span className="text-[#183A20] relative inline-block">
-                Rice Marketplace
+                {t("Rice Marketplace")}
                 {/* Handcrafted underline curve accent */}
                 <svg
                   className="absolute left-0 -bottom-2 w-full h-3 text-[#B88A35]"
@@ -72,7 +75,7 @@ export const HeroSection: React.FC = () => {
 
             {/* Description */}
             <p className="text-base sm:text-lg text-[#686C64] leading-relaxed max-w-xl mb-8">
-              Buy rice for your home or business — directly from verified farmers, mills, and suppliers.
+              {t("Buy rice for your home or business — directly from verified farmers, mills, and suppliers.")}
             </p>
 
             {/* Two Prominent Action Buttons: B2C vs B2B */}
@@ -83,7 +86,7 @@ export const HeroSection: React.FC = () => {
                 className="inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-xl bg-[#183A20] hover:bg-[#102C1B] text-[#FFFDF8] font-semibold text-base shadow-md hover:shadow-lg transition-all duration-200 active:scale-[0.99] group"
               >
                 <ShoppingCart className="w-5 h-5 text-[#B88A35] group-hover:scale-110 transition-transform" />
-                <span>Buy for Home (B2C)</span>
+                <span>{t("Buy for Home (B2C)")}</span>
               </Link>
 
               {/* Buy in Bulk (B2B) */}
@@ -92,7 +95,7 @@ export const HeroSection: React.FC = () => {
                 className="inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-xl bg-[#FAF6EF] hover:bg-[#EFE7D8] text-[#19221B] font-semibold text-base border-2 border-[#183A20]/25 shadow-xs hover:border-[#183A20] transition-all duration-200 active:scale-[0.99] group"
               >
                 <Building2 className="w-5 h-5 text-[#183A20] group-hover:text-[#B88A35] transition-colors" />
-                <span>Buy in Bulk (B2B)</span>
+                <span>{t("Buy in Bulk (B2B)")}</span>
                 <ArrowRight className="w-4 h-4 ml-1 text-[#686C64] group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
@@ -119,7 +122,7 @@ export const HeroSection: React.FC = () => {
                   onChange={(e) => setQuery(e.target.value)}
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setTimeout(() => setIsFocused(false), 200)}
-                  placeholder="Search rice (e.g. Basmati, Miniket, Nazirshail...)"
+                  placeholder={t("Search rice (e.g. Basmati, Miniket, Nazirshail...)")}
                   className="w-full bg-transparent py-3 pr-2 text-sm sm:text-base text-[#19221B] placeholder-[#686C64] focus:outline-none"
                   aria-label="Search rice varieties, categories, or suppliers"
                 />
@@ -127,7 +130,7 @@ export const HeroSection: React.FC = () => {
                   type="submit"
                   className="shrink-0 px-6 py-3.5 rounded-xl bg-[#183A20] hover:bg-[#102C1B] text-[#FFFDF8] font-semibold text-sm transition-colors shadow-xs"
                 >
-                  Search
+                  {t("Search")}
                 </button>
               </form>
 
@@ -135,7 +138,7 @@ export const HeroSection: React.FC = () => {
               {isFocused && suggestions.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-[#FFFDF8] rounded-xl shadow-xl border border-[#E7E1D7] p-2 z-30">
                   <div className="text-[11px] font-bold text-[#686C64] uppercase px-3 py-1">
-                    Matching Varieties
+                    {t("Matching Varieties")}
                   </div>
                   {suggestions.map((p) => (
                     <Link
@@ -161,7 +164,7 @@ export const HeroSection: React.FC = () => {
                   <Truck className="w-4 h-4" />
                 </div>
                 <div className="text-xs sm:text-sm font-semibold text-[#19221B] leading-tight">
-                  Nationwide Delivery
+                  {t("Nationwide Delivery")}
                 </div>
               </div>
 
@@ -171,7 +174,7 @@ export const HeroSection: React.FC = () => {
                   <ShieldCheck className="w-4 h-4" />
                 </div>
                 <div className="text-xs sm:text-sm font-semibold text-[#19221B] leading-tight">
-                  Verified Suppliers
+                  {t("Verified Suppliers")}
                 </div>
               </div>
 
@@ -181,7 +184,7 @@ export const HeroSection: React.FC = () => {
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
                 <div className="text-xs sm:text-sm font-semibold text-[#19221B] leading-tight">
-                  Quality Assured
+                  {t("Quality Assured")}
                 </div>
               </div>
             </div>

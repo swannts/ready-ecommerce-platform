@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import StoreProvider from "@/store/StoreProvider";
+import { CatalogBootstrap } from "@/components/layout/CatalogBootstrap";
+import { LocaleProvider } from "@/lib/i18n";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -45,7 +47,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
       <body className="antialiased min-h-screen flex flex-col bg-[#FAF6EF] text-[#19221B]">
-        <StoreProvider>{children}</StoreProvider>
+        <StoreProvider>
+          <LocaleProvider><CatalogBootstrap />{children}</LocaleProvider>
+        </StoreProvider>
       </body>
     </html>
   );

@@ -13,37 +13,8 @@ export interface CartState {
   checkoutError: string | null;
 }
 
-const initialItems: CartItem[] = [
-  {
-    id: "rice-basmati-royal-5kg",
-    productId: "rice-basmati-royal",
-    productSlug: "royal-aged-super-kernel-basmati",
-    name: "Royal 2-Year Aged Super Kernel Basmati Rice",
-    variety: "Basmati",
-    image: "/images/hero/hero-rice-composition.svg",
-    packagingSize: "5 kg Family Sack",
-    weightKg: 5,
-    unitPrice: 17.5,
-    quantity: 2,
-    supplierName: "Golden Harvest Agro Mills",
-  },
-  {
-    id: "rice-miniket-prime-25kg",
-    productId: "rice-miniket-prime",
-    productSlug: "premium-silky-white-miniket",
-    name: "Premium Silky White Miniket Rice (Single Boiled)",
-    variety: "Miniket",
-    image: "/images/hero/hero-rice-composition.svg",
-    packagingSize: "25 kg Sack",
-    weightKg: 25,
-    unitPrice: 27.5,
-    quantity: 1,
-    supplierName: "Heritage Valley Farmer Cooperative",
-  },
-];
-
 const initialState: CartState = {
-  items: initialItems,
+  items: [],
   couponCode: null,
   discountPercentage: 0,
   couponStatus: "idle",

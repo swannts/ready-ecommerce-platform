@@ -16,9 +16,9 @@ class ProductResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $this->load(['reviews', 'orders', 'sizes', 'colors', 'unit', 'brand', 'shop', 'flashSales']);
+        $this->load(['reviews', 'orders', 'sizes', 'colors', 'unit', 'brand', 'shop', 'flashSales', 'categories']);
 
-        $lang = request()->header('accept-language') ?? 'en';
+        $lang = $request->attributes->get('api_locale', 'en');
 
         $favorite = false;
         $user = Auth::guard('api')->user();
@@ -50,10 +50,10 @@ class ProductResource extends JsonResource
         $price = $this->price;
         $discountPrice = $flashSaleProduct ? $flashSaleProduct->pivot->price : $this->discount_price;
 
-        $isAr = $lang !== 'en';
-        $name = ($isAr && !empty($this->name_ar)) ? $this->name_ar : $this->name;
-        $shortDescription = ($isAr && !empty($this->short_description_ar)) ? $this->short_description_ar : $this->short_description;
-        $brandName = ($isAr && !empty($this->brand?->name_ar)) ? $this->brand->name_ar : $this->brand?->name;
+        $name = $lang === 'bn' ? ($this->name_bn ?: $this->name) : $this->name;
+        $shortDescription = $lang === 'bn' ? ($this->short_description_bn ?: $this->short_description) : $this->short_description;
+        $description = $lang === 'bn' ? ($this->description_bn ?: $this->description) : $this->description;
+        $brandName = $lang === 'bn' ? ($this->brand?->name_bn ?: $this->brand?->name) : $this->brand?->name;
         module_exists('PreOrder') ? $isPreorder = (bool) $this->is_preorder : $isPreorder = false;
 
         return [
@@ -62,14 +62,15 @@ class ProductResource extends JsonResource
             'is_digital' => (bool) $this->is_digital,
             'name' => $name,
             'short_description' => $shortDescription,
+            'description' => $description,
             'thumbnail' => $this->thumbnail,
             'price' => (float) number_format($price, 2, '.', ''),
             'discount_price' => (float) number_format($discountPrice, 2, '.', ''),
             'discount_percentage' => (float) number_format($discountPercentage, 2, '.', ''),
             'discount_type' => $this->discount_type,
             'discount'   => (float) number_format($this->discount, 2, '.', ''),
-            'rating' => (float) $this->averageRating ?? 0.0,
-            'total_reviews' => (string) Number::abbreviate($this->reviews?->count(), maxPrecision: 2),
+            'rating' => (float) ($this->catalog_rating ?? $this->averageRating ?? 0.0),
+            'total_reviews' => (string) Number::abbreviate($this->catalog_review_count ?? $this->reviews?->count() ?? 0, maxPrecision: 2),
             'total_sold' => (string) number_format($totalSold, 0, '.', ','),
             'quantity' => (int) ($flashSaleProduct ? $quantity : $this->quantity),
             'is_favorite' => (bool) $favorite,
@@ -77,6 +78,22 @@ class ProductResource extends JsonResource
             'colors' => ColorResource::collection($this->colors),
             'unit' => $this->unit ? UnitResource::make($this->unit) : null,
             'brand' => $brandName,
+            'category_slug' => $this->categories->first()?->slug,
+            'supplier_id' => $this->shop?->supplier_code,
+            'supplier_name' => $lang === 'bn' ? ($this->shop?->name_bn ?: $this->shop?->name) : $this->shop?->name,
+            'supplier_verified' => (bool) $this->shop?->supplier_verified,
+            'images' => [$this->thumbnail],
+            'variety' => $this->variety,
+            'origin' => $this->origin,
+            'grain_type' => $this->grain_type,
+            'processing_type' => $this->processing_type,
+            'retail_price_per_kg' => $this->retail_price_per_kg !== null ? (float) $this->retail_price_per_kg : null,
+            'packaging_options' => $this->packaging_options ?? [],
+            'wholesale_tiers' => $this->wholesale_tiers ?? [],
+            'min_order_quantity_kg' => $this->min_order_quantity_kg,
+            'available_stock_kg' => $this->available_stock_kg,
+            'is_popular' => (bool) $this->is_popular,
+            'is_organic' => (bool) $this->is_organic,
             'is_preorder' => $isPreorder,
             'is_prepay' => (bool) $this->is_prepay ?? false,
             'shop' => ProductShopResource::make($this->shop),

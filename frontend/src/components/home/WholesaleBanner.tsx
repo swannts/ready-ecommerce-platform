@@ -1,9 +1,15 @@
+"use client";
+
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Building2, ArrowRight, ShieldCheck, FileCheck, Scale } from "lucide-react";
+import { useLocale } from "@/lib/i18n";
 
 export const WholesaleBanner: React.FC = () => {
+  const { t } = useLocale();
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
       {/* Container with rounded corners and split layout */}
@@ -24,10 +30,10 @@ export const WholesaleBanner: React.FC = () => {
           {/* Floating Mill Capacity Badge */}
           <div className="absolute bottom-4 left-4 bg-[#183A20]/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-[#B88A35]/30 text-xs">
             <span className="text-[#B88A35] font-bold block uppercase tracking-wider text-[10px]">
-              Direct Producer Network
+              {t("Direct Producer Network")}
             </span>
             <span className="font-semibold text-[#FFFDF8]">
-              50,000+ Metric Tons Monthly Capacity
+              {t("50,000+ Metric Tons Monthly Capacity")}
             </span>
           </div>
         </div>
@@ -38,32 +44,32 @@ export const WholesaleBanner: React.FC = () => {
           {/* Top Label */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAF6EF]/10 text-[#B88A35] text-xs font-bold tracking-widest uppercase mb-4 w-fit border border-[#B88A35]/30">
             <Building2 className="w-3.5 h-3.5" />
-            <span>Institutional & Commercial Sourcing</span>
+            <span>{t("Institutional & Commercial Sourcing")}</span>
           </div>
 
           {/* Heading */}
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#FFFDF8] leading-tight mb-4">
-            Are You a Business Buyer?
+            {t("Are You a Business Buyer?")}
           </h2>
 
           {/* Description */}
           <p className="text-base sm:text-lg text-[#E7E1D7] max-w-xl leading-relaxed mb-6 font-normal">
-            Get wholesale pricing, custom quotes, and dedicated support for restaurants, hotels, supermarkets, and catering enterprises.
+            {t("Get wholesale pricing, custom quotes, and dedicated support for restaurants, hotels, supermarkets, and catering enterprises.")}
           </p>
 
           {/* Business Highlights List */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8 text-xs text-[#FAF6EF]/90">
             <div className="flex items-center gap-2">
               <Scale className="w-4 h-4 text-[#B88A35] shrink-0" />
-              <span>Sacks to Container Loads</span>
+              <span>{t("Sacks to Container Loads")}</span>
             </div>
             <div className="flex items-center gap-2">
               <FileCheck className="w-4 h-4 text-[#B88A35] shrink-0" />
-              <span>Formal Invoicing & GST/VAT</span>
+              <span>{t("Formal Invoicing & GST/VAT")}</span>
             </div>
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-[#B88A35] shrink-0" />
-              <span>Batch Quality Certificates</span>
+              <span>{t("Batch Quality Certificates")}</span>
             </div>
           </div>
 
@@ -73,15 +79,15 @@ export const WholesaleBanner: React.FC = () => {
               href="/register/business"
               className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-[#FAF6EF] hover:bg-[#FFFDF8] text-[#183A20] font-bold text-base shadow-lg hover:shadow-xl transition-all duration-200 active:scale-[0.99] group shrink-0"
             >
-              <span>Create a Business Account</span>
+              <span>{t("Create a Business Account")}</span>
               <ArrowRight className="w-5 h-5 text-[#B88A35] group-hover:translate-x-1 transition-transform" />
             </Link>
 
             <Link
-              href="/wholesale/quote"
+              href="/wholesale/rfq"
               className="inline-flex items-center justify-center px-6 py-4 rounded-xl bg-transparent hover:bg-[#FAF6EF]/10 text-[#FFFDF8] font-semibold text-sm border border-[#E7E1D7]/30 transition-colors"
             >
-              Request Custom Quote
+              {t("Request Custom Quote")}
             </Link>
           </div>
         </div>

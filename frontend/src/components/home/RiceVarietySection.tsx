@@ -1,10 +1,17 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight, Sparkles } from "lucide-react";
-import { riceCategories } from "@/data/riceCategories";
+import { useAppSelector } from "@/store/hooks";
+import { CategoryGridSkeleton } from "@/components/ui/Skeleton";
+import { useLocale } from "@/lib/i18n";
 
 export const RiceVarietySection: React.FC = () => {
+  const riceCategories = useAppSelector((state) => state.products.categories);
+  const { t } = useLocale();
+  const categoriesStatus = useAppSelector((state) => state.products.categoriesStatus);
   return (
     <section id="rice-varieties" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16 scroll-mt-24">
       {/* Header with Title and "View All Varieties" */}
@@ -12,13 +19,13 @@ export const RiceVarietySection: React.FC = () => {
         <div>
           <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#B88A35] tracking-widest uppercase mb-2">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Curated Grains</span>
+            <span>{t("Curated Grains")}</span>
           </div>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-4xl font-bold text-[#19221B]">
-            Shop by Rice Variety
+            {t("Shop by Rice Variety")}
           </h2>
           <p className="text-sm sm:text-base text-[#686C64] mt-1 max-w-xl">
-            From regal aged Basmati to aromatic Chinigura and everyday Miniket staples.
+            {t("From regal aged Basmati to aromatic Chinigura and everyday Miniket staples.")}
           </p>
         </div>
 
@@ -26,13 +33,13 @@ export const RiceVarietySection: React.FC = () => {
           href="/shop"
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#183A20] hover:text-[#B88A35] transition-colors group shrink-0"
         >
-          <span>View All Varieties</span>
+          <span>{t("View All Varieties")}</span>
           <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
         </Link>
       </div>
 
       {/* 6 Category Cards Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
+      {categoriesStatus === "loading" && riceCategories.length === 0 ? <CategoryGridSkeleton /> : <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
         {riceCategories.map((category) => (
           <Link
             key={category.id}
@@ -64,7 +71,7 @@ export const RiceVarietySection: React.FC = () => {
               {/* Bottom bar with Count and Circular Arrow button */}
               <div className="mt-4 pt-3 border-t border-[#E7E1D7]/60 flex items-center justify-between">
                 <span className="text-xs text-[#686C64] font-medium">
-                  {category.productCount} Varieties
+                  {category.productCount} {t("Varieties")}
                 </span>
 
                 <div className="w-7 h-7 rounded-full bg-[#183A20]/8 text-[#183A20] group-hover:bg-[#183A20] group-hover:text-[#FFFDF8] flex items-center justify-center transition-colors shrink-0 shadow-2xs">
@@ -74,7 +81,7 @@ export const RiceVarietySection: React.FC = () => {
             </div>
           </Link>
         ))}
-      </div>
+      </div>}
     </section>
   );
 };

@@ -36,7 +36,7 @@ const quickNavItems: QuickNavItem[] = [
     id: "for-businesses",
     title: "For Businesses",
     subtitle: "Restaurants, hotels & distributors",
-    href: "/business/info",
+    href: "/register/business",
     icon: Handshake,
   },
 ];

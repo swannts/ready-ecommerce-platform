@@ -224,11 +224,14 @@ class ProductRepository extends Repository
                 'shop_id' => $shop?->id,
                 'name' => $request->name,
                 'name_ar' => $request->name_ar,
+                'name_bn' => $request->name_bn,
                 'slug' => $request->slug,
                 'description' => $description,
                 'description_ar' => $descriptionAr,
+                'description_bn' => $request->filled('description_bn') ? Purifier::clean($request->description_bn) : null,
                 'short_description' => $request->short_description,
                 'short_description_ar' => $request->short_description_ar,
+                'short_description_bn' => $request->short_description_bn,
                 'brand_id' => $request->brand,
                 'unit_id' => $request->unit,
                 'price' => $request->price,
@@ -352,6 +355,9 @@ class ProductRepository extends Repository
         $descriptionAr = $request->filled('description_ar')
             ? Purifier::clean(self::sanitizeUnicode($request->description_ar))
             : $product->description_ar;
+        $descriptionBn = $request->filled('description_bn')
+            ? Purifier::clean($request->description_bn)
+            : $product->description_bn;
         $keywords = implode(',', $request->meta_keywords ?? []);
 
         $discountPrice = 0;
@@ -364,11 +370,14 @@ class ProductRepository extends Repository
         self::update($product, [
             'name' => $request->name,
             'name_ar' => $request->name_ar ?? $product->name_ar,
+            'name_bn' => $request->name_bn ?? $product->name_bn,
             'slug' => $request->slug,
             'description' => $description,
             'description_ar' => $descriptionAr,
+            'description_bn' => $descriptionBn,
             'short_description' => $request->short_description,
             'short_description_ar' => $request->short_description_ar ?? $product->short_description_ar,
+            'short_description_bn' => $request->short_description_bn ?? $product->short_description_bn,
             'brand_id' => $request->brand ?? null,
             'unit_id' => $request->unit ?? null,
             'price' => $request->price,

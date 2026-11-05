@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { RiceLogo } from "@/components/ui/RiceLogo";
 import {
@@ -11,9 +11,27 @@ import {
   Mail,
   Globe,
 } from "lucide-react";
-import { riceCategories } from "@/data/riceCategories";
+import { useAppSelector } from "@/store/hooks";
+import { submitSupportRequest } from "@/lib/api";
+import { useLocale } from "@/lib/i18n";
 
 export const Footer: React.FC = () => {
+  const riceCategories = useAppSelector((state) => state.products.categories);
+  const [newsletterStatus, setNewsletterStatus] = useState("");
+  const [newsletterBusy, setNewsletterBusy] = useState(false);
+  const { t } = useLocale();
+  const joinNewsletter = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formElement = event.currentTarget;
+    const email = String(new FormData(formElement).get("email") || "");
+    setNewsletterBusy(true);
+    try {
+      const message = await submitSupportRequest({ name: email, subject: "RiceMart grain market updates subscription", message: `Please add ${email} to the grain market price index and harvest report mailing list.` });
+      setNewsletterStatus(message);
+      formElement.reset();
+    } catch (error) { setNewsletterStatus(error instanceof Error ? error.message : "Could not submit subscription."); }
+    finally { setNewsletterBusy(false); }
+  };
   return (
     <footer className="bg-[#102C1B] text-[#E7E1D7] pt-16 pb-12 border-t border-[#183A20] mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,8 +43,8 @@ export const Footer: React.FC = () => {
               <Truck className="w-6 h-6" />
             </div>
             <div>
-              <div className="font-semibold text-[#FFFDF8] text-sm">Nationwide Distribution</div>
-              <div className="text-xs text-[#E7E1D7]/70 mt-0.5">Reliable logistics from single sacks to multi-ton consignments.</div>
+              <div className="font-semibold text-[#FFFDF8] text-sm">{t("Nationwide Distribution")}</div>
+              <div className="text-xs text-[#E7E1D7]/70 mt-0.5">{t("Reliable logistics from single sacks to multi-ton consignments.")}</div>
             </div>
           </div>
 
@@ -35,8 +53,8 @@ export const Footer: React.FC = () => {
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
-              <div className="font-semibold text-[#FFFDF8] text-sm">Verified Producers & Mills</div>
-              <div className="text-xs text-[#E7E1D7]/70 mt-0.5">Direct farm gate & certified industrial mill partner network.</div>
+              <div className="font-semibold text-[#FFFDF8] text-sm">{t("Verified Producers & Mills")}</div>
+              <div className="text-xs text-[#E7E1D7]/70 mt-0.5">{t("Direct farm gate & certified industrial mill partner network.")}</div>
             </div>
           </div>
 
@@ -45,8 +63,8 @@ export const Footer: React.FC = () => {
               <Award className="w-6 h-6" />
             </div>
             <div>
-              <div className="font-semibold text-[#FFFDF8] text-sm">100% Quality Assurance</div>
-              <div className="text-xs text-[#E7E1D7]/70 mt-0.5">Moisture-controlled, lab-tested, and authentic grain varieties.</div>
+              <div className="font-semibold text-[#FFFDF8] text-sm">{t("100% Quality Assurance")}</div>
+              <div className="text-xs text-[#E7E1D7]/70 mt-0.5">{t("Moisture-controlled, lab-tested, and authentic grain varieties.")}</div>
             </div>
           </div>
         </div>
@@ -58,18 +76,19 @@ export const Footer: React.FC = () => {
           <div className="lg:col-span-2 space-y-4">
             <RiceLogo variant="light" />
             <p className="text-sm text-[#E7E1D7]/80 leading-relaxed max-w-sm mt-3">
-              RiceMart is the premier agricultural commerce marketplace connecting verified rice mills, farmers, and distributors directly with retail households and institutional B2B buyers.
+              {t("RiceMart is the premier agricultural commerce marketplace connecting verified rice mills, farmers, and distributors directly with retail households and institutional B2B buyers.")}
             </p>
 
             {/* Newsletter input */}
             <div className="pt-2">
               <span className="block text-xs font-semibold text-[#FFFDF8] uppercase tracking-wider mb-2">
-                Subscribe for Grain Market Price Index & Harvest Reports
+                {t("Subscribe for Grain Market Price Index & Harvest Reports")}
               </span>
-              <form onSubmit={(e) => e.preventDefault()} className="flex items-center max-w-md">
+              <form onSubmit={joinNewsletter} className="flex items-center max-w-md">
                 <input
                   type="email"
-                  placeholder="Enter business or personal email"
+                  name="email"
+                  placeholder={t("Enter business or personal email")}
                   className="bg-[#183A20] border border-[#25522F] text-sm text-[#FFFDF8] px-4 py-2.5 rounded-l-xl w-full focus:outline-none focus:border-[#B88A35] placeholder-[#E7E1D7]/50"
                   required
                 />
@@ -77,15 +96,16 @@ export const Footer: React.FC = () => {
                   type="submit"
                   className="bg-[#B88A35] hover:bg-[#D4A74F] text-[#FFFDF8] px-4 py-2.5 rounded-r-xl text-sm font-semibold transition-colors shrink-0"
                 >
-                  Join
+                  {newsletterBusy ? t("Joining…") : t("Join")}
                 </button>
               </form>
+              {newsletterStatus && <p role="status" className="mt-2 text-xs text-[#E7E1D7]">{newsletterStatus}</p>}
             </div>
           </div>
 
           {/* Col 2: Retail Categories */}
           <div>
-            <h4 className="font-serif text-base font-bold text-[#FFFDF8] mb-4">Rice Varieties</h4>
+            <h4 className="font-serif text-base font-bold text-[#FFFDF8] mb-4">{t("Rice Varieties")}</h4>
             <ul className="space-y-2.5 text-sm">
               {riceCategories.map((cat) => (
                 <li key={cat.id}>
@@ -99,7 +119,7 @@ export const Footer: React.FC = () => {
               ))}
               <li className="pt-1">
                 <Link href="/shop" className="text-xs font-semibold text-[#B88A35] hover:underline">
-                  View Full Catalog →
+                  {t("View Full Catalog →")}
                 </Link>
               </li>
             </ul>
@@ -107,7 +127,7 @@ export const Footer: React.FC = () => {
 
           {/* Col 3: B2B Wholesale */}
           <div>
-            <h4 className="font-serif text-base font-bold text-[#FFFDF8] mb-4">B2B Wholesale</h4>
+            <h4 className="font-serif text-base font-bold text-[#FFFDF8] mb-4">{t("B2B Wholesale")}</h4>
             <ul className="space-y-2.5 text-sm">
               <li>
                 <Link href="/wholesale" className="hover:text-[#B88A35] transition-colors">

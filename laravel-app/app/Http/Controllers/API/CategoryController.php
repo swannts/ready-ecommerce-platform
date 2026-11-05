@@ -26,10 +26,6 @@ class CategoryController extends Controller
         $categories = CategoryRepository::query()->active()
             ->whereHas('shops', function ($query) use ($shop) {
                 $query->where('id', $shop->id);
-            })->whereHas('products', function ($query) {
-                $query->whereHas('shop', function ($query) {
-                    return $query->isActive();
-                });
             })
             ->ordered();
 

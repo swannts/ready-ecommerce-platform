@@ -278,6 +278,7 @@ Route::get('/download-product-license/{license}/{order_id}', [ProductLicenseCont
 
 // language route
 Route::get('/lang/{locale}', function ($locale) {
+    abort_unless(in_array($locale, ['en', 'bn'], true), 404);
     $path = base_path("lang/{$locale}.json");
     if (File::exists($path)) {
         return File::get($path);

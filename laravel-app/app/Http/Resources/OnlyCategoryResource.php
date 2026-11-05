@@ -14,12 +14,12 @@ class OnlyCategoryResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $isAr = (request()->header('accept-language') ?? 'en') !== 'en';
+        $isBn = $request->attributes->get('api_locale', 'en') === 'bn';
 
         return [
             'id' => $this->id ?? null,
             'slug' => $this->slug ?? null,
-            'name' => ($isAr && !empty($this->name_ar)) ? $this->name_ar : ($this->name ?? null),
+            'name' => $isBn ? ($this->name_bn ?: $this->name) : ($this->name ?? null),
             'thumbnail' => $this->thumbnail ?? null,
         ];
     }

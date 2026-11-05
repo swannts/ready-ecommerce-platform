@@ -7,7 +7,7 @@ export interface WishlistState {
 }
 
 const initialState: WishlistState = {
-  itemIds: ["rice-basmati-royal"],
+  itemIds: [],
   status: "idle",
 };
 

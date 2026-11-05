@@ -1,0 +1,20 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgP" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FAF5E8"/>
+      <stop offset="100%" stop-color="#ECE1CA"/>
+    </radialGradient>
+    <linearGradient id="terracotta" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9E4B28"/>
+      <stop offset="100%" stop-color="#5E2710"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="16" fill="url(#bgP)"/>
+  <ellipse cx="200" cy="180" rx="100" ry="44" fill="url(#terracotta)"/>
+  <ellipse cx="200" cy="164" rx="84" ry="32" fill="#F4E9CF"/>
+  <g fill="#D6C49E" opacity="0.85">
+    <ellipse cx="170" cy="160" rx="11" ry="4" transform="rotate(-15 170 160)"/>
+    <ellipse cx="200" cy="158" rx="12" ry="4" transform="rotate(20 200 158)"/>
+    <ellipse cx="228" cy="162" rx="11" ry="4" transform="rotate(-10 228 162)"/>
+  </g>
+</svg>
