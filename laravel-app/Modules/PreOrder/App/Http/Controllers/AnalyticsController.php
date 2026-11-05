@@ -44,7 +44,7 @@ class AnalyticsController extends Controller
             'deliveredOrder' => (int) $preOrderQuery->delivered_order,
             'inShippingAmount' => (float) $preOrderQuery->in_shipping_amount,
             'deliveredAmount' => (float) $preOrderQuery->Delivered_amount,
-            'delayFinalAmount' => (float) $preOrderQuery->delay_final_amount
+            'delayFinalAmount' => (float) $preOrderQuery->delay_final_amount,
         ];
         $productQuery = PreOrderProductRepository::query()->withoutGlobalScope(PreOderProduct::class)
             ->where('is_preorder', true)
@@ -72,15 +72,17 @@ class AnalyticsController extends Controller
             ->orderByDesc('total_sold')
             ->take(5)
             ->get();
+
         return view('preorder::index', $data);
     }
+
     public function saleAnalytics(Request $request)
     {
         $type = $request->type ?? 'monthly';
         $shopId = generaleSetting('shop')?->id;
         $currentYear = now()->year;
         $startOfWeek = now()->startOfWeek();
-        $endOfWeek   = now()->endOfWeek();
+        $endOfWeek = now()->endOfWeek();
         $query = PreOrderRepository::query()->where('shop_id', $shopId);
         switch ($type) {
             case 'daily':
@@ -89,35 +91,36 @@ class AnalyticsController extends Controller
                     ->selectRaw('WEEKDAY(created_at) + 1 as day_number, SUM(total_amount) as total_amount')
                     ->groupBy('day_number')
                     ->get();
-                $keyMapper = fn($row) => $labels[$row->day_number - 1];
+                $keyMapper = fn ($row) => $labels[$row->day_number - 1];
                 break;
             case 'monthly':
                 $labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
                 $query->whereYear('created_at', $currentYear)
                     ->selectRaw('MONTH(created_at) as month_number, SUM(total_amount) as total_amount')
                     ->groupBy('month_number');
-                $keyMapper = fn($row) => $labels[$row->month_number - 1];
+                $keyMapper = fn ($row) => $labels[$row->month_number - 1];
                 break;
             default: // yearly
                 $labels = collect(range($currentYear - 6, $currentYear))
-                    ->map(fn($y) => (string)$y)
+                    ->map(fn ($y) => (string) $y)
                     ->toArray();
                 $query->whereYear('created_at', '>=', $currentYear - 6)
                     ->selectRaw('YEAR(created_at) as year, SUM(total_amount) as total_amount')
                     ->groupBy('year');
-                $keyMapper = fn($row) => (string)$row->year;
+                $keyMapper = fn ($row) => (string) $row->year;
         }
         $data = $query->get();
         $map = array_fill_keys($labels, 0);
         foreach ($data as $row) {
             $key = $keyMapper($row);
             if (isset($map[$key])) {
-                $map[$key] = round((float)$row->total_amount, 2);
+                $map[$key] = round((float) $row->total_amount, 2);
             }
         }
+
         return response()->json([
             'labels' => $labels,
-            'website' => array_values($map)
+            'website' => array_values($map),
         ]);
     }
 }

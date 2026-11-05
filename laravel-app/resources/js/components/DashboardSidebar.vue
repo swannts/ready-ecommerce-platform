@@ -51,7 +51,10 @@
                 to="/digital-product-order-history"
                 class="routerLink group"
                 :class="
-                    route.name == 'digital-product-order-history' || route.name == 'digital-product-order-history-details' ? 'router-link-active' : ''
+                    route.name == 'digital-product-order-history' ||
+                    route.name == 'digital-product-order-history-details'
+                        ? 'router-link-active'
+                        : ''
                 "
             >
                 <InboxArrowDownIcon

@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AreaRequest extends FormRequest
 {
@@ -17,11 +17,11 @@ class AreaRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
      */
     public function rules(): array
     {
         $area = $this->route('area');
+
         return [
             'name' => [
                 'required',
@@ -31,8 +31,8 @@ class AreaRequest extends FormRequest
             ],
             'delivery_amount' => 'required|numeric|min:0',
             'distance' => 'nullable|numeric|min:0',
-            'latitude'           => 'nullable|numeric|between:-90,90',
-            'longitude'          => 'nullable|numeric|between:-180,180',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
             'polygon_coordinates' => 'nullable|json',
             'price_per_km' => 'nullable|numeric|min:0',
             'price_per_min' => 'nullable|numeric|min:0',

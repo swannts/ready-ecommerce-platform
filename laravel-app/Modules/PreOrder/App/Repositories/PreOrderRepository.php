@@ -2,14 +2,13 @@
 
 namespace Modules\PreOrder\App\Repositories;
 
-
-use App\Repositories\Repository;
 use App\Enums\PaymentMethod;
 use App\Models\Currency;
 use App\Models\Payment;
 use App\Models\Product;
 use App\Repositories\DriverRepository;
 use App\Repositories\NotificationRepository;
+use App\Repositories\Repository;
 use App\Repositories\TransactionRepository;
 use App\Repositories\WalletRepository;
 use App\Services\NotificationServices;
@@ -27,6 +26,7 @@ class PreOrderRepository extends Repository
     {
         return PreOrder::class;
     }
+
     public static function storeByRequestFrom($request, Product $product, $paymentMethod)
     {
         return DB::transaction(function () use ($request, $product, $paymentMethod) {
@@ -42,12 +42,12 @@ class PreOrderRepository extends Repository
             $price = $product->discount_price > 0 ? $product->discount_price : $product->price;
             $order = self::create([
                 'shop_id' => $product->shop_id,
-                'order_code' => 'PO-' . str_pad(self::query()->max('id') + 1, 6, '0', STR_PAD_LEFT),
+                'order_code' => 'PO-'.str_pad(self::query()->max('id') + 1, 6, '0', STR_PAD_LEFT),
                 'customer_id' => $customer->id,
                 'delivery_charge' => $getRequestAmount['deliveryCharge'],
                 'payable_amount' => $getRequestAmount['payableAmount'],
                 'total_amount' => $getRequestAmount['totalAmount'],
-                'paid_amount'  => 0,
+                'paid_amount' => 0,
                 'payment_method' => $paymentMethod->value,
                 'is_refundable' => $product->is_refund ? true : false,
                 'order_status' => PreOrderStatus::REQUESTED->value,
@@ -55,7 +55,7 @@ class PreOrderRepository extends Repository
                 'instruction' => $request->note,
                 'payment_status' => PrePaymentStatus::PENDING->value,
                 'currency_symbol' => $currency->symbol ?? '$',
-                'currency_rate' => $currency->rate ?? 1
+                'currency_rate' => $currency->rate ?? 1,
             ]);
             PreOrderItem::create([
                 'pre_order_id' => $order->id,
@@ -72,9 +72,11 @@ class PreOrderRepository extends Repository
             $payment->update([
                 'amount' => $isPrePay ? $getRequestAmount['prePayableAmount'] : $getRequestAmount['payableAmount'],
             ]);
+
             return $payment;
         });
     }
+
     public static function getTotalAmounts($request, Product $product): array
     {
         $deliveryCharge = getPreOrderDeliveryCharge($product, $request);
@@ -85,6 +87,7 @@ class PreOrderRepository extends Repository
         $payableAmount = ($totalAmount + $deliveryCharge);
         $prePayAmount = ($prePay + $deliveryCharge);
         $prePayableAmount = $product->is_prepay ? $prePayAmount : 0;
+
         // return array
         return [
             'totalAmount' => $totalAmount,
@@ -141,8 +144,8 @@ class PreOrderRepository extends Repository
                     'admin_commission' => $commission,
                 ]);
                 $wallet = $order->shop->user->wallet;
-                if (!$wallet) {
-                    $wallet =  WalletRepository::storeByRequest($order->shop->user);
+                if (! $wallet) {
+                    $wallet = WalletRepository::storeByRequest($order->shop->user);
                 }
                 WalletRepository::updateByRequest($wallet, $order->total_amount, 'credit');
                 TransactionRepository::storeByRequest($wallet, $commission, 'debit', true, true, 'admin commission added', 'pre-order commission added in admin wallet');
@@ -209,6 +212,7 @@ class PreOrderRepository extends Repository
             default => [],
         };
     }
+
     public static function updateWalletAndTransaction(PreOrder $preOrder)
     {
 
@@ -228,7 +232,7 @@ class PreOrderRepository extends Repository
         ]);
 
         $wallet = $preOrder->shop->user->wallet;
-        if (!$wallet) {
+        if (! $wallet) {
             $wallet = WalletRepository::storeByRequest($preOrder->shop->user);
         }
 

@@ -12,7 +12,6 @@ import 'package:ready_ecommerce/firebase_options.dart';
 //   debugPrint('Handling a background message ${message.messageId}');
 // }
 
-
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   WidgetsFlutterBinding.ensureInitialized();
 

@@ -12,7 +12,7 @@ class Chat
     {
         $this->messages[] = [
             'role' => 'system',
-            'content' => $message
+            'content' => $message,
         ];
 
         return $this;
@@ -22,19 +22,19 @@ class Chat
     {
         $this->messages[] = [
             'role' => 'user',
-            'content' => $message
+            'content' => $message,
         ];
 
         $response = OpenAI::chat()->create([
             'model' => 'gpt-4o-mini',
             'messages' => $this->messages,
-            'temperature' => 0.7
+            'temperature' => 0.7,
         ])->choices[0]->message->content;
 
         if ($response) {
             $this->messages[] = [
                 'role' => 'assistant',
-                'content' => $response
+                'content' => $response,
             ];
         }
 

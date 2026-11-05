@@ -2,14 +2,14 @@
 
 namespace App\Providers;
 
+use App\Events\LowStockAlertEvent;
 use App\Events\OrderMailEvent;
 use App\Events\SendOTPMail;
 use App\Events\SendTestMailEvent;
-use App\Events\LowStockAlertEvent;
+use App\Listeners\LowStockAlertListener;
 use App\Listeners\OrderMailListener;
 use App\Listeners\SendOTPMailNotification;
 use App\Listeners\TestMailListener;
-use App\Listeners\LowStockAlertListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;

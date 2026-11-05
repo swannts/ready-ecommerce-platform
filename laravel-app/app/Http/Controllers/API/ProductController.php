@@ -8,21 +8,24 @@ use App\Http\Requests\ReviewRequest;
 use App\Http\Resources\BrandResource;
 use App\Http\Resources\ColorResource;
 use App\Http\Resources\ProductDetailsResource;
-use App\Http\Resources\ProductSellerOfferResource;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\ProductSellerOfferResource;
 use App\Http\Resources\ReviewResource;
 use App\Http\Resources\SizeResource;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\FlashSale;
-use App\Models\SubCategory;
-use App\Models\Shop;
-use App\Models\User;
 use App\Models\Scopes\PreOderProduct;
+use App\Models\Shop;
+use App\Models\SubCategory;
+use App\Models\User;
 use App\Repositories\ProductRepository;
 use App\Repositories\ReviewRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\PreOrder\App\Models\PreOrderSetting;
+use Modules\PreOrder\App\Policies\PreOrderPolicy;
+use Modules\Report\App\Repositories\ProductSearchLogRepository;
 
 class ProductController extends Controller
 {
@@ -108,19 +111,18 @@ class ProductController extends Controller
             $this->getSearchLog($search);
         }
 
-
         $preorderSetting = module_exists('PreOrder')
-            ? \Modules\PreOrder\App\Models\PreOrderSetting::first()
+            ? PreOrderSetting::first()
             : null;
 
         $isPreorderMode = $preorderSetting
-            ? app(\Modules\PreOrder\App\Policies\PreOrderPolicy::class)->canUsePreOrder(auth()->user() ?? new User(), $preorderSetting)
+            ? app(PreOrderPolicy::class)->canUsePreOrder(auth()->user() ?? new User, $preorderSetting)
             : false;
 
         // filter query
         $products = ProductRepository::query()
             ->withoutGlobalScopes()
-            ->when(!$isPreorderMode, fn($q) => $q->where('is_preorder', false))
+            ->when(! $isPreorderMode, fn ($q) => $q->where('is_preorder', false))
             ->withSum('orders as orders_count', 'order_products.quantity')
             ->withAvg('reviews as average_rating', 'rating')
             ->isActive()
@@ -134,11 +136,11 @@ class ProductController extends Controller
             })
             ->when($search, function ($query) use ($search) {
                 return $query->where(function ($query) use ($search) {
-                    $query->where('name', 'like', '%' . $search . '%')
-                        ->orWhere('short_description', 'like', '%' . $search . '%')
-                        ->orWhere('code', 'like', '%' . $search . '%')
-                        ->orWhere('variety', 'like', '%' . $search . '%')
-                        ->orWhere('origin', 'like', '%' . $search . '%');
+                    $query->where('name', 'like', '%'.$search.'%')
+                        ->orWhere('short_description', 'like', '%'.$search.'%')
+                        ->orWhere('code', 'like', '%'.$search.'%')
+                        ->orWhere('variety', 'like', '%'.$search.'%')
+                        ->orWhere('origin', 'like', '%'.$search.'%');
                 });
             })->when($grainType, function ($query) use ($grainType) {
                 return $query->where('grain_type', $grainType);
@@ -243,10 +245,10 @@ class ProductController extends Controller
 
     private function getSearchLog($search)
     {
-        if (!module_exists('report')) {
+        if (! module_exists('report')) {
             return true;
         }
-        \Modules\Report\App\Repositories\ProductSearchLogRepository::updateOrCreateByRequest($search);
+        ProductSearchLogRepository::updateOrCreateByRequest($search);
     }
 
     /**
@@ -268,30 +270,30 @@ class ProductController extends Controller
         }
 
         $preorderSetting = module_exists('PreOrder')
-            ? \Modules\PreOrder\App\Models\PreOrderSetting::first()
+            ? PreOrderSetting::first()
             : null;
 
         $isPreorderMode = $preorderSetting
-            ? app(\Modules\PreOrder\App\Policies\PreOrderPolicy::class)->canUsePreOrder(auth()->user() ?? new User(), $preorderSetting)
+            ? app(PreOrderPolicy::class)->canUsePreOrder(auth()->user() ?? new User, $preorderSetting)
             : false;
 
         $product = ProductRepository::query()
             ->withoutGlobalScopes()
-            ->when(!$isPreorderMode, fn($q) => $q->where('is_preorder', false))
-            ->when($request->filled('product_id'), fn($q) => $q->where('id', $request->product_id))
-            ->when($request->filled('slug'), fn($q) => $q->where('slug', $request->slug))
+            ->when(! $isPreorderMode, fn ($q) => $q->where('is_preorder', false))
+            ->when($request->filled('product_id'), fn ($q) => $q->where('id', $request->product_id))
+            ->when($request->filled('slug'), fn ($q) => $q->where('slug', $request->slug))
             ->isActive()
             ->first();
 
-        if (!$product) {
+        if (! $product) {
             return $this->json('product not found');
         }
         ProductRepository::recentView($product->id);
 
         $relatedProducts = ProductRepository::query()->withoutGlobalScopes()
-            ->when(!$isPreorderMode, fn($q) => $q->where('is_preorder', false))->whereHas('categories', function ($query) use ($product) {
-            $query->whereIn('categories.id', $product->categories->pluck('id'));
-        })->where('id', '!=', $product->id)
+            ->when(! $isPreorderMode, fn ($q) => $q->where('is_preorder', false))->whereHas('categories', function ($query) use ($product) {
+                $query->whereIn('categories.id', $product->categories->pluck('id'));
+            })->where('id', '!=', $product->id)
             ->isActive()
             ->inRandomOrder()
             ->limit(6)->get();
@@ -300,14 +302,14 @@ class ProductController extends Controller
 
         $popularProducts = $shop->products()->isActive()->where('id', '!=', $product->id)->withCount('orders')->withAvg('reviews as average_rating', 'rating')->orderByDesc('average_rating')->orderByDesc('orders_count')->take(6)->get();
         $sellerOffers = ProductRepository::query()
-                    ->with(['shop', 'flashSales'])
-                    ->isActive()
-                    ->where('id', '!=', $product->id)
-                    ->where('shop_id','!=',$product->shop_id)
-                    ->where('name', 'like', '%' . $product->name . '%')
-                    ->orderByRaw('CASE WHEN discount_price > 0 THEN discount_price ELSE price END ASC')
-                    ->limit(6)
-                    ->get();
+            ->with(['shop', 'flashSales'])
+            ->isActive()
+            ->where('id', '!=', $product->id)
+            ->where('shop_id', '!=', $product->shop_id)
+            ->where('name', 'like', '%'.$product->name.'%')
+            ->orderByRaw('CASE WHEN discount_price > 0 THEN discount_price ELSE price END ASC')
+            ->limit(6)
+            ->get();
 
         return $this->json('product details', [
             'product' => ProductDetailsResource::make($product),

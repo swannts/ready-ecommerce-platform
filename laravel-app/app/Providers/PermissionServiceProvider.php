@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use app\Models\User;
 use App\Models\UserNonPermission;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cache;
@@ -26,7 +27,7 @@ class PermissionServiceProvider extends ServiceProvider
          * @throws \Exception
          */
         Blade::if('hasPermission', function ($permissions) {
-            /** @var \app\Models\User $user */
+            /** @var User $user */
             $user = auth()->user();
 
             if (! $user) {

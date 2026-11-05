@@ -50,7 +50,10 @@
 
             <!-- product item -->
             <div class="p-4 flex flex-col gap-3">
-                <div v-for="product in shop.products" :key="product.cart_id ?? product.id">
+                <div
+                    v-for="product in shop.products"
+                    :key="product.cart_id ?? product.id"
+                >
                     <BasketProductItem :product="product" />
                 </div>
             </div>
@@ -68,7 +71,9 @@
                         {{ $t("Apply Store voucher") }}
                     </div>
                 </div>
-                <ChevronRightIcon class="w-[18px] h-[18px] text-slate-500 dark:text-slate-400" />
+                <ChevronRightIcon
+                    class="w-[18px] h-[18px] text-slate-500 dark:text-slate-400"
+                />
             </div>
         </div>
         <!-- chat sidebar -->
@@ -116,7 +121,9 @@
                             <DialogPanel
                                 class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 text-left shadow-xl transition-all w-full sm:max-w-xl"
                             >
-                                <div class="bg-white dark:bg-slate-800 p-4 sm:p-8 relative">
+                                <div
+                                    class="bg-white dark:bg-slate-800 p-4 sm:p-8 relative"
+                                >
                                     <!-- close button -->
                                     <div
                                         class="w-9 h-9 bg-slate-100 dark:bg-slate-700 rounded-[32px] justify-center items-center flex absolute top-3 right-3 cursor-pointer"
@@ -169,7 +176,7 @@
                                                                 ? coupon.discount +
                                                                   "%"
                                                                 : master.showCurrency(
-                                                                      coupon.discount
+                                                                      coupon.discount,
                                                                   )
                                                         }}
                                                     </div>
@@ -177,10 +184,12 @@
                                                     <div
                                                         class="text-slate-950 dark:text-white text-sm font-normal leading-tight"
                                                     >
-                                                        {{ $t("Minimum Spend") }}
+                                                        {{
+                                                            $t("Minimum Spend")
+                                                        }}
                                                         {{
                                                             master.showCurrency(
-                                                                coupon.min_order_amount
+                                                                coupon.min_order_amount,
                                                             )
                                                         }}
                                                     </div>
@@ -219,7 +228,7 @@
                                             >
                                                 {{
                                                     $t(
-                                                        "Sorry there is no voucher available"
+                                                        "Sorry there is no voucher available",
                                                     )
                                                 }}
                                             </h3>
@@ -291,7 +300,7 @@ const showChat = async () => {
             headers: {
                 Authorization: authStore.token,
             },
-        }
+        },
     );
 
     showSidebar.value = true;
@@ -347,7 +356,7 @@ const collectVoucher = (coupon) => {
                     headers: {
                         Authorization: authStore.token,
                     },
-                }
+                },
             )
             .then((response) => {
                 toast.success(response.data.message, {

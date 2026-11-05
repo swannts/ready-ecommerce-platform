@@ -28,7 +28,7 @@ export const HeroSection: React.FC = () => {
         .filter(
           (p) =>
             p.name.toLowerCase().includes(query.toLowerCase()) ||
-            p.variety.toLowerCase().includes(query.toLowerCase())
+            p.variety.toLowerCase().includes(query.toLowerCase()),
         )
         .slice(0, 3)
     : [];
@@ -75,7 +75,9 @@ export const HeroSection: React.FC = () => {
 
             {/* Description */}
             <p className="text-base sm:text-lg text-[#686C64] leading-relaxed max-w-xl mb-8">
-              {t("Buy rice for your home or business — directly from verified farmers, mills, and suppliers.")}
+              {t(
+                "Buy rice for your home or business — directly from verified farmers, mills, and suppliers.",
+              )}
             </p>
 
             {/* Two Prominent Action Buttons: B2C vs B2B */}
@@ -110,7 +112,9 @@ export const HeroSection: React.FC = () => {
                   }
                 }}
                 className={`relative flex items-center bg-[#FFFDF8] rounded-2xl shadow-lg border-2 transition-all p-1.5 ${
-                  isFocused ? "border-[#183A20] ring-4 ring-[#183A20]/10" : "border-[#E7E1D7]"
+                  isFocused
+                    ? "border-[#183A20] ring-4 ring-[#183A20]/10"
+                    : "border-[#E7E1D7]"
                 }`}
               >
                 <div className="pl-4 pr-2 text-[#686C64]">
@@ -122,9 +126,13 @@ export const HeroSection: React.FC = () => {
                   onChange={(e) => setQuery(e.target.value)}
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setTimeout(() => setIsFocused(false), 200)}
-                  placeholder={t("Search rice (e.g. Basmati, Miniket, Nazirshail...)")}
+                  placeholder={t(
+                    "Search rice (e.g. Basmati, Miniket, Nazirshail...)",
+                  )}
                   className="w-full bg-transparent py-3 pr-2 text-sm sm:text-base text-[#19221B] placeholder-[#686C64] focus:outline-none"
-                  aria-label="Search rice varieties, categories, or suppliers"
+                  aria-label={t(
+                    "Search rice varieties, categories, or suppliers",
+                  )}
                 />
                 <button
                   type="submit"
@@ -236,4 +244,3 @@ export const HeroSection: React.FC = () => {
     </section>
   );
 };
-

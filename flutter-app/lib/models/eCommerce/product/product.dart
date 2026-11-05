@@ -91,7 +91,6 @@ class Product {
       'is_favorite': isFavorite,
       'shop': shop.toMap(),
       "is_digital": isDigital
-
     };
   }
 

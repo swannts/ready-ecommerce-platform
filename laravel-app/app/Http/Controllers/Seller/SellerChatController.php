@@ -44,13 +44,13 @@ class SellerChatController extends Controller
             'data' => ShopUserResource::collection($users),
         ]);
     }
+
     public function getMessageAdmin(Request $request)
     {
         $shop = generaleSetting('shop');
         $page = $request->page;
         $perPage = $request->per_page;
         $skip = ($page * $perPage) - $perPage;
-
 
         $chats = ShopUserChatsRepository::query()
             ->where('user_id', $request->user_id)
@@ -73,13 +73,14 @@ class SellerChatController extends Controller
             'data' => ChatResource::collection($chats),
         ]);
     }
+
     public function sendMessageAdmin(Request $request)
     {
         $shop = generaleSetting('shop');
 
         $shopUser = ShopUserRepository::query()->where('user_id', $request->user_id)->where('shop_id', $shop->id)->first();
 
-        if (!$shopUser) {
+        if (! $shopUser) {
             return $this->json('your account is not connected with this shop', [], 404);
         }
 
@@ -99,6 +100,7 @@ class SellerChatController extends Controller
 
         return $this->json('message sent successfully', ['data' => ChatResource::make($chat)]);
     }
+
     public function unreadMessages(Request $request)
     {
         if ($request->user_id) {

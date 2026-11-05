@@ -2,8 +2,9 @@
 
 namespace Modules\Report\App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
 // use Modules\Report\Database\Factories\ProductSearchLogFactory;
 
 class ProductSearchLog extends Model
@@ -14,5 +15,4 @@ class ProductSearchLog extends Model
      * The attributes that are mass assignable.
      */
     protected $guarded = ['id'];
-
 }

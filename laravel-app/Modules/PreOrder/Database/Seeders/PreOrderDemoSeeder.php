@@ -32,15 +32,16 @@ class PreOrderDemoSeeder extends Seeder
         $customers = Customer::pluck('id')->all();
         if (empty($customers)) {
             $this->command?->warn('PreOrderDemoSeeder: no customers found, skipping.');
+
             return;
         }
 
         // Remove rows from a previous run of this seeder (cascade drops their items).
         PreOrder::where('admin_note', self::MARKER)->delete();
 
-        $setting     = PreOrderSetting::first();
-        $commRate    = (float) ($setting?->shop_commission ?? 10);
-        $commType    = $setting?->commission_type ?? 'percentage';
+        $setting = PreOrderSetting::first();
+        $commRate = (float) ($setting?->shop_commission ?? 10);
+        $commType = $setting?->commission_type ?? 'percentage';
         $isRefundAbleDefault = true;
 
         // Statuses to spread per shop: mostly Delivered so profit shows up.
@@ -67,10 +68,11 @@ class PreOrderDemoSeeder extends Seeder
 
         if ($products->isEmpty()) {
             $this->command?->warn('PreOrderDemoSeeder: no pre-order products found — run PreOrderProductSeeder first. Skipping.');
+
             return;
         }
 
-        $seq   = (int) (PreOrder::max('id') ?? 0);
+        $seq = (int) (PreOrder::max('id') ?? 0);
         $count = 0;
 
         foreach ($products as $shopId => $shopProducts) {
@@ -87,10 +89,10 @@ class PreOrderDemoSeeder extends Seeder
                     $buyPrice = round($sellPrice * (mt_rand(55, 75) / 100), 2);
                 }
 
-                $qty            = mt_rand(1, 5);
+                $qty = mt_rand(1, 5);
                 $deliveryCharge = mt_rand(0, 5) * 10;
-                $totalAmount    = round($sellPrice * $qty, 2);
-                $payableAmount  = round($totalAmount + $deliveryCharge, 2);
+                $totalAmount = round($sellPrice * $qty, 2);
+                $payableAmount = round($totalAmount + $deliveryCharge, 2);
 
                 $isDelivered = $status === PreOrderStatus::DELIVERED->value;
 
@@ -105,40 +107,40 @@ class PreOrderDemoSeeder extends Seeder
 
                 $seq++;
                 $order = PreOrder::create([
-                    'shop_id'         => $shopId,
-                    'customer_id'     => $customers[array_rand($customers)],
-                    'order_code'      => 'PO-' . str_pad((string) $seq, 6, '0', STR_PAD_LEFT),
-                    'payable_amount'  => $payableAmount,
-                    'total_amount'    => $totalAmount,
-                    'paid_amount'     => $isDelivered ? $payableAmount : 0,
+                    'shop_id' => $shopId,
+                    'customer_id' => $customers[array_rand($customers)],
+                    'order_code' => 'PO-'.str_pad((string) $seq, 6, '0', STR_PAD_LEFT),
+                    'payable_amount' => $payableAmount,
+                    'total_amount' => $totalAmount,
+                    'paid_amount' => $isDelivered ? $payableAmount : 0,
                     'delivery_charge' => $deliveryCharge,
-                    'payment_status'  => $isDelivered ? PrePaymentStatus::PAID->value : PrePaymentStatus::PENDING->value,
-                    'order_status'    => $status,
-                    'is_refundable'   => $isRefundAbleDefault,
-                    'payment_method'  => 'Cash Payment',
-                    'address_id'      => Address::where('customer_id', $customers[array_rand($customers)])->value('id'),
-                    'customer_note'   => 'Demo pre-order',
-                    'admin_note'      => self::MARKER,
-                    'delivered_at'    => $isDelivered ? $createdAt->copy()->addDays(2) : null,
+                    'payment_status' => $isDelivered ? PrePaymentStatus::PAID->value : PrePaymentStatus::PENDING->value,
+                    'order_status' => $status,
+                    'is_refundable' => $isRefundAbleDefault,
+                    'payment_method' => 'Cash Payment',
+                    'address_id' => Address::where('customer_id', $customers[array_rand($customers)])->value('id'),
+                    'customer_note' => 'Demo pre-order',
+                    'admin_note' => self::MARKER,
+                    'delivered_at' => $isDelivered ? $createdAt->copy()->addDays(2) : null,
                     'admin_commission' => $commission,
                     'currency_symbol' => '$',
-                    'currency_rate'   => 1,
-                    'created_at'      => $createdAt,
-                    'updated_at'      => $createdAt,
+                    'currency_rate' => 1,
+                    'created_at' => $createdAt,
+                    'updated_at' => $createdAt,
                 ]);
 
                 PreOrderItem::create([
                     'pre_order_id' => $order->id,
-                    'product_id'   => $product->id,
+                    'product_id' => $product->id,
                     'product_name' => $product->name,
                     'product_price' => (float) $product->price,
                     'buying_price' => $buyPrice,
-                    'price'        => $sellPrice,
-                    'discount'     => max(0, round((float) $product->price - $sellPrice, 2)),
-                    'quantity'     => $qty,
-                    'unit'         => $isEcommerce ? ($product->unit?->name ?? null) : ($product->unit ?? null),
-                    'created_at'   => $createdAt,
-                    'updated_at'   => $createdAt,
+                    'price' => $sellPrice,
+                    'discount' => max(0, round((float) $product->price - $sellPrice, 2)),
+                    'quantity' => $qty,
+                    'unit' => $isEcommerce ? ($product->unit?->name ?? null) : ($product->unit ?? null),
+                    'created_at' => $createdAt,
+                    'updated_at' => $createdAt,
                 ]);
 
                 $count++;

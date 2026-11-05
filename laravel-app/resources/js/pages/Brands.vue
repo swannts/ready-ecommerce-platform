@@ -1,37 +1,57 @@
 <template>
     <div class="brand-page pb-12 pt-8">
         <div class="main-container">
+            <!-- Breadcrumb -->
+            <nav class="flex items-center gap-1.5 overflow-hidden pb-4 text-sm">
+                <router-link
+                    to="/"
+                    class="shrink-0 flex items-center gap-1 text-slate-500 hover:text-primary transition"
+                >
+                    <HomeIcon class="w-4 h-4" />
+                    <span>{{ $t("Home") }}</span>
+                </router-link>
+                <span class="text-slate-400">&#8250;</span>
+                <span
+                    class="text-slate-800 dark:text-slate-100 font-medium truncate"
+                    >{{ $t("All Brands") }}</span
+                >
+            </nav>
 
-                        <!-- Breadcrumb -->
-                        <nav class="flex items-center gap-1.5 overflow-hidden pb-4 text-sm">
-                            <router-link to="/" class="shrink-0 flex items-center gap-1 text-slate-500 hover:text-primary transition">
-                                <HomeIcon class="w-4 h-4" />
-                                <span>{{ $t("Home") }}</span>
-                            </router-link>
-                            <span class="text-slate-400">&#8250;</span>
-                            <span class="text-slate-800 dark:text-slate-100 font-medium truncate">{{ $t("All Brands") }}</span>
-                        </nav>
+            <h1
+                class="text-slate-800 dark:text-slate-100 text-xl font-bold leading-9"
+            >
+                {{ $t("All Brands") }}
+            </h1>
+            <p
+                v-if="!isLoading"
+                class="mt-3 max-w-2xl text-sm leading-6 text-slate-500 sm:text-sm"
+            >
+                {{
+                    $t("Explore our top brands and shop the products you love.")
+                }}
+            </p>
+            <div v-else class="mt-4 space-y-2">
+                <SkeletonLoader class="h-4 w-72 max-w-full rounded-full" />
+                <SkeletonLoader class="h-4 w-60 max-w-full rounded-full" />
+            </div>
 
-                        <h1 class="text-slate-800 dark:text-slate-100 text-xl font-bold leading-9">
-                            {{ $t('All Brands') }}
-                        </h1>
-                        <p v-if="!isLoading" class="mt-3 max-w-2xl text-sm leading-6 text-slate-500 sm:text-sm">
-                            {{ $t('Explore our top brands and shop the products you love.') }}
-                        </p>
-                        <div v-else class="mt-4 space-y-2">
-                            <SkeletonLoader class="h-4 w-72 max-w-full rounded-full" />
-                            <SkeletonLoader class="h-4 w-60 max-w-full rounded-full" />
-                        </div>
-
-            <section class="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-[260px_minmax(0,1fr)]">
+            <section
+                class="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-[260px_minmax(0,1fr)]"
+            >
                 <aside class="space-y-5">
-                    <div class="bg-white border border-slate-200 dark:border-slate-700/70 dark:bg-slate-800 rounded-xl p-5 shadow-[0_18px_60px_rgba(15,23,42,0.06)]">
-                        <h2 class="text-base font-semibold text-slate-800 dark:text-slate-100 mb-3">
-                            {{ $t('Search') }}
+                    <div
+                        class="bg-white border border-slate-200 dark:border-slate-700/70 dark:bg-slate-800 rounded-xl p-5 shadow-[0_18px_60px_rgba(15,23,42,0.06)]"
+                    >
+                        <h2
+                            class="text-base font-semibold text-slate-800 dark:text-slate-100 mb-3"
+                        >
+                            {{ $t("Search") }}
                         </h2>
 
                         <form @submit.prevent="submitSearch">
-                            <div class="flex items-stretch overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-slate-300 focus-within:ring-4 focus-within:ring-slate-900/5">
+                            <div
+                                class="flex items-stretch overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-slate-300 focus-within:ring-4 focus-within:ring-slate-900/5"
+                            >
                                 <input
                                     v-model="brandSearch"
                                     type="text"
@@ -55,14 +75,18 @@
                             class="mt-2 text-xs text-slate-400 hover:text-red-500 flex items-center gap-1 transition"
                         >
                             <XMarkIcon class="w-3.5 h-3.5" />
-                            {{ $t('Clear search') }}
+                            {{ $t("Clear search") }}
                         </button>
                     </div>
 
-                    <div class="rounded-[28px] border border-slate-200 dark:border-slate-700/70 bg-white dark:bg-slate-800 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.06)]">
+                    <div
+                        class="rounded-[28px] border border-slate-200 dark:border-slate-700/70 bg-white dark:bg-slate-800 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.06)]"
+                    >
                         <div class="flex items-center justify-between gap-3">
-                            <h2 class="text-base font-semibold text-slate-900 dark:text-white">
-                                {{ $t('Alphabetical') }}
+                            <h2
+                                class="text-base font-semibold text-slate-900 dark:text-white"
+                            >
+                                {{ $t("Alphabetical") }}
                             </h2>
                             <button
                                 v-if="selectedLetter !== 'all'"
@@ -70,29 +94,44 @@
                                 class="text-xs font-medium text-primary transition hover:text-primary/80"
                                 @click="setSelectedLetter('all')"
                             >
-                                {{ $t('Reset') }}
+                                {{ $t("Reset") }}
                             </button>
                         </div>
 
-                        <div v-if="isLoading" class="mt-4 grid grid-cols-6 gap-2">
-                            <SkeletonLoader v-for="item in 18" :key="`alphabet-${item}`" class="h-8 rounded-lg" />
+                        <div
+                            v-if="isLoading"
+                            class="mt-4 grid grid-cols-6 gap-2"
+                        >
+                            <SkeletonLoader
+                                v-for="item in 18"
+                                :key="`alphabet-${item}`"
+                                class="h-8 rounded-lg"
+                            />
                         </div>
 
                         <div v-else class="mt-4 grid grid-cols-6 gap-2">
                             <button
                                 type="button"
                                 class="alphabet-chip bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300"
-                                :class="selectedLetter === 'all' ? 'alphabet-chip--active' : ''"
+                                :class="
+                                    selectedLetter === 'all'
+                                        ? 'alphabet-chip--active'
+                                        : ''
+                                "
                                 @click="setSelectedLetter('all')"
                             >
-                                {{ $t('All') }}
+                                {{ $t("All") }}
                             </button>
                             <button
                                 v-for="letter in alphabetList"
                                 :key="letter"
                                 type="button"
-                                class="alphabet-chip bg-slate-50 border-slate-200 dark:bg-slate-800 dark:border-slate-600 text-slate-500 "
-                                :class="selectedLetter === letter ? 'alphabet-chip--active' : ''"
+                                class="alphabet-chip bg-slate-50 border-slate-200 dark:bg-slate-800 dark:border-slate-600 text-slate-500"
+                                :class="
+                                    selectedLetter === letter
+                                        ? 'alphabet-chip--active'
+                                        : ''
+                                "
                                 @click="setSelectedLetter(letter)"
                             >
                                 {{ letter }}
@@ -100,37 +139,53 @@
                         </div>
                     </div>
 
-                    <div class="partner-card rounded-[28px] border border-slate-200 dark:border-slate-700/70 bg-white dark:bg-slate-800 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.06)]">
-                        <div class="partner-badge-wrap bg-white dark:bg-slate-700">
+                    <div
+                        class="partner-card rounded-[28px] border border-slate-200 dark:border-slate-700/70 bg-white dark:bg-slate-800 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.06)]"
+                    >
+                        <div
+                            class="partner-badge-wrap bg-white dark:bg-slate-700"
+                        >
                             <div class="partner-badge" aria-hidden="true">
-                                <span class="partner-badge__ribbon partner-badge__ribbon--left"></span>
-                                <span class="partner-badge__ribbon partner-badge__ribbon--right"></span>
+                                <span
+                                    class="partner-badge__ribbon partner-badge__ribbon--left"
+                                ></span>
+                                <span
+                                    class="partner-badge__ribbon partner-badge__ribbon--right"
+                                ></span>
                                 <span class="partner-badge__medal">
                                     <span class="partner-badge__inner"></span>
                                     <span class="partner-badge__star"></span>
                                 </span>
                             </div>
                         </div>
-                        <h3 class="mt-5 text-center text-base font-semibold text-slate-900 dark:text-white">
-                            {{ $t('Become a Partner') }}
+                        <h3
+                            class="mt-5 text-center text-base font-semibold text-slate-900 dark:text-white"
+                        >
+                            {{ $t("Become a Partner") }}
                         </h3>
-                        <p class="mt-2 max-w-[220px] text-center text-sm leading-6 text-slate-600 dark:text-slate-400">
-                            {{ $t('Sell your products with us') }}
+                        <p
+                            class="mt-2 max-w-[220px] text-center text-sm leading-6 text-slate-600 dark:text-slate-400"
+                        >
+                            {{ $t("Sell your products with us") }}
                         </p>
                         <a
                             href="/shop/register"
                             class="mt-5 flex h-11 w-full max-w-[180px] items-center justify-center rounded-xl bg-slate-900 text-sm font-semibold text-white transition hover:bg-slate-800"
                         >
-                            {{ $t('Apply Now') }}
+                            {{ $t("Apply Now") }}
                         </a>
                     </div>
                 </aside>
 
                 <div class="rounded-[10px] p-4 sm:p-5 lg:p-6">
-                    <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+                    <div
+                        class="mb-5 flex flex-wrap items-center justify-between gap-3"
+                    >
                         <div>
-                            <h2 class="text-lg font-semibold text-slate-900 dark:text-white sm:text-xl">
-                                {{ $t('Featured Brands') }}
+                            <h2
+                                class="text-lg font-semibold text-slate-900 dark:text-white sm:text-xl"
+                            >
+                                {{ $t("Featured Brands") }}
                             </h2>
                         </div>
 
@@ -140,22 +195,37 @@
                         <SkeletonLoader v-else class="h-10 w-32 rounded-full" /> -->
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
+                    <div
+                        class="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4"
+                    >
                         <template v-if="isLoading">
-                            <div v-for="item in 12" :key="item" class="rounded-[22px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-5 shadow-[0_12px_28px_rgba(15,23,42,0.05)]">
-                                <div class="flex h-28 items-center justify-center rounded-[18px] bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)]">
-                                    <SkeletonLoader class="h-16 w-24 rounded-lg" />
+                            <div
+                                v-for="item in 12"
+                                :key="item"
+                                class="rounded-[22px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-5 shadow-[0_12px_28px_rgba(15,23,42,0.05)]"
+                            >
+                                <div
+                                    class="flex h-28 items-center justify-center rounded-[18px] bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)]"
+                                >
+                                    <SkeletonLoader
+                                        class="h-16 w-24 rounded-lg"
+                                    />
                                 </div>
-                                <SkeletonLoader class="mx-auto mt-5 h-5 w-2/3 rounded-full" />
-                                <SkeletonLoader class="mx-auto mt-2 h-4 w-1/2 rounded-full" />
-                                <SkeletonLoader class="mt-5 h-10 w-full rounded-xl" />
+                                <SkeletonLoader
+                                    class="mx-auto mt-5 h-5 w-2/3 rounded-full"
+                                />
+                                <SkeletonLoader
+                                    class="mx-auto mt-2 h-4 w-1/2 rounded-full"
+                                />
+                                <SkeletonLoader
+                                    class="mt-5 h-10 w-full rounded-xl"
+                                />
                             </div>
                         </template>
 
-                         <!-- <p v-if="!isLoading" class="mt-1 text-sm text-slate-500">
+                        <!-- <p v-if="!isLoading" class="mt-1 text-sm text-slate-500">
                                 {{ $t('Showing') }} {{ pageStart }} {{ $t('to') }} {{ pageEnd }} {{ $t('of') }} {{ filteredTotalBrands }} {{ $t('results') }}
                             </p> -->
-
 
                         <template v-else-if="paginatedBrands.length">
                             <article
@@ -163,7 +233,9 @@
                                 :key="brand.id"
                                 class="brand-card rounded-[22px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-5 sm:px-5"
                             >
-                                <div class="brand-media flex h-32 items-center justify-center rounded-[18px]  px-4  sm:h-36">
+                                <div
+                                    class="brand-media flex h-32 items-center justify-center rounded-[18px] px-4 sm:h-36"
+                                >
                                     <img
                                         :src="brand.thumbnail"
                                         :alt="brand.name"
@@ -173,7 +245,9 @@
                                 </div>
 
                                 <div class="mt-5 text-center">
-                                    <h3 class="line-clamp-1 text-base font-semibold text-slate-900 dark:text-white">
+                                    <h3
+                                        class="line-clamp-1 text-base font-semibold text-slate-900 dark:text-white"
+                                    >
                                         {{ brand.name }}
                                     </h3>
                                     <!-- <p class="mt-1 text-sm text-slate-500">
@@ -182,18 +256,32 @@
                                 </div>
 
                                 <router-link
-                                    :to="{ path: '/products', query: { brand_slug: brand.slug } }"
+                                    :to="{
+                                        path: '/products',
+                                        query: { brand_slug: brand.slug },
+                                    }"
                                     class="mt-5 flex h-10 w-full items-center justify-center rounded-xl border border-slate-300 bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-300 transition hover:border-primary hover:bg-primary hover:text-white"
                                 >
-                                    {{ $t('View Products') }}
+                                    {{ $t("View Products") }}
                                 </router-link>
                             </article>
                         </template>
 
-                        <div v-else class="col-span-full rounded-[28px] border border-dashed border-slate-300 bg-slate-50 dark:bg-slate-900 px-6 py-16 text-center">
-                            <div class="text-xl font-semibold text-slate-800 dark:text-slate-100">{{ $t('No Brands Found') }}</div>
+                        <div
+                            v-else
+                            class="col-span-full rounded-[28px] border border-dashed border-slate-300 bg-slate-50 dark:bg-slate-900 px-6 py-16 text-center"
+                        >
+                            <div
+                                class="text-xl font-semibold text-slate-800 dark:text-slate-100"
+                            >
+                                {{ $t("No Brands Found") }}
+                            </div>
                             <p class="mt-2 text-sm text-slate-500">
-                                {{ $t('There are no active brands for this alphabet filter right now.') }}
+                                {{
+                                    $t(
+                                        "There are no active brands for this alphabet filter right now.",
+                                    )
+                                }}
                             </p>
                         </div>
                     </div>
@@ -203,7 +291,9 @@
                         class="mt-8 flex flex-col gap-4 border-t border-slate-200 dark:border-slate-700 pt-5 sm:flex-row sm:items-center sm:justify-between"
                     >
                         <p class="text-sm text-slate-500">
-                            {{ $t('Showing') }} {{ pageStart }} {{ $t('to') }} {{ pageEnd }} {{ $t('of') }} {{ filteredTotalBrands }} {{ $t('results') }}
+                            {{ $t("Showing") }} {{ pageStart }} {{ $t("to") }}
+                            {{ pageEnd }} {{ $t("of") }}
+                            {{ filteredTotalBrands }} {{ $t("results") }}
                         </p>
 
                         <vue-awesome-paginate
@@ -250,10 +340,14 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
-import { MagnifyingGlassIcon, XMarkIcon, HomeIcon } from '@heroicons/vue/24/outline';
-import SkeletonLoader from '../components/SkeletonLoader.vue';
-import { useMaster } from '../stores/MasterStore';
+import { computed, onMounted, ref } from "vue";
+import {
+    MagnifyingGlassIcon,
+    XMarkIcon,
+    HomeIcon,
+} from "@heroicons/vue/24/outline";
+import SkeletonLoader from "../components/SkeletonLoader.vue";
+import { useMaster } from "../stores/MasterStore";
 
 const master = useMaster();
 
@@ -263,15 +357,44 @@ const supportItems = ref([]);
 const totalBrands = ref(0);
 const currentPage = ref(1);
 const perPage = 12;
-const selectedLetter = ref('all');
-const brandSearch = ref('');
+const selectedLetter = ref("all");
+const brandSearch = ref("");
 const hasLoadedSupportItems = ref(false);
-const alphabetList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '#'];
+const alphabetList = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+    "#",
+];
 
 const filteredBrands = computed(() => {
     return brands.value.filter((brand) => {
-        const name = brand.name || '';
-        const matchesLetter = selectedLetter.value === 'all' || matchesSelectedLetter(name);
+        const name = brand.name || "";
+        const matchesLetter =
+            selectedLetter.value === "all" || matchesSelectedLetter(name);
 
         return matchesLetter;
     });
@@ -310,7 +433,7 @@ const onClickHandler = (page) => {
     currentPage.value = page;
     window.scrollTo({
         top: 0,
-        behavior: 'smooth',
+        behavior: "smooth",
     });
 };
 
@@ -319,7 +442,7 @@ const normalizeFirstCharacter = (value) => value.trim().charAt(0).toUpperCase();
 const matchesSelectedLetter = (name) => {
     const firstCharacter = normalizeFirstCharacter(name);
 
-    if (selectedLetter.value === '#') {
+    if (selectedLetter.value === "#") {
         return /[^A-Z]/.test(firstCharacter);
     }
 
@@ -341,7 +464,7 @@ const clearSearch = () => {
         return;
     }
 
-    brandSearch.value = '';
+    brandSearch.value = "";
 
     currentPage.value = 1;
     fetchBrandsPageData();
@@ -352,33 +475,33 @@ const fetchBrandsPageData = async () => {
 
     try {
         const requests = [
-            axios.get('/brands', {
+            axios.get("/brands", {
                 params: {
                     search: brandSearch.value.trim() || undefined,
                 },
                 headers: {
-                    'Accept-Language': master.locale || 'en',
+                    "Accept-Language": master.locale || "en",
                 },
             }),
         ];
 
         if (!hasLoadedSupportItems.value) {
             requests.push(
-                axios.get('/blogs', {
+                axios.get("/blogs", {
                     params: {
                         page: 1,
                         per_page: 1,
                     },
                     headers: {
-                        'Accept-Language': master.locale || 'en',
+                        "Accept-Language": master.locale || "en",
                     },
-                })
+                }),
             );
         }
 
         const [brandsResult, blogsResult] = await Promise.allSettled(requests);
 
-        if (brandsResult.status === 'fulfilled') {
+        if (brandsResult.status === "fulfilled") {
             totalBrands.value = brandsResult.value.data.data.total || 0;
             brands.value = brandsResult.value.data.data.brands || [];
         } else {
@@ -386,8 +509,11 @@ const fetchBrandsPageData = async () => {
             brands.value = [];
         }
 
-        if (blogsResult?.status === 'fulfilled') {
-            supportItems.value = blogsResult.value.data.data.support_items || blogsResult.value.data.data.supportItems || [];
+        if (blogsResult?.status === "fulfilled") {
+            supportItems.value =
+                blogsResult.value.data.data.support_items ||
+                blogsResult.value.data.data.supportItems ||
+                [];
             hasLoadedSupportItems.value = true;
         } else if (!hasLoadedSupportItems.value) {
             supportItems.value = [];
@@ -420,7 +546,10 @@ const fetchBrandsPageData = async () => {
 
 .brand-card {
     box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
-    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        border-color 0.22s ease;
 }
 
 .brand-card:hover {
@@ -465,7 +594,6 @@ const fetchBrandsPageData = async () => {
     background: rgb(15 23 42);
     color: rgb(255 255 255);
 }
-
 
 .partner-card {
     display: flex;
@@ -538,7 +666,18 @@ const fetchBrandsPageData = async () => {
     width: 0.72rem;
     height: 0.72rem;
     background: rgb(245 158 11);
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 92%, 50% 71%, 21% 92%, 32% 57%, 2% 35%, 39% 35%);
+    clip-path: polygon(
+        50% 0%,
+        61% 35%,
+        98% 35%,
+        68% 57%,
+        79% 92%,
+        50% 71%,
+        21% 92%,
+        32% 57%,
+        2% 35%,
+        39% 35%
+    );
     z-index: 1;
 }
 </style>

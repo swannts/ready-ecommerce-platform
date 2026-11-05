@@ -2,12 +2,11 @@
 
 namespace Modules\PreOrder\App\Repositories;
 
-
-use App\Repositories\Repository;
 use App\Models\Product;
+use App\Repositories\ProductRepository;
+use App\Repositories\Repository;
 use Illuminate\Support\Str;
 use Mews\Purifier\Facades\Purifier;
-use App\Repositories\ProductRepository;
 
 class PreOrderProductRepository extends Repository
 {
@@ -15,6 +14,7 @@ class PreOrderProductRepository extends Repository
     {
         return Product::class;
     }
+
     public static function storeByRequest($request): Product
     {
         $shop = generaleSetting('shop');
@@ -52,7 +52,7 @@ class PreOrderProductRepository extends Repository
             'is_prepay' => $request->is_prepay ? true : false,
             'prepay_amount' => $request->prepay_amount ?? 0,
             'preorder_quantity_limit' => $request->preorder_quantity_limit ?? 1,
-            'preorder_notice' => $request->preorder_notice
+            'preorder_notice' => $request->preorder_notice,
         ]);
 
         if ($project === 'ReadyEcommerce') {
@@ -65,11 +65,13 @@ class PreOrderProductRepository extends Repository
         $thumbnails = array_filter($request->additionThumbnail ?? []);
         foreach ($thumbnails as $additionThumbnail) {
             $product->medias()->create([
-                $thumbnailColumn => $additionThumbnail
+                $thumbnailColumn => $additionThumbnail,
             ]);
         }
+
         return $product;
     }
+
     public static function updateByRequest($request, Product $product): Product
     {
         $project = config('app.project_key');
@@ -88,7 +90,7 @@ class PreOrderProductRepository extends Repository
             'discount_price' => $request->discount_price,
             'quantity' => $request->quantity ?? 0,
             'min_order_quantity' => $request->min_order_quantity ?? 1,
-            'product_thumbnail' => $request->thumbnail ??  $product->product_thumbnail,
+            'product_thumbnail' => $request->thumbnail ?? $product->product_thumbnail,
             'code' => $request->code,
             'buy_price' => $request->buy_price ?? 0,
             'is_active' => $product->is_active,
@@ -106,7 +108,7 @@ class PreOrderProductRepository extends Repository
             'is_prepay' => $request->is_prepay ? true : false,
             'prepay_amount' => $request->prepay_amount ?? 0,
             'preorder_quantity_limit' => $request->preorder_quantity_limit ?? 1,
-            'preorder_notice' => $request->preorder_notice
+            'preorder_notice' => $request->preorder_notice,
         ]);
         if ($project === 'ReadyEcommerce') {
             $product->categories()->sync($request->category ? [$request->category] : []);
@@ -122,11 +124,12 @@ class PreOrderProductRepository extends Repository
             $product->medias()->updateOrCreate(
                 [
                     'product_id' => $product->id,
-                    $thumbnailColumn => $thumbnail
+                    $thumbnailColumn => $thumbnail,
                 ],
                 []
             );
         }
+
         return $product;
     }
 }

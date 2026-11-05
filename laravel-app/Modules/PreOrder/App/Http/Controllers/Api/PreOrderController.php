@@ -6,7 +6,6 @@ use App\Enums\PaymentMethod;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Payment;
-use App\Models\Product;
 use App\Models\Scopes\PreOderProduct;
 use App\Repositories\ProductRepository;
 use Illuminate\Http\JsonResponse;
@@ -31,7 +30,7 @@ class PreOrderController extends Controller
         $customer = auth()->user()->customer;
 
         $perPage = (int) $request->input('per_page', 30);
-        $status  = $request->input('order_status');
+        $status = $request->input('order_status');
 
         $baseQuery = PreOrderRepository::query()
             ->where('customer_id', $customer->id);
@@ -52,8 +51,8 @@ class PreOrderController extends Controller
             ->pluck('total', 'order_status');
 
         $statusWiseOrders = collect(PreOrderStatus::cases())
-            ->mapWithKeys(fn($status) => [
-                $status->value => $statusCounts[$status->value] ?? 0
+            ->mapWithKeys(fn ($status) => [
+                $status->value => $statusCounts[$status->value] ?? 0,
             ]);
 
         return $this->json('orders', [
@@ -71,10 +70,9 @@ class PreOrderController extends Controller
         abort_if($preOrder->customer_id !== auth()->user()->customer->id, 403);
 
         return $this->json('preOrder', [
-            'preOrder' => PreOrderDetailsResource::make($preOrder)
+            'preOrder' => PreOrderDetailsResource::make($preOrder),
         ]);
     }
-
 
     /**
      * Generate an online payment url for an existing pre-order whose payment
@@ -151,7 +149,6 @@ class PreOrderController extends Controller
         ]);
     }
 
-
     /**
      * Customer requests a refund for a delivered pre-order. The request is queued
      * for admin review; the admin approves and pays it from the dashboard.
@@ -197,7 +194,6 @@ class PreOrderController extends Controller
             'preOrder' => PreOrderDetailsResource::make($preOrder->fresh()),
         ]);
     }
-
 
     /**
      * Customer cancels their own pre-order. Only allowed while the order is still
@@ -245,14 +241,13 @@ class PreOrderController extends Controller
         ]);
     }
 
-
     public function checkout(CheckoutRequest $request)
     {
         $product = ProductRepository::query()->withoutGlobalScope(PreOderProduct::class)->find($request->product_id);
-        if (!$product) {
+        if (! $product) {
             return $this->json('Sorry product not found', [], 404);
         }
-        if (!$product->is_preorder) {
+        if (! $product->is_preorder) {
             return $this->json('Sorry product is not pre order', [], 422);
         }
 
@@ -260,10 +255,9 @@ class PreOrderController extends Controller
 
         return $this->json('checkout success', [
             'checkout' => $checkoutData,
-            'product' => ProductResource::make($product)
+            'product' => ProductResource::make($product),
         ]);
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -271,13 +265,13 @@ class PreOrderController extends Controller
     public function store(PreOrderRequest $request)
     {
         $product = ProductRepository::query()->withoutGlobalScope(PreOderProduct::class)->find($request->product_id);
-        if (!$product) {
+        if (! $product) {
             return $this->json('Sorry product not found', [], 404);
         }
-        if (!$product->is_preorder) {
+        if (! $product->is_preorder) {
             return $this->json('Sorry product is not pre order', [], 422);
         }
-        if (!$product->is_available) {
+        if (! $product->is_available) {
             return $this->json('Sorry product is not available now', [], 422);
         }
         if ($product->is_prepay && $request->payment_method == 'Cash Payment') {
@@ -289,7 +283,7 @@ class PreOrderController extends Controller
 
         $paymentMethod = $paymentMethods[array_search($toUpper, array_column(PaymentMethod::cases(), 'name'))];
 
-        $payment = PreOrderRepository::storeByRequestFrom($request, $product,$paymentMethod);
+        $payment = PreOrderRepository::storeByRequestFrom($request, $product, $paymentMethod);
 
         $paymentUrl = null;
         if ($paymentMethod->name != 'CASH') {

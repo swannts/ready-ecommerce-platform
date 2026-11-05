@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
                 app: MaterialApp(
                   showPerformanceOverlay: false,
                   debugShowCheckedModeBanner: false,
-                 // title: 'Ready eCommerce',
+                  // title: 'Ready eCommerce',
                   navigatorKey: GlobalFunction.navigatorKey,
                   locale: resolveLocal(langCode: appLocal ?? 'en'),
                   localizationsDelegates: const [

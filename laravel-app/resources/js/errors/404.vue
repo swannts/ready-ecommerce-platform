@@ -2,13 +2,15 @@
     <main class="flex justify-center items-center">
         <section>
             <div class="image">
-                <img src="/public/assets/images/dino-404.svg" alt="">
+                <img src="/public/assets/images/dino-404.svg" alt="" />
             </div>
             <div class="details">
                 <p class="title">Page Not Found</p>
-                <p class="description">The page you’re looking for might have been moved, deleted, or does not exist.
-                    Please check the URL or return to the homepage.
-                    <br>
+                <p class="description">
+                    The page you’re looking for might have been moved, deleted,
+                    or does not exist. Please check the URL or return to the
+                    homepage.
+                    <br />
                 </p>
             </div>
             <a href="/" class="reload_btn_404" style="text-decoration: none">
@@ -20,7 +22,7 @@
 
 <style scoped>
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     margin: 0px;
     min-height: 100vh;
     max-height: 100vh;
@@ -31,7 +33,7 @@ main {
     max-height: 100vh;
 }
 
-main>section {
+main > section {
     padding: 32px;
     display: flex;
     flex-direction: column;
@@ -51,14 +53,14 @@ main>section {
     gap: 28px;
 }
 
-.image>img {
+.image > img {
     max-width: 347px;
     width: 100%;
     /* Ensure image scales with container */
 }
 
 .title {
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     font-weight: 600;
     font-style: normal;
     /* Corrected font-style */
@@ -69,7 +71,7 @@ main>section {
 }
 
 .description {
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     font-weight: 400;
     font-style: normal;
     /* Corrected font-style */
@@ -79,7 +81,7 @@ main>section {
     text-align: center;
 }
 
-.description>span {
+.description > span {
     color: var(--primary);
 }
 
@@ -120,14 +122,14 @@ main>section {
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-    main>section {
+    main > section {
         padding: 16px;
         /* Reduced padding for mobile */
         gap: 16px;
         /* Smaller gap between elements */
     }
 
-    .image>img {
+    .image > img {
         max-width: 80vw;
         /* Image scales to 80% of viewport width */
     }
@@ -154,7 +156,7 @@ main>section {
 }
 
 @media (max-width: 480px) {
-    .image>img {
+    .image > img {
         max-width: 90vw;
         /* Further adjust for very small screens */
     }
@@ -177,17 +179,15 @@ main>section {
     }
 }
 
-
-
 @media (max-width: 320px) {
-    main>section {
+    main > section {
         padding: 16px;
         /* Reduced padding for mobile */
         gap: 16px;
         /* Smaller gap between elements */
     }
 
-    .image>img {
+    .image > img {
         max-width: 90vw;
         /* Further adjust for very small screens */
     }
@@ -215,13 +215,12 @@ main>section {
 }
 </style>
 
-
 <script setup>
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
 
-const router = useRouter()
+const router = useRouter();
 
 function goHome() {
-    router.push('/')
+    router.push("/");
 }
 </script>

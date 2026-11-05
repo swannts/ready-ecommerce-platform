@@ -14,7 +14,3 @@ function printReport() {
         removeEmpty: true,
     });
 }
-
-
-
-

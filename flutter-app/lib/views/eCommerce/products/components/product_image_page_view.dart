@@ -81,7 +81,7 @@ class _ProductImagePageViewState extends ConsumerState<ProductImagePageView> {
                     iframeUrl:
                         widget.productDetails.product.thumbnails[index].url ??
                             '',
-                    ),
+                  ),
                 );
               }
             },

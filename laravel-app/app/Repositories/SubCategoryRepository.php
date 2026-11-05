@@ -30,8 +30,10 @@ class SubCategoryRepository extends Repository
             'shop_id' => $shop->id,
             'name' => $request->name,
             'name_ar' => $request->name_ar ?? $request->name,
+            'name_bn' => $request->name_bn,
             'short_description' => $request->short_description,
             'short_description_ar' => $request->short_description_ar ?? $request->short_description,
+            'short_description_bn' => $request->short_description_bn,
             'sub_thumbnail' => $request->thumbnail,
             'is_active' => true,
         ]);
@@ -60,8 +62,10 @@ class SubCategoryRepository extends Repository
         $subCategory->update([
             'name' => $request->name,
             'name_ar' => $request->name_ar ?? $request->name,
+            'name_bn' => $request->name_bn ?? $subCategory->name_bn,
             'short_description' => $request->short_description,
             'short_description_ar' => $request->short_description_ar ?? $request->short_description,
+            'short_description_bn' => $request->short_description_bn ?? $subCategory->short_description_bn,
             'sub_thumbnail' => $request->thumbnail,
         ]);
 

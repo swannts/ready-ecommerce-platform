@@ -86,7 +86,6 @@ class Order {
   late final int? returnOrderWithinDays;
   late final Rider? rider;
 
-
   // Order.fromJson(Map<String, dynamic> json) {
   //   id = json['id'];
   //   orderCode = json['order_code'];
@@ -127,7 +126,8 @@ class Order {
     quantity = json['quantity'];
     deliveryCharge = json['delivery_charge'];
     shop = Shop.fromJson(json['shop']);
-    products = List.from(json['products']).map((e) => Products.fromJson(e)).toList();
+    products =
+        List.from(json['products']).map((e) => Products.fromJson(e)).toList();
     invoiceUrl = json['invoice_url'];
     paymentReceiptUrl = json['payment_receipt_url'];
     address = AddAddress.fromMap(json['address']);
@@ -370,6 +370,7 @@ class License {
         "updated_at": updatedAt.toIso8601String(),
       };
 }
+
 class Rider {
   Rider({
     required this.id,

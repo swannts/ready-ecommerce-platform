@@ -57,7 +57,7 @@ class SocialLinkSeeder extends Seeder
 
         foreach ($data as $item) {
             $exists = SocialLink::where('name', $item['name'])->first();
-            if (!$exists) {
+            if (! $exists) {
                 SocialLink::create($item);
             }
         }

@@ -16,11 +16,11 @@ class ReturnOrderResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'order_id' => $this->order->prefix . $this->order->order_code,
+            'order_id' => $this->order->prefix.$this->order->order_code,
             'reason' => $this->reason,
             'amount' => $this->amount,
             'status' => $this->status,
-            'quantity' =>$this->returnProduct?->sum('quantity'),
+            'quantity' => $this->returnProduct?->sum('quantity'),
             'payment_status' => $this->payment_status ? 'Paid' : 'Unpaid',
             'reject_note' => $this->reject_note,
             'return_date' => $this->created_at->format('d F, Y'),

@@ -3,8 +3,9 @@
 namespace Modules\Purchase\App\Models;
 
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Scopes\PreOderProduct;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class PurchaseProduct extends Model
 {
@@ -22,7 +23,7 @@ class PurchaseProduct extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class)->withoutGlobalScope(\App\Models\Scopes\PreOderProduct::class);
+        return $this->belongsTo(Product::class)->withoutGlobalScope(PreOderProduct::class);
     }
 
     public function productSkus()

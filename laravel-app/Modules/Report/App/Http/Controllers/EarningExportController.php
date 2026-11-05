@@ -2,12 +2,12 @@
 
 namespace Modules\Report\App\Http\Controllers;
 
-use Carbon\Carbon;
 use App\Enums\OrderStatus;
 use App\Exports\TemplateExport;
 use App\Http\Controllers\Controller;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Repositories\OrderRepository;
+use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EarningExportController extends Controller
 {
@@ -17,7 +17,7 @@ class EarningExportController extends Controller
         $data['to'] = request('to') ?? now()->format('m/d/Y');
         $shop = generaleSetting('shop');
         $from = Carbon::parse($data['from'])->startOfDay();
-        $to   = Carbon::parse($data['to'])->endOfDay();
+        $to = Carbon::parse($data['to'])->endOfDay();
         $search = request('search');
         $orders = OrderRepository::query()
             ->withoutGlobalScopes()
@@ -25,7 +25,7 @@ class EarningExportController extends Controller
             ->where('orders.shop_id', $shop->id)
             ->where('orders.order_status', OrderStatus::DELIVERED->value)
             ->whereBetween('orders.created_at', [$from, $to])
-            ->when($search, fn($query) => $query->filter(['search' => $search]))
+            ->when($search, fn ($query) => $query->filter(['search' => $search]))
             ->groupBy('orders.admin_commission', 'orders.created_at', 'order_code', 'prefix')
             ->selectRaw('
                     orders.admin_commission,
@@ -51,7 +51,7 @@ class EarningExportController extends Controller
                     'Buying Amount',
                     'Selling  Amount',
                     'Admin Commission',
-                    'Selling Earning'
+                    'Selling Earning',
                 ],
             ]
         );
@@ -59,15 +59,16 @@ class EarningExportController extends Controller
         foreach ($orders ?? [] as $item) {
             $exportData->push([
                 $serialNo++,
-                $item->prefix . $item->order_code,
+                $item->prefix.$item->order_code,
                 $item->created_at->format('d F, Y'),
                 round((float) $item->total_buying_amount, 2),
                 round((float) $item->total_sale_amount, 2),
                 round((float) $item->admin_commission, 2),
-                round((float) $item->profit, 2)
+                round((float) $item->profit, 2),
             ]);
         }
         $timeStamp = date('Y-m-d_H-i-s');
-        return Excel::download(new TemplateExport($exportData), 'commission_report_' . $timeStamp . '.xlsx');
+
+        return Excel::download(new TemplateExport($exportData), 'commission_report_'.$timeStamp.'.xlsx');
     }
 }

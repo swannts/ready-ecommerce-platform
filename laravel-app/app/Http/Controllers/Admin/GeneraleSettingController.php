@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Exception;
-use App\Models\Currency;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AiPromptRequest;
-use Illuminate\Support\Facades\Artisan;
 use App\Http\Requests\GeneraleSettingRequest;
+use App\Models\Currency;
 use App\Repositories\GeneraleSettingRepository;
+use Exception;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 
 class GeneraleSettingController extends Controller
 {
@@ -37,7 +38,7 @@ class GeneraleSettingController extends Controller
     /**
      * Run the latest update script.
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function updateCommand()
     {
@@ -45,22 +46,21 @@ class GeneraleSettingController extends Controller
 
         $errors = [];
 
-        $changeToBasePath = 'cd ' . base_path();
+        $changeToBasePath = 'cd '.base_path();
         foreach ($commands as $command) {
             try {
-                shell_exec($changeToBasePath . ' && ' . $command);
+                shell_exec($changeToBasePath.' && '.$command);
             } catch (\Throwable $th) {
                 $errors[] = $th->getMessage();
             }
         }
 
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             return back()->with('runUpdateScriptError', $errors);
         }
 
         return back()->withSuccess(__('Latest Script Run Successfully'));
     }
-
 
     public function aiPromptIndex()
     {
@@ -70,6 +70,7 @@ class GeneraleSettingController extends Controller
     public function aiPromptUpdate(AiPromptRequest $request)
     {
         GeneraleSettingRepository::updateByAiPromptRequest($request);
+
         return back()->withSuccess(__('AI Prompt updated successfully'));
     }
 
@@ -77,6 +78,7 @@ class GeneraleSettingController extends Controller
     {
         return view('admin.aiPrompt.configure');
     }
+
     public function aiPromptConfigureUpdate(Request $request)
     {
         $request->validate([

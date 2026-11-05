@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Log;
 class SteadFast
 {
     private $api_key;
+
     private $secret_key;
+
     private $base_url;
 
     public function __construct()

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Modules\PreOrder\App\Models\PreOrder;
 
 class Payment extends Model
 {
@@ -19,6 +20,7 @@ class Payment extends Model
     {
         return $this->belongsToMany(Order::class, 'order_payments', 'payment_id', 'order_id');
     }
+
     /**
      * Get all of the Preorders for the Payment
      */
@@ -27,6 +29,7 @@ class Payment extends Model
         if (! module_exists('preOrder')) {
             return null;
         }
-        return $this->belongsToMany(\Modules\PreOrder\App\Models\PreOrder::class, 'pre_order_payments', 'payment_id', 'order_id');
+
+        return $this->belongsToMany(PreOrder::class, 'pre_order_payments', 'payment_id', 'order_id');
     }
 }

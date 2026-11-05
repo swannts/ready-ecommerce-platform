@@ -2,7 +2,7 @@ import axios from "axios";
 import { defineStore } from "pinia";
 import { useBasketStore } from "./BasketStore";
 import { useChat } from "./ChatStore";
-import router from '@/router'
+import router from "@/router";
 
 export const useAuth = defineStore("authStore", {
     state: () => ({
@@ -113,7 +113,7 @@ export const useAuth = defineStore("authStore", {
                     chatStore.chats = [];
                     chatStore.activeShop = null;
                     // changing the route
-                    router.push({ name: 'home' })
+                    router.push({ name: "home" });
                 })
                 .catch((error) => {
                     this.user = null;
@@ -122,7 +122,7 @@ export const useAuth = defineStore("authStore", {
                     this.access_token = null;
                     this.favoriteProducts = 0;
                     // changing the route
-                    router.push({ name: 'home' })
+                    router.push({ name: "home" });
                 });
         },
     },

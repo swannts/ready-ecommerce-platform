@@ -2,25 +2,27 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\ReturnOrder;
-use Illuminate\Http\Request;
 use App\Enums\ReturnOderStatus;
 use App\Http\Controllers\Controller;
-use App\Repositories\WalletRepository;
+use App\Models\ReturnOrder;
 use App\Repositories\ReturnOrderRepository;
 use App\Repositories\TransactionRepository;
+use App\Repositories\WalletRepository;
+use Illuminate\Http\Request;
 
 class ReturnOrderController extends Controller
 {
     public function index()
     {
         $returnOrder = ReturnOrderRepository::query()->latest('id')->paginate(20);
+
         return view('admin.returnOrder.index', compact('returnOrder'));
     }
 
     public function show(ReturnOrder $returnOrder)
     {
         $returnStatus = ReturnOderStatus::cases();
+
         return view('admin.returnOrder.show', compact('returnOrder', 'returnStatus'));
     }
 
@@ -36,13 +38,12 @@ class ReturnOrderController extends Controller
             return back()->with('error', __('Payment status updated successfully'));
         }
 
-       $returnOrder->update(['payment_status' => 1, 'status' => 'Refunded']);
+        $returnOrder->update(['payment_status' => 1, 'status' => 'Refunded']);
 
         $this->updateWalletAndTransaction($returnOrder);
 
         return back()->with('success', __('Payment status updated successfully'));
     }
-
 
     private function updateWalletAndTransaction($returnOrder)
     {
@@ -63,17 +64,18 @@ class ReturnOrderController extends Controller
 
         $wallet = $returnOrder->shop->user->wallet;
 
-       WalletRepository::updateByRequest($wallet, $amount, 'debit');
+        WalletRepository::updateByRequest($wallet, $amount, 'debit');
 
-       TransactionRepository::storeByRefundRequest($wallet, $commission, 'credit', true, true, 'admin commission removal for refund order', 'refundorder');
+        TransactionRepository::storeByRefundRequest($wallet, $commission, 'credit', true, true, 'admin commission removal for refund order', 'refundorder');
     }
 
     public function returnReject(ReturnOrder $returnOrder, Request $request)
     {
         $returnOrder->update([
             'status' => $request->status,
-            'reject_note' => $request->reject_note
+            'reject_note' => $request->reject_note,
         ]);
+
         return back()->with('success', __('Return order Cancelled successfully'));
     }
 }

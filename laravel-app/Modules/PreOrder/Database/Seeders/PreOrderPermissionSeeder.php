@@ -16,7 +16,7 @@ class PreOrderPermissionSeeder extends Seeder
         foreach ($allPermissionArray as $modelType => $allPermissions) {
             foreach ($allPermissions as $permissionName => $permissionValues) {
                 foreach ($permissionValues as $permission) {
-                   Permission::firstOrCreate([
+                    Permission::firstOrCreate([
                         'name' => $modelType.'.'.$permissionName.'.'.$permission,
                         'guard_name' => 'web',
                     ]);

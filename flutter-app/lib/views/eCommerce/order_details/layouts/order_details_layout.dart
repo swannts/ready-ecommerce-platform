@@ -61,7 +61,6 @@ class _OrderDetailsLayoutState extends ConsumerState<OrderDetailsLayout> {
 
   @override
   Widget build(
-
     BuildContext context,
   ) {
     final asyncValue =
@@ -102,7 +101,8 @@ class _OrderDetailsLayoutState extends ConsumerState<OrderDetailsLayout> {
                                             context,
                                             orderDetails.data.order.products,
                                             orderDetails.data.order.orderStatus,
-                                            orderDetails.data.order.paymentStatus,
+                                            orderDetails
+                                                .data.order.paymentStatus,
                                             true, (index) {
                                           ref
                                               .read(
@@ -172,89 +172,91 @@ class _OrderDetailsLayoutState extends ConsumerState<OrderDetailsLayout> {
             data: (orderDetails) => Column(
               children: [
                 Gap(8.h),
-
-              orderDetails.data.order.orderStatus == 'On The Way' ?  SizedBox(
-                  height: 300,
-                  width: double.infinity,
-                  child: EcommerceOrderTrackLayout(
-                    customerLatitude: orderDetails.data.order.address.latitude,
-                    customerLongitude: orderDetails.data.order.address.longitude,
-                    riderLatitude: double.tryParse(orderDetails.data.order.rider?.latitude ?? ''),
-                    riderLongitude: double.tryParse(orderDetails.data.order.rider?.longitude ?? ''),
-                    riderId: orderDetails.data.order.rider?.id ?? 0,
+                orderDetails.data.order.orderStatus == 'On The Way'
+                    ? SizedBox(
+                        height: 300,
+                        width: double.infinity,
+                        child: EcommerceOrderTrackLayout(
+                          customerLatitude:
+                              orderDetails.data.order.address.latitude,
+                          customerLongitude:
+                              orderDetails.data.order.address.longitude,
+                          riderLatitude: double.tryParse(
+                              orderDetails.data.order.rider?.latitude ?? ''),
+                          riderLongitude: double.tryParse(
+                              orderDetails.data.order.rider?.longitude ?? ''),
+                          riderId: orderDetails.data.order.rider?.id ?? 0,
+                        ),
+                      )
+                    : SizedBox(),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Gap(8.h),
+                        _buildServiceItemsWidget(
+                            context,
+                            orderDetails.data.order.products,
+                            orderDetails.data.order.orderStatus,
+                            orderDetails.data.order.paymentStatus,
+                            false,
+                            null,
+                            false,
+                            widget.orderId,
+                            isDark,
+                            false),
+                        Gap(8.h),
+                        _buildShopCardWidget(
+                          context: context,
+                          orderDetails: orderDetails,
+                        ),
+                        OrderDetailsCard(
+                          orderDetails: orderDetails,
+                        ),
+                        Gap(8.h),
+                        Visibility(
+                          visible: orderDetails.data.order.paymentStatus ==
+                                  'Pending' &&
+                              orderDetails.data.order.paymentMethod ==
+                                  'Online Payment',
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                child: CustomTransparentButton(
+                                  buttonTextColor: colors(context).primaryColor,
+                                  borderColor: colors(context).primaryColor,
+                                  buttonText: 'Pay Now',
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      showDragHandle: true,
+                                      isScrollControlled: true,
+                                      backgroundColor: EcommerceAppColor.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(12.r),
+                                          topRight: Radius.circular(12.r),
+                                        ),
+                                      ),
+                                      barrierColor: colors(context)
+                                          .accentColor!
+                                          .withOpacity(0.8),
+                                      context: context,
+                                      builder: (context) {
+                                        return _buildPaymentBottomSheet();
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                              Gap(8.h),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ) : SizedBox(),
-
-               Expanded(
-                 child: SingleChildScrollView(
-                   child: Column(
-                     children: [
-                       Gap(8.h),
-                       _buildServiceItemsWidget(
-                           context,
-                           orderDetails.data.order.products,
-                           orderDetails.data.order.orderStatus,
-                           orderDetails.data.order.paymentStatus,
-                           false,
-                           null,
-                           false,
-                           widget.orderId,
-                           isDark,
-                           false),
-                       Gap(8.h),
-                       _buildShopCardWidget(
-                         context: context,
-                         orderDetails: orderDetails,
-                       ),
-
-                       OrderDetailsCard(
-                         orderDetails: orderDetails,
-                       ),
-                       Gap(8.h),
-                       Visibility(
-                         visible:
-                         orderDetails.data.order.paymentStatus == 'Pending' &&
-                             orderDetails.data.order.paymentMethod ==
-                                 'Online Payment',
-                         child: Column(
-                           children: [
-
-                             Padding(
-                               padding: EdgeInsets.symmetric(horizontal: 16.w),
-                               child: CustomTransparentButton(
-                                 buttonTextColor: colors(context).primaryColor,
-                                 borderColor: colors(context).primaryColor,
-                                 buttonText: 'Pay Now',
-                                 onTap: () {
-                                   showModalBottomSheet(
-                                     showDragHandle: true,
-                                     isScrollControlled: true,
-                                     backgroundColor: EcommerceAppColor.white,
-                                     shape: RoundedRectangleBorder(
-                                       borderRadius: BorderRadius.only(
-                                         topLeft: Radius.circular(12.r),
-                                         topRight: Radius.circular(12.r),
-                                       ),
-                                     ),
-                                     barrierColor: colors(context)
-                                         .accentColor!
-                                         .withOpacity(0.8),
-                                     context: context,
-                                     builder: (context) {
-                                       return _buildPaymentBottomSheet();
-                                     },
-                                   );
-                                 },
-                               ),
-                             ),
-                             Gap(8.h),
-                           ],
-                         ),
-                       )
-                     ],
-                   ),
-                 ),
-               )
+                )
               ],
             ),
             error: ((error, stackTrace) => Center(

@@ -25,11 +25,12 @@ class AuthController extends Controller
      * @param  RegistrationRequest  $request  The registration request data
      * @return Some_Return_Value The registration result data
      */
-    public function register(RegistrationRequest $request):JsonResponse
+    public function register(RegistrationRequest $request): JsonResponse
     {
         $oldUser = UserRepository::query()->where('phone', $request->phone)->orWhere('email', $request->email)->first();
         if ($oldUser) {
-           $user = UserRepository::registerGuestUser($request, $oldUser);
+            $user = UserRepository::registerGuestUser($request, $oldUser);
+
             return $this->json('Registration successfully complete', [
                 'user' => new UserResource($user),
                 'access' => UserRepository::getAccessToken($user),

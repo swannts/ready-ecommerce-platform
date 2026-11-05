@@ -7,6 +7,7 @@ use App\Models\Media;
 use App\Models\Product;
 use App\Models\ProductTranslation;
 use App\Models\RecentView;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -64,8 +65,8 @@ class ProductRepository extends Repository
     /**
      * store new product.
      *
-     * @param  \App\Http\Requests\ProductRequest  $request
-     *                                                      return \App\Models\Product
+     * @param  ProductRequest  $request
+     *                                   return \App\Models\Product
      */
     // public static function storeByRequest(ProductRequest $request): Product
     // {
@@ -192,7 +193,6 @@ class ProductRepository extends Repository
     //     return $product;
     // }
 
-
     public static function storeByRequest(ProductRequest $request): Product
     {
         return DB::transaction(function () use ($request) {
@@ -203,7 +203,7 @@ class ProductRepository extends Repository
             $generaleSetting = generaleSetting('setting');
             $approve = $generaleSetting?->new_product_approval ? false : true;
 
-            /** @var \App\Models\User $user */
+            /** @var User $user */
             $user = auth()->user();
 
             $isAdmin = $user->hasRole('root') || ($generaleSetting?->shop_type == 'single');
@@ -257,7 +257,7 @@ class ProductRepository extends Repository
             ]);
 
             foreach ($request->names ?? [] as $key => $value) {
-                if (!$key || !$value) {
+                if (! $key || ! $value) {
                     continue;
                 }
 
@@ -332,8 +332,8 @@ class ProductRepository extends Repository
     /**
      * Update the product.
      *
-     * @param  \App\Http\Requests\ProductRequest  $request
-     *                                                      return \App\Models\Product
+     * @param  ProductRequest  $request
+     *                                   return \App\Models\Product
      */
     public static function updateByRequest(ProductRequest $request, Product $product): Product
     {
@@ -342,7 +342,7 @@ class ProductRepository extends Repository
         $approve = $generaleSetting?->update_product_approval ? false : true;
 
         /**
-         * @var \App\Models\User $user
+         * @var User $user
          */
         $user = auth()->user();
         $isAdmin = false;
@@ -462,7 +462,6 @@ class ProductRepository extends Repository
         } else {
             $thumbnails = array_filter($request->additionThumbnail ?? []);
 
-
             $product->medias()
                 ->where(function ($q) use ($thumbnails) {
                     $q->whereNotIn('thumbnail', $thumbnails)
@@ -474,7 +473,7 @@ class ProductRepository extends Repository
                 $product->medias()->firstOrCreate(
                     [
                         'product_id' => $product->id,
-                        'thumbnail' => $thumbnail
+                        'thumbnail' => $thumbnail,
                     ],
                     []
                 );
@@ -494,13 +493,13 @@ class ProductRepository extends Repository
             self::updatePreviousThumbnail($request->attachmentPreviousThumbnail);
         }
 
-        if (!empty($request->license_key)) {
+        if (! empty($request->license_key)) {
             foreach ($request->license_key ?? [] as $license) {
                 ProductLicenseRepository::storeByRequest($product->id, $license);
             }
         }
 
-        if (!empty($request->previous_license_key)) {
+        if (! empty($request->previous_license_key)) {
             foreach ($request->previous_license_key ?? [] as $key => $license) {
                 ProductLicenseRepository::updateByRequest($product->id, $license, $key);
             }
@@ -519,7 +518,7 @@ class ProductRepository extends Repository
         }
 
         $type = $uploadVideoRequest['type'];
-        $url = isset($uploadVideoRequest[$type . '_' . 'url']) ? $uploadVideoRequest[$type . '_' . 'url'] : null;
+        $url = isset($uploadVideoRequest[$type.'_'.'url']) ? $uploadVideoRequest[$type.'_'.'url'] : null;
 
         if ($media && $type == 'file' && isset($uploadVideoRequest['file']) && is_file($uploadVideoRequest['file'])) {
             return MediaRepository::updateByRequest(
@@ -578,7 +577,7 @@ class ProductRepository extends Repository
 
         $folders = $folders !== null ? array_keys($folders) : [];
 
-        $galleryPath = 'gallery/shop' . $shop->id;
+        $galleryPath = 'gallery/shop'.$shop->id;
 
         foreach ($rows as $row) {
 
@@ -596,8 +595,8 @@ class ProductRepository extends Repository
                     foreach ($explodeThumbnails as $thumbnail) {
                         $storeFile = null;
                         foreach ($folders as $folder) {
-                            if (Storage::disk('public')->exists($galleryPath . '/' . $folder)) {
-                                $files = File::files(Storage::disk('public')->path($galleryPath . '/' . $folder));
+                            if (Storage::disk('public')->exists($galleryPath.'/'.$folder)) {
+                                $files = File::files(Storage::disk('public')->path($galleryPath.'/'.$folder));
                                 foreach ($files as $file) {
                                     if (basename($file) == $thumbnail) {
                                         $storeFile = $file;
@@ -699,7 +698,7 @@ class ProductRepository extends Repository
         $approve = $generaleSetting?->new_product_approval ? false : true;
 
         /**
-         * @var \App\Models\User $user
+         * @var User $user
          */
         $user = auth()->user();
         $isAdmin = false;
@@ -758,7 +757,7 @@ class ProductRepository extends Repository
 
             $path = 'thumbnails';
 
-            $fileName = random_int(100000, 999999) . date('YmdHis') . '.' . pathinfo($realPath, PATHINFO_EXTENSION);
+            $fileName = random_int(100000, 999999).date('YmdHis').'.'.pathinfo($realPath, PATHINFO_EXTENSION);
 
             $storagePath = Storage::disk('public')->putFileAs($path, $thumbnail, $fileName);
 
@@ -816,7 +815,7 @@ class ProductRepository extends Repository
             $product->medias()->firstOrCreate(
                 [
                     'product_id' => $product->id,
-                    'thumbnail' => $thumbnail
+                    'thumbnail' => $thumbnail,
                 ],
                 []
             );

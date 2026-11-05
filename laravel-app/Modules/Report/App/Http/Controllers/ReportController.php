@@ -2,14 +2,14 @@
 
 namespace Modules\Report\App\Http\Controllers;
 
-use Carbon\Carbon;
+use App\Http\Controllers\Controller;
 use App\Models\Favorite;
 use App\Models\OrderProduct;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Repositories\CartRepository;
-use Illuminate\Support\Facades\Cache;
 use App\Repositories\CategoryRepository;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Modules\Report\App\Repositories\ProductSearchLogRepository;
 
 class ReportController extends Controller
@@ -30,7 +30,7 @@ class ReportController extends Controller
             [$startDate, $endDate] = explode(' - ', $dateRange, 2);
             try {
                 $startDate = Carbon::createFromFormat('Y-m-d', trim($startDate))->startOfDay();
-                $endDate   = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
+                $endDate = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
             } catch (\Exception $e) {
                 $startDate = $endDate = null;
             }
@@ -71,6 +71,7 @@ class ReportController extends Controller
 
         return view('report::report.saleProduct', $data);
     }
+
     public function wishListReport(Request $request)
     {
         $data['categories'] = Cache::remember('categories_all', now()->addHour(), function () {
@@ -79,16 +80,16 @@ class ReportController extends Controller
         $data['reportType'] = 'wishList';
         $shop = generaleSetting('shop');
         $startDate = null;
-        $endDate   = null;
+        $endDate = null;
         $dateRange = $request->date_range;
         $categoryId = $request->category_id;
         $search = $request->search;
         if ($dateRange && str_contains($dateRange, ' - ')) {
             [$startDate, $endDate] = explode(' - ', $dateRange, 2);
             try {
-                $dateRange = explode(" - ", $dateRange);
+                $dateRange = explode(' - ', $dateRange);
                 $startDate = Carbon::createFromFormat('Y-m-d', trim($startDate))->startOfDay();
-                $endDate   = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
+                $endDate = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
             } catch (\Exception $e) {
                 $startDate = $endDate = null;
             }
@@ -119,8 +120,10 @@ class ReportController extends Controller
             ->groupBy('favorites.product_id', 'products.name', 'products.quantity')
             ->orderByDesc('total_quantity')
             ->paginate(30);
+
         return view('report::report.wishlist', $data);
     }
+
     public function addToCartReport(Request $request)
     {
         $data['categories'] = Cache::remember('categories_all', now()->addHour(), function () {
@@ -129,16 +132,16 @@ class ReportController extends Controller
         $data['reportType'] = 'addToCart';
         $shop = generaleSetting('shop');
         $startDate = null;
-        $endDate   = null;
+        $endDate = null;
         $dateRange = $request->date_range;
         $categoryId = $request->category_id;
         $search = $request->search;
         if ($dateRange && str_contains($dateRange, ' - ')) {
             [$startDate, $endDate] = explode(' - ', $dateRange, 2);
             try {
-                $dateRange = explode(" - ", $dateRange);
+                $dateRange = explode(' - ', $dateRange);
                 $startDate = Carbon::createFromFormat('Y-m-d', trim($startDate))->startOfDay();
-                $endDate   = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
+                $endDate = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
             } catch (\Exception $e) {
                 $startDate = $endDate = null;
             }
@@ -172,19 +175,20 @@ class ReportController extends Controller
 
         return view('report::report.addToCart', $data);
     }
+
     public function productSearchReport(Request $request)
     {
         $data['reportType'] = 'productSearch';
         $startDate = null;
-        $endDate   = null;
+        $endDate = null;
         $dateRange = $request->date_range;
         $search = $request->search;
         if ($dateRange && str_contains($dateRange, ' - ')) {
             [$startDate, $endDate] = explode(' - ', $dateRange, 2);
             try {
-                $dateRange = explode(" - ", $dateRange);
+                $dateRange = explode(' - ', $dateRange);
                 $startDate = Carbon::createFromFormat('Y-m-d', trim($startDate))->startOfDay();
-                $endDate   = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
+                $endDate = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
             } catch (\Exception $e) {
                 $startDate = $endDate = null;
             }

@@ -2,12 +2,10 @@
 
 namespace Modules\PreOrder\App\Repositories;
 
-
-use App\Repositories\Repository;
 use App\Models\Scopes\PreOderProduct;
+use App\Repositories\Repository;
 use Illuminate\Support\Facades\DB;
 use Modules\PreOrder\App\Models\PreOrderSetting;
-use Modules\PreOrder\App\Repositories\PreOrderProductRepository;
 
 class PreOrderSettingRepository extends Repository
 {
@@ -15,6 +13,7 @@ class PreOrderSettingRepository extends Repository
     {
         return PreOrderSetting::class;
     }
+
     public static function storeByRequestFrom($request)
     {
         $preOrderSetting = self::first();
@@ -31,12 +30,12 @@ class PreOrderSettingRepository extends Repository
                     'shop_commission' => $request->shop_commission ?? 0,
                     'commission_type' => $request->commission_type ?? 'percentage',
                     'pre_order_policy' => $request->pre_order_policy ?? '',
-                    'pre_order_refund_policy' => $request->pre_order_refund_policy ?? ''
+                    'pre_order_refund_policy' => $request->pre_order_refund_policy ?? '',
                 ]
             );
-            if (!$preOrderSetting->pre_order_for_shop) {
+            if (! $preOrderSetting->pre_order_for_shop) {
                 PreOrderProductRepository::query()->withoutGlobalScope(PreOderProduct::class)->where('shop_id', '!=', $rootShopId)->where('is_preorder', true)->update([
-                    'is_active' => false
+                    'is_active' => false,
                 ]);
             }
         });

@@ -2,8 +2,8 @@
 
 namespace Modules\Purchase\App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class PurchaseReturn extends Model
 {
@@ -16,9 +16,8 @@ class PurchaseReturn extends Model
         return $this->belongsTo(Purchase::class);
     }
 
-     public function purchaseReturnProducts()
+    public function purchaseReturnProducts()
     {
         return $this->hasMany(PurchaseReturnProduct::class);
     }
-
 }

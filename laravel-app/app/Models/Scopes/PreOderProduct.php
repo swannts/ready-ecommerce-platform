@@ -13,6 +13,6 @@ class PreOderProduct implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $builder->where("is_preorder", false);
+        $builder->where('is_preorder', false);
     }
 }

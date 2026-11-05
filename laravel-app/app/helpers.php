@@ -1,18 +1,20 @@
 <?php
 
-use Carbon\Carbon;
 use App\Models\Cart;
-use App\Models\User;
-use App\Models\Currency;
-use Illuminate\Http\Request;
-use App\Models\DeliveryCharge;
-use Illuminate\Support\Number;
 use App\Models\CartAccessToken;
+use App\Models\Currency;
+use App\Models\DeliveryCharge;
 use App\Models\GeneraleSetting;
-use Nwidart\Modules\Facades\Module;
+use App\Models\User;
+use App\Models\WeightDeliveryCharge;
+use App\Repositories\PreOrderDeliveryRepository;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Number;
 use Laravel\Sanctum\PersonalAccessToken;
+use Nwidart\Modules\Facades\Module;
 
 if (! function_exists('getDistance')) {
     /**
@@ -29,14 +31,14 @@ if (! function_exists('getDistance')) {
         }
 
         $theta = ($firstLatLng[1] - $secondLatLng[1]);
-        $dist  = sin(deg2rad($firstLatLng[0])) *
+        $dist = sin(deg2rad($firstLatLng[0])) *
         sin(deg2rad($secondLatLng[0])) +
         cos(deg2rad($firstLatLng[0])) *
         cos(deg2rad($secondLatLng[0])) *
         cos(deg2rad($theta));
 
-        $dist  = acos($dist);
-        $dist  = rad2deg($dist);
+        $dist = acos($dist);
+        $dist = rad2deg($dist);
         $miles = $dist * 60 * 1.1515;
 
         return $miles * 1.609344;
@@ -55,7 +57,7 @@ if (! function_exists('generaleSetting')) {
      *
      * @return GeneraleSetting|Shop|Currency
      *
-     * @throws \Exception
+     * @throws Exception
      */
     function generaleSetting($type = null, $authUser = null)
     {
@@ -118,10 +120,10 @@ if (! function_exists('showCurrency')) {
         $amount = ($amount == 0 || $amount == null) ? 0 : $amount;
 
         if ($generaleSetting?->currency_position == 'suffix') {
-            return $amount . $currency;
+            return $amount.$currency;
         }
 
-        return $currency . $amount;
+        return $currency.$amount;
     }
 }
 
@@ -150,7 +152,7 @@ if (! function_exists('getPreOrderDeliveryCharge')) {
      */
     function getPreOrderDeliveryCharge($product, $request): float
     {
-        return \App\Repositories\PreOrderDeliveryRepository::calculate($product, $request);
+        return PreOrderDeliveryRepository::calculate($product, $request);
     }
 }
 
@@ -181,26 +183,26 @@ if (! function_exists('diffInLargestUnit')) {
         $diff = $from->diff($to);
 
         if ($diff->y >= 1) {
-            return $diff->y . ' year' . ($diff->y > 1 ? 's' : '');
+            return $diff->y.' year'.($diff->y > 1 ? 's' : '');
         }
 
         if ($diff->m >= 1) {
-            return $diff->m . ' month' . ($diff->m > 1 ? 's' : '');
+            return $diff->m.' month'.($diff->m > 1 ? 's' : '');
         }
 
         if ($diff->d >= 1) {
-            return $diff->d . ' day' . ($diff->d > 1 ? 's' : '');
+            return $diff->d.' day'.($diff->d > 1 ? 's' : '');
         }
 
         if ($diff->h >= 1) {
-            return $diff->h . ' hour' . ($diff->h > 1 ? 's' : '');
+            return $diff->h.' hour'.($diff->h > 1 ? 's' : '');
         }
 
         if ($diff->i >= 1) {
-            return $diff->i . ' minute' . ($diff->i > 1 ? 's' : '');
+            return $diff->i.' minute'.($diff->i > 1 ? 's' : '');
         }
 
-        return $diff->s . ' second' . ($diff->s !== 1 ? 's' : '');
+        return $diff->s.' second'.($diff->s !== 1 ? 's' : '');
     }
 }
 
@@ -209,20 +211,23 @@ if (! function_exists('daysToLargestUnit')) {
     {
         if ($days >= 365) {
             $years = floor($days / 365);
-            return $years . ' year' . ($years > 1 ? 's' : '');
+
+            return $years.' year'.($years > 1 ? 's' : '');
         }
 
         if ($days >= 30) {
             $months = floor($days / 30);
-            return $months . ' month' . ($months > 1 ? 's' : '');
+
+            return $months.' month'.($months > 1 ? 's' : '');
         }
 
         if ($days >= 7) {
             $weeks = floor($days / 7);
-            return $weeks . ' week' . ($weeks > 1 ? 's' : '');
+
+            return $weeks.' week'.($weeks > 1 ? 's' : '');
         }
 
-        return $days . ' day' . ($days > 1 ? 's' : '');
+        return $days.' day'.($days > 1 ? 's' : '');
     }
 }
 
@@ -246,6 +251,7 @@ if (! function_exists('getFileImages')) {
         if (array_key_exists($extension, $fileIcons)) {
             return $fileIcons[$extension];
         }
+
         return $source;
 
     }
@@ -254,48 +260,40 @@ if (! function_exists('getFileImages')) {
 if (! function_exists('generateLicenseKey')) {
 
     function generateLicenseKey($blockCount = 4, $blockLen = 4)
-        {
-            $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // excludes I, 1, O, 0
-            $licenseParts = [];
+    {
+        $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // excludes I, 1, O, 0
+        $licenseParts = [];
 
-            for ($b = 0; $b < $blockCount; $b++) {
-                $part = '';
-                for ($i = 0; $i < $blockLen; $i++) {
-                    $part .= $chars[random_int(0, strlen($chars) - 1)];
-                }
-                $licenseParts[] = $part;
+        for ($b = 0; $b < $blockCount; $b++) {
+            $part = '';
+            for ($i = 0; $i < $blockLen; $i++) {
+                $part .= $chars[random_int(0, strlen($chars) - 1)];
             }
-
-            return implode('-', $licenseParts);
+            $licenseParts[] = $part;
         }
+
+        return implode('-', $licenseParts);
+    }
 }
 
+if (! function_exists('module_exists')) {
+    /**
+     * Check if a given module exists either by folder or in config/modules.php
+     */
+    function module_exists(string $moduleName): bool
+    {
+        $moduleName = ucfirst($moduleName);
+        $modulePath = base_path("Modules/{$moduleName}");
+        $configPath = config_path('modules.php');
 
-
-if (!function_exists('module_exists')) {
-        /**
-         * Check if a given module exists either by folder or in config/modules.php
-         *
-         * @param  string  $moduleName
-         * @return bool
-         */
-        function module_exists(string $moduleName): bool
-        {
-            $moduleName = ucfirst($moduleName);
-            $modulePath = base_path("Modules/{$moduleName}");
-            $configPath = config_path('modules.php');
-
-            if (class_exists(Module::class) && Module::has($moduleName) && Module::isEnabled($moduleName) && File::isDirectory($modulePath) && File::exists($configPath)) {
-                return true;
-            }
-            // Otherwise, module not found
-            return false;
+        if (class_exists(Module::class) && Module::has($moduleName) && Module::isEnabled($moduleName) && File::isDirectory($modulePath) && File::exists($configPath)) {
+            return true;
         }
+
+        // Otherwise, module not found
+        return false;
     }
-
-
-
-
+}
 
 if (! function_exists('cartAccessToken')) {
     function cartAccessToken(Request $request): array
@@ -305,25 +303,25 @@ if (! function_exists('cartAccessToken')) {
         $customerId = $user->customer->id ?? null;
         $accessTokenValue = $request->header('X-Guest-Token') ?? $request->access_token;
         $guestToken = CartAccessToken::where('access_token', $accessTokenValue)->first();
-        $isAuth =false;
+        $isAuth = false;
 
         if ($request->bearerToken()) {
             $accessToken = PersonalAccessToken::findToken($request->bearerToken());
             if ($accessToken) {
                 $user = $accessToken->tokenable;
                 $customerId = $user->customer->id ?? null;
-                $isAuth =true;
+                $isAuth = true;
             }
         }
 
-        if (!$isAuth && $guestToken) {
-            $customerId=$guestToken->customer_id ?? null;
+        if (! $isAuth && $guestToken) {
+            $customerId = $guestToken->customer_id ?? null;
         }
 
         return [
             'customer_id' => $customerId ?? null,
             'access_token' => $guestToken->access_token ?? null,
-            'is_auth' =>$isAuth
+            'is_auth' => $isAuth,
         ];
     }
 }
@@ -343,15 +341,15 @@ if (! function_exists('userCart')) {
         } else {
             $query->whereRaw('1 = 0');
         }
+
         return $query;
     }
 }
 
-
 if (! function_exists('getWeightDeliveryCharge')) {
     function getWeightDeliveryCharge($totalWeight): float
     {
-        $deliveryCharge = \App\Models\WeightDeliveryCharge::where('min_weight', '<=', $totalWeight)
+        $deliveryCharge = WeightDeliveryCharge::where('min_weight', '<=', $totalWeight)
             ->where('max_weight', '>=', $totalWeight)
             ->first();
 
@@ -362,6 +360,6 @@ if (! function_exists('getWeightDeliveryCharge')) {
 if (! function_exists('formatAmount')) {
     function formatAmount($amount)
     {
-        return Number::abbreviate($amount ?? 0,2);
+        return Number::abbreviate($amount ?? 0, 2);
     }
 }

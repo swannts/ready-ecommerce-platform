@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\API;
 
-use Illuminate\Support\Str;
-use App\Models\CartAccessToken;
-use App\Http\Requests\CartRequest;
 use App\Http\Controllers\Controller;
-use App\Repositories\CartRepository;
+use App\Http\Requests\CartRequest;
 use App\Http\Requests\CheckoutRequest;
+use App\Models\CartAccessToken;
+use App\Repositories\CartRepository;
 use App\Repositories\ProductRepository;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 
 class CartController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(): JsonResponse
     {
@@ -40,17 +41,18 @@ class CartController extends Controller
     {
         $tokens = cartAccessToken(request());
 
-        if (!$tokens['customer_id'] && !$tokens['access_token']) {
+        if (! $tokens['customer_id'] && ! $tokens['access_token']) {
             $accessToken = Str::uuid()->toString();
             CartAccessToken::create([
                 'access_token' => $accessToken,
             ]);
+
             return $this->json('Access token generated', [
                 'access_token' => $accessToken,
             ]);
         }
 
-        if (!$tokens['customer_id'] && !$tokens['access_token']) {
+        if (! $tokens['customer_id'] && ! $tokens['access_token']) {
             return $this->json('login first', [], 422);
         }
         $isBuyNow = $request->is_buy_now ?? false;
@@ -61,8 +63,8 @@ class CartController extends Controller
             return $this->json('Product not available now.', [], 422);
         }
 
-        if($product->is_digital && !$tokens['customer_id']){
-             return $this->json('login first to buy digital product.', [], 422);
+        if ($product->is_digital && ! $tokens['customer_id']) {
+            return $this->json('login first to buy digital product.', [], 422);
         }
 
         $quantity = $request->quantity ?? 1;
@@ -209,7 +211,6 @@ class CartController extends Controller
         $shopIds = $request->shop_ids ?? [];
 
         $carts = userCart(request())->whereIn('shop_id', $shopIds)->where('is_buy_now', $isBuyNow)->get();
-
 
         $checkout = CartRepository::checkoutByRequest($request, $carts);
 

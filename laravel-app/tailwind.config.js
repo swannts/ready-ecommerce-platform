@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-    darkMode: 'class',
+    darkMode: "class",
     content: [
         "./resources/**/*.blade.php",
         "./resources/**/*.js",
@@ -35,7 +35,7 @@ export default {
                         img: {
                             marginTop: "0.5rem",
                             marginBottom: "0.5rem",
-                        }
+                        },
                     },
                 },
             },

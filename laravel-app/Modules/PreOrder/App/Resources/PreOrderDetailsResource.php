@@ -2,13 +2,12 @@
 
 namespace Modules\PreOrder\App\Resources;
 
-use Illuminate\Http\Request;
-use App\Http\Resources\ShopResource;
 use App\Http\Resources\AddressResource;
+use App\Http\Resources\ShopResource;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\PreOrder\App\Enums\PreOrderStatus;
 use Modules\PreOrder\App\Enums\PrePaymentStatus;
-use Modules\PreOrder\App\Resources\PreOrderItemResource;
 
 class PreOrderDetailsResource extends JsonResource
 {
@@ -17,8 +16,8 @@ class PreOrderDetailsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $rate= $this->currency_rate ?? 1;
-        $currencyAmount= $this->payable_amount * $rate;
+        $rate = $this->currency_rate ?? 1;
+        $currencyAmount = $this->payable_amount * $rate;
 
         // Amount still due for online payment. Pending = the amount set at order
         // time (the prepay amount for prepay products, otherwise the full
@@ -54,7 +53,7 @@ class PreOrderDetailsResource extends JsonResource
             'id' => $this->id,
             'order_code' => $this->order_code,
             'order_status' => $this->order_status->label(),
-            'currency_symbol'=>$this->currency_symbol ?? '$',
+            'currency_symbol' => $this->currency_symbol ?? '$',
             'quantity' => (int) $this->preOrderItem?->quantity ?? 0,
             'amount' => (float) number_format($currencyAmount, 2, '.', ''),
             'payment_method' => $this->payment_method,
@@ -75,7 +74,7 @@ class PreOrderDetailsResource extends JsonResource
             'shop' => $this->shop ? ShopResource::make($this->shop) : [],
             'invoice_url' => route('shop.preOrder.invoice', $this->id),
             'payment_receipt_url' => route('shop.preOrder.paymentInvoice', $this->id),
-            'item'     =>$this->preOrderItem ? PreOrderItemResource::make($this->preOrderItem) : []
+            'item' => $this->preOrderItem ? PreOrderItemResource::make($this->preOrderItem) : [],
         ];
     }
 }

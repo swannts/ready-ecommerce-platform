@@ -14,6 +14,7 @@ class PreProductResource extends JsonResource
     {
         $rate = $this->currency_rate ?? 1;
         $currencyAmount = $this->prepay_amount * $rate;
+
         return [
             'is_available' => (bool) $this->is_available,
             'is_prepay' => (bool) $this->is_prepay,

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Services\Chat;
-use App\Models\Page;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Page;
+use App\Services\Chat;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PageController extends Controller
 {
@@ -36,7 +36,7 @@ class PageController extends Controller
             'title' => $request->title,
             'title_ar' => $request->title_ar,
             'slug' => Str::slug($request->title),
-            'url' => 'page/' . Str::slug($request->title),
+            'url' => 'page/'.Str::slug($request->title),
             'description' => $request->content,
             'description_ar' => $request->content_ar,
             'icon' => $request->icon,
@@ -89,7 +89,7 @@ class PageController extends Controller
             'title' => $request->title,
             'title_ar' => $request->title_ar ?? $page->title_ar,
             'slug' => $page->is_default ? $page->slug : Str::slug($request->title),
-            'url' => $page->is_default ? $page->slug : 'page/' . Str::slug($request->title),
+            'url' => $page->is_default ? $page->slug : 'page/'.Str::slug($request->title),
             'description' => $request->content,
             'description_ar' => $request->content_ar ?? $page->description_ar,
             'icon' => $request->filled('icon') ? $request->icon : $page->getRawOriginal('icon'),
@@ -112,7 +112,6 @@ class PageController extends Controller
     /**
      * generate ai data
      */
-
     public function generateAIData(Request $request)
     {
 
@@ -122,7 +121,7 @@ class PageController extends Controller
                 'title' => 'required|string',
             ]);
 
-            $chat = new Chat();
+            $chat = new Chat;
             $chat->systemMessage($request->title);
 
             $question = str_replace(
@@ -139,7 +138,7 @@ class PageController extends Controller
 
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }

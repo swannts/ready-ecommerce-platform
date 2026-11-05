@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Address;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddressRequest;
 use App\Http\Resources\AddressResource;
+use App\Models\Address;
 use App\Repositories\AddressRepository;
+use Illuminate\Http\JsonResponse;
 
 class AddressController extends Controller
 {

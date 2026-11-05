@@ -42,7 +42,7 @@ const calculateRoute = () => {
             } else {
                 console.error("Directions request failed due to: " + status);
             }
-        }
+        },
     );
 };
 
@@ -56,7 +56,7 @@ watch(
     () => mapRef.value?.ready,
     (ready) => {
         if (ready) calculateRoute();
-    }
+    },
 );
 
 // 2. Watch for Rider or Customer movement
@@ -65,7 +65,7 @@ watch(
     () => {
         calculateRoute();
     },
-    { deep: true } // deep: true is important for Objects
+    { deep: true }, // deep: true is important for Objects
 );
 </script>
 

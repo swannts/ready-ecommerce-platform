@@ -7,22 +7,17 @@ use App\Events\SendMessageToUser;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ChatResource;
 use App\Http\Resources\ShopUserResource;
-use App\Http\Resources\UserResource;
-use App\Models\Shop;
-use App\Models\ShopUserChats;
-use App\Models\User;
 use App\Repositories\ShopUserChatsRepository;
 use App\Repositories\ShopUserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use MessageBird\Objects\Conversation\SendMessage;
-use Twilio\Rest\Chat;
 
 class ChatController extends Controller
 {
     public function index()
     {
         $shop = generaleSetting('shop');
+
         return view('shop.chat.index', compact('shop'));
     }
 
@@ -39,7 +34,7 @@ class ChatController extends Controller
         );
 
         if ($storeShopUser->product_id) {
-            $chat =  ShopUserChatsRepository::query()->create([
+            $chat = ShopUserChatsRepository::query()->create([
                 'shop_user_id' => $storeShopUser->id,
                 'type' => $request->type,
                 'message' => $request->message,
@@ -89,6 +84,7 @@ class ChatController extends Controller
             'data' => ShopUserResource::collection($shops ?? []),
         ]);
     }
+
     public function getUsers(Request $request)
     {
         $shop = generaleSetting('shop');
@@ -143,6 +139,7 @@ class ChatController extends Controller
             'data' => ChatResource::collection($chats),
         ]);
     }
+
     public function getMessageAdmin(Request $request)
     {
         $shop = generaleSetting('shop');
@@ -168,7 +165,7 @@ class ChatController extends Controller
 
         $shopUser = ShopUserRepository::query()->where('user_id', $auth->id)->where('shop_id', $request->shop_id)->first();
 
-        if (!$shopUser) {
+        if (! $shopUser) {
             return $this->json('your account is not connected with this shop', [], 404);
         }
 
@@ -188,13 +185,14 @@ class ChatController extends Controller
 
         return $this->json('message sent successfully', ['data' => ChatResource::make($chat)]);
     }
+
     public function sendMessageAdmin(Request $request)
     {
         $shop = generaleSetting('shop');
 
         $shopUser = ShopUserRepository::query()->where('user_id', $request->user_id)->where('shop_id', $shop->id)->first();
 
-        if (!$shopUser) {
+        if (! $shopUser) {
             return $this->json('your account is not connected with this shop', [], 404);
         }
 

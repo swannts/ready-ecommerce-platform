@@ -1,5 +1,7 @@
 <template>
-    <div class="p-6 bg-white dark:bg-slate-800  rounded-2xl border border-slate-200 dark:border-slate-600 mt-3">
+    <div
+        class="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-600 mt-3"
+    >
         <form>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>

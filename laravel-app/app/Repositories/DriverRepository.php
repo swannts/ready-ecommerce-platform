@@ -6,6 +6,7 @@ use App\Models\Driver;
 use App\Models\Order;
 use App\Models\User;
 use App\Services\NotificationServices;
+use Modules\PreOrder\App\Models\PreOrder;
 
 class DriverRepository extends Repository
 {
@@ -63,7 +64,7 @@ class DriverRepository extends Repository
             'is_accept' => false,
         ]);
 
-        $message = 'New order assigned to you. OrderID: ' . $order->prefix . $order->order_code;
+        $message = 'New order assigned to you. OrderID: '.$order->prefix.$order->order_code;
         $title = 'New Order Assigned';
 
         $deviceKeys = $driver->user->devices->pluck('key')->toArray();
@@ -90,7 +91,7 @@ class DriverRepository extends Repository
     {
         if (
             ! module_exists('PreOrder') ||
-            ! class_exists(\Modules\PreOrder\App\Models\PreOrder::class)
+            ! class_exists(PreOrder::class)
         ) {
             return $driver;
         }
@@ -102,7 +103,7 @@ class DriverRepository extends Repository
             'is_accept' => false,
         ]);
 
-        $message = 'New order assigned to you. OrderID: ' . $preOrder->order_code;
+        $message = 'New order assigned to you. OrderID: '.$preOrder->order_code;
         $title = 'New Order Assigned';
 
         $deviceKeys = $driver->user->devices->pluck('key')->toArray();

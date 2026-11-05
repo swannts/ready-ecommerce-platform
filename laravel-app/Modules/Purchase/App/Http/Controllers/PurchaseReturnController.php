@@ -2,15 +2,15 @@
 
 namespace Modules\Purchase\App\Http\Controllers;
 
-use Mpdf\Mpdf;
-use Illuminate\Http\Request;
-use Mpdf\Config\FontVariables;
-use Mpdf\Config\ConfigVariables;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Modules\Purchase\App\Models\Purchase;
 use Modules\Purchase\App\Models\PurchaseReturn;
 use Modules\Purchase\App\Repositories\PurchaseReturnRepository;
 use Modules\Purchase\App\Resources\PurchaseProductSearchResource;
+use Mpdf\Config\ConfigVariables;
+use Mpdf\Config\FontVariables;
+use Mpdf\Mpdf;
 
 class PurchaseReturnController extends Controller
 {
@@ -18,12 +18,15 @@ class PurchaseReturnController extends Controller
     {
         $shop = generaleSetting('shop');
         $purchaseReturns = PurchaseReturn::where('shop_id', $shop->id)->latest()->paginate(10);
+
         return view('purchase::purchaseReturn.index', compact('purchaseReturns'));
     }
+
     public function create()
     {
         return view('purchase::purchaseReturn.create');
     }
+
     public function invoiceSearch(Request $request)
     {
         $search = $request->search;
@@ -34,16 +37,19 @@ class PurchaseReturnController extends Controller
         $uniquePurchases = $purchases->unique('id')->values();
 
         $purchasesGet = PurchaseProductSearchResource::collection($uniquePurchases);
+
         return response()->json([
             'data' => $purchasesGet,
             'status' => 'success',
         ], 200);
     }
+
     public function invoiceAdd(Request $request)
     {
         $id = $request->id;
         $purchase = Purchase::find($id);
         $purchaseProducts = $purchase->purchaseProducts()->with('product')->get();
+
         return view('purchase::purchaseReturn.return_form', compact('purchase', 'purchaseProducts'));
     }
 
@@ -53,7 +59,7 @@ class PurchaseReturnController extends Controller
         $requestLotProducts = $request->return_quantity;
         if (
             empty($requestLotProducts) ||
-            collect($requestLotProducts)->filter(fn($qty) => !is_null($qty) && $qty > 0)->isEmpty()
+            collect($requestLotProducts)->filter(fn ($qty) => ! is_null($qty) && $qty > 0)->isEmpty()
         ) {
             return back()->with('error', __('Select Return Quantity.'));
         }
@@ -67,7 +73,7 @@ class PurchaseReturnController extends Controller
     {
         $purchaseReturn = PurchaseReturn::find($id);
 
-        $purchaseReturnCode = '#' . 'PCB' . $purchaseReturn?->return_lot_code;
+        $purchaseReturnCode = '#'.'PCB'.$purchaseReturn?->return_lot_code;
         $defaultConfig = (new ConfigVariables)->getDefaults();
         $fontDirs = $defaultConfig['fontDir'];
 
@@ -79,7 +85,6 @@ class PurchaseReturnController extends Controller
         ];
 
         $paperSize = 'A4';
-
 
         $mPdf = new Mpdf([
             'mode' => 'UTF-8',
@@ -101,6 +106,6 @@ class PurchaseReturnController extends Controller
         $mPdf->WriteHTML($view);
 
         // Output the PDF as a stream
-        return $mPdf->Output('invoice-' . 'RET' . $purchaseReturn->id . '.pdf', 'I');
+        return $mPdf->Output('invoice-'.'RET'.$purchaseReturn->id.'.pdf', 'I');
     }
 }

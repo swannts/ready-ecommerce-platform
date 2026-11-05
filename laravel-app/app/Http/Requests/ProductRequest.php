@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,19 +25,19 @@ class ProductRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
-        $max =$this->price;
+        $max = $this->price;
         $additionThumbnail = $this->product?->medias?->isNotEmpty() ? 'nullable' : 'nullable';
         $thumbnail = $this->product?->media ? 'nullable' : 'required';
 
         if ($this->is('api/*')) {
             $additionThumbnail = 'nullable';
         }
-        if($this->discount_type == 0){
-            $max =100;
+        if ($this->discount_type == 0) {
+            $max = 100;
         }
 
         return [
@@ -76,7 +77,7 @@ class ProductRequest extends FormRequest
             'min_order_quantity' => 'nullable|integer|min:0|max:'.self::MAX_QUANTITY,
             'meta_title' => 'nullable|string|max:191',
             'meta_description' => 'nullable|string|max:200',
-            'thumbnail' => "nullable|string|max:255",
+            'thumbnail' => 'nullable|string|max:255',
             'additionThumbnail' => "$additionThumbnail|array",
             'additionThumbnail.*' => 'max:255',
 

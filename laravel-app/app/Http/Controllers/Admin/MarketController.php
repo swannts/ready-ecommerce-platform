@@ -40,7 +40,7 @@ class MarketController extends Controller
                 'version' => $json['version'] ?? '1.0.0',
                 'image' => asset($json['image'] ?? 'default/default.jpg'),
                 'license_key' => $json['license_key'] ?? null,
-                'is_verified' => $json['is_verified'] ?? false
+                'is_verified' => $json['is_verified'] ?? false,
             ];
         });
 
@@ -50,7 +50,7 @@ class MarketController extends Controller
     public function upload(Request $request)
     {
         $request->validate([
-            'addon_package' => 'required|file|mimes:zip'
+            'addon_package' => 'required|file|mimes:zip',
         ]);
 
         if (request()->hasFile('addon_package')) {
@@ -60,16 +60,17 @@ class MarketController extends Controller
 
             $zip = new ZipArchive;
 
-            if ($zip->open($file) === TRUE) {
+            if ($zip->open($file) === true) {
                 // Extract files
                 $zip->extractTo($dir);
                 // Close the zip file
                 $zip->close();
-                if(dir($dir . '__MACOSX')) {
-                    exec('rm -r ' . $dir . '__MACOSX');
+                if (dir($dir.'__MACOSX')) {
+                    exec('rm -r '.$dir.'__MACOSX');
                 }
             }
             Artisan::call('vendor:publish --tag=public --force');
+
             return response()->json(['message' => 'Addon uploaded successfully']);
         }
 
@@ -103,37 +104,36 @@ class MarketController extends Controller
 
     public function updateStatus($addon)
     {
-        try{
-        $modules = Module::all();
-        collect($modules)->map(function ($module, $name) use ($addon) {
-            if ($module->get('name') === $addon) {
-                $moduleName = $module->get('name');
-                $json = $module->json()->toArray();
-                if (Module::isEnabled($moduleName)) {
-                    Module::disable($moduleName);
-                } else {
-                    if(!$json['is_verified']) {
-                        throw new \Exception('Addon is not verified. Please verify the addon before enabling it.');
-                    }
-                    $module = ModuleSetting::where('name', $moduleName)->first();
+        try {
+            $modules = Module::all();
+            collect($modules)->map(function ($module, $name) use ($addon) {
+                if ($module->get('name') === $addon) {
+                    $moduleName = $module->get('name');
+                    $json = $module->json()->toArray();
+                    if (Module::isEnabled($moduleName)) {
+                        Module::disable($moduleName);
+                    } else {
+                        if (! $json['is_verified']) {
+                            throw new \Exception('Addon is not verified. Please verify the addon before enabling it.');
+                        }
+                        $module = ModuleSetting::where('name', $moduleName)->first();
 
-                    Module::enable($moduleName);
-                    if(!$module) {
-                        Artisan::call('module:migrate', ['module' => $moduleName, '--force' => true]);
-                        Artisan::call('module:seed', ['module' => $moduleName, '--force' => true]);
-                        Artisan::call('db:seed RoleSeeder --force');
-                        Artisan::call('db:seed PermissionSeeder --force');
-                        Artisan::call('vendor:publish --tag=public --force');
-                        $module = ModuleSetting::create(['name' => $moduleName, 'enabled' => true, 'is_first' => false]);
+                        Module::enable($moduleName);
+                        if (! $module) {
+                            Artisan::call('module:migrate', ['module' => $moduleName, '--force' => true]);
+                            Artisan::call('module:seed', ['module' => $moduleName, '--force' => true]);
+                            Artisan::call('db:seed RoleSeeder --force');
+                            Artisan::call('db:seed PermissionSeeder --force');
+                            Artisan::call('vendor:publish --tag=public --force');
+                            $module = ModuleSetting::create(['name' => $moduleName, 'enabled' => true, 'is_first' => false]);
+                        }
                     }
                 }
-            }
-        });
+            });
         } catch (\Exception $e) {
-            return back()->with('error', 'Failed to update addon status: ' . $e->getMessage());
+            return back()->with('error', 'Failed to update addon status: '.$e->getMessage());
         }
 
         return back()->with('success', 'Addon status updated successfully');
     }
 }
-

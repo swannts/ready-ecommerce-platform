@@ -263,88 +263,88 @@ class _OrderProductCardState extends ConsumerState<OrderProductCard> {
                 _buildRatingBar(),
               ] else ...[
                 if (!hideReviewButton) _buildReviewButton(context: context),
-                if(widget.paymentStatus.toLowerCase()!='pending' &&
-                widget.product.isDigital == true)
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 8.w),
-                      decoration: BoxDecoration(
-                        color: colors(context)
-                            .primaryColor!
-                            .withValues(alpha: 0.12),
-                        border:
-                            Border.all(color: colors(context).primaryColor!),
-                        borderRadius: BorderRadius.circular(5.r),
-                      ),
-                      child: Theme(
-                        data: Theme.of(context).copyWith(
-                          highlightColor: Colors.transparent,
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
+                if (widget.paymentStatus.toLowerCase() != 'pending' &&
+                    widget.product.isDigital == true)
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 8.w),
+                        decoration: BoxDecoration(
+                          color: colors(context)
+                              .primaryColor!
+                              .withValues(alpha: 0.12),
+                          border:
+                              Border.all(color: colors(context).primaryColor!),
+                          borderRadius: BorderRadius.circular(5.r),
                         ),
-                        child: DropdownButton(
-                          padding: EdgeInsets.zero,
-                          underline: SizedBox(),
-                          elevation: 2,
-                          isDense: true,
-                          iconEnabledColor: colors(context).primaryColor!,
-                          focusColor: Colors.transparent,
-                          style: AppTextStyle(context).bodyTextSmall.copyWith(
-                              color: colors(context).bodyTextColor!,
-                              backgroundColor: Colors.transparent),
-                          items: allItems.map((e) {
-                            return DropdownMenuItem(
-                              value: e.url,
-                              child: Text(
-                                e.extension.toUpperCase(),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (url) {
-                            if (url != null) {
-                              ref
-                                  .read(downloadProvider.notifier)
-                                  .downloadFile(url);
-                            }
-                          },
-                          hint: Row(
-                            children: [
-                              Icon(
-                                Icons.download,
-                                size: 16.sp,
-                                color: EcommerceAppColor.primary,
-                              ),
-                              Gap(5.w),
-                              Text("Download",
-                                  style: AppTextStyle(context)
-                                      .bodyTextSmall
-                                      .copyWith(
-                                          color: EcommerceAppColor.primary)),
-                            ],
+                        child: Theme(
+                          data: Theme.of(context).copyWith(
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                          ),
+                          child: DropdownButton(
+                            padding: EdgeInsets.zero,
+                            underline: SizedBox(),
+                            elevation: 2,
+                            isDense: true,
+                            iconEnabledColor: colors(context).primaryColor!,
+                            focusColor: Colors.transparent,
+                            style: AppTextStyle(context).bodyTextSmall.copyWith(
+                                color: colors(context).bodyTextColor!,
+                                backgroundColor: Colors.transparent),
+                            items: allItems.map((e) {
+                              return DropdownMenuItem(
+                                value: e.url,
+                                child: Text(
+                                  e.extension.toUpperCase(),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (url) {
+                              if (url != null) {
+                                ref
+                                    .read(downloadProvider.notifier)
+                                    .downloadFile(url);
+                              }
+                            },
+                            hint: Row(
+                              children: [
+                                Icon(
+                                  Icons.download,
+                                  size: 16.sp,
+                                  color: EcommerceAppColor.primary,
+                                ),
+                                Gap(5.w),
+                                Text("Download",
+                                    style: AppTextStyle(context)
+                                        .bodyTextSmall
+                                        .copyWith(
+                                            color: EcommerceAppColor.primary)),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    if (downloadState.progress > 0 &&
-                        downloadState.progress < 100)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: SizedBox(
-                          width: 100.w,
-                          height: 5.h,
-                          child: LinearProgressIndicator(
-                            value: downloadState.progress / 100,
-                            backgroundColor: EcommerceAppColor.lightGray,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                EcommerceAppColor.primary),
+                      if (downloadState.progress > 0 &&
+                          downloadState.progress < 100)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: SizedBox(
+                            width: 100.w,
+                            height: 5.h,
+                            child: LinearProgressIndicator(
+                              value: downloadState.progress / 100,
+                              backgroundColor: EcommerceAppColor.lightGray,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  EcommerceAppColor.primary),
+                            ),
                           ),
                         ),
-                      ),
-                  ],
-                ),
+                    ],
+                  ),
               ]
             ]
           ],

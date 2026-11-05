@@ -10,6 +10,9 @@ use App\Repositories\DriverOrderRepository;
 use App\Repositories\OrderRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Modules\PreOrder\App\Enums\PreOrderStatus;
+use Modules\PreOrder\App\Models\DriverPreOrder;
+use Modules\PreOrder\App\Repositories\PreOrderRepository;
 
 class OrderController extends Controller
 {
@@ -62,7 +65,7 @@ class OrderController extends Controller
                 'order.shop.user' => function ($query) {
                     $query->select('id', 'phone');
                 },
-                'order.address'
+                'order.address',
             ]);
         $preOrdersQuery = null;
         if (module_exists('PreOrder') && method_exists($driver, 'driverPreOrders')) {
@@ -85,7 +88,7 @@ class OrderController extends Controller
                     'preOrder.shop.user' => function ($query) {
                         $query->select('id', 'phone');
                     },
-                    'preOrder.address'
+                    'preOrder.address',
                 ]);
         }
         if ($preOrdersQuery) {
@@ -100,7 +103,7 @@ class OrderController extends Controller
 
         // dd($paginatedItems);
 
-        $toDoOrder = (clone $mergedOrders)->where('is_completed', false)->count();;
+        $toDoOrder = (clone $mergedOrders)->where('is_completed', false)->count();
         $completedOrder = $driver->driverOrders()->where('is_completed', true)->count();
 
         if (module_exists('PreOrder')) {
@@ -115,12 +118,11 @@ class OrderController extends Controller
         ]);
     }
 
-
     // show order details
     public function show(Request $request)
     {
         $request->validate([
-            'order_id'   => 'required|integer',
+            'order_id' => 'required|integer',
             'order_code' => 'required|string',
         ]);
 
@@ -130,20 +132,20 @@ class OrderController extends Controller
         $relations = [
             'customer.user',
             'shop.user',
-            'address'
+            'address',
         ];
 
         $order = null;
         $type = 'order';
         if (module_exists('PreOrder')) {
             $type = 'preOrder';
-            $order = \Modules\PreOrder\App\Repositories\PreOrderRepository::query()
+            $order = PreOrderRepository::query()
                 ->with($relations)
                 ->where('id', $orderId)
                 ->where('order_code', $orderCode)
                 ->first();
         }
-        if (!$order) {
+        if (! $order) {
             $type = 'order';
             $order = OrderRepository::query()
                 ->with($relations)
@@ -154,7 +156,7 @@ class OrderController extends Controller
                 ->first();
         }
 
-        if (!$order) {
+        if (! $order) {
             return $this->json('Sorry, this order was not found', [], 422);
         }
 
@@ -168,64 +170,65 @@ class OrderController extends Controller
     private function getNextStatus(string $currentStatus, bool $isPreOrder = false): string
     {
         if ($isPreOrder) {
-            if (!module_exists('PreOrder')) {
+            if (! module_exists('PreOrder')) {
                 throw new \RuntimeException('Pre-order module is not available');
             }
+
             return match ($currentStatus) {
-                \Modules\PreOrder\App\Enums\PreOrderStatus::IN_SHIPPING->value  => \Modules\PreOrder\App\Enums\PreOrderStatus::PICKUP->value,
-                \Modules\PreOrder\App\Enums\PreOrderStatus::PICKUP->value       => \Modules\PreOrder\App\Enums\PreOrderStatus::ON_THE_WAY->value,
-                \Modules\PreOrder\App\Enums\PreOrderStatus::ON_THE_WAY->value   => \Modules\PreOrder\App\Enums\PreOrderStatus::DELIVERED->value,
-                \Modules\PreOrder\App\Enums\PreOrderStatus::DELIVERED->value    => \Modules\PreOrder\App\Enums\PreOrderStatus::DELIVERED->value,
-                default => \Modules\PreOrder\App\Enums\PreOrderStatus::IN_SHIPPING->value,
+                PreOrderStatus::IN_SHIPPING->value => PreOrderStatus::PICKUP->value,
+                PreOrderStatus::PICKUP->value => PreOrderStatus::ON_THE_WAY->value,
+                PreOrderStatus::ON_THE_WAY->value => PreOrderStatus::DELIVERED->value,
+                PreOrderStatus::DELIVERED->value => PreOrderStatus::DELIVERED->value,
+                default => PreOrderStatus::IN_SHIPPING->value,
             };
         }
 
         return match ($currentStatus) {
-            OrderStatus::CONFIRM->value     => OrderStatus::PROCESSING->value,
-            OrderStatus::PROCESSING->value  => OrderStatus::PICKUP->value,
-            OrderStatus::PICKUP->value      => OrderStatus::ON_THE_WAY->value,
-            OrderStatus::ON_THE_WAY->value  => OrderStatus::DELIVERED->value,
-            OrderStatus::DELIVERED->value   => 'deliveredAndPaid',
-            default                         => OrderStatus::CONFIRM->value,
+            OrderStatus::CONFIRM->value => OrderStatus::PROCESSING->value,
+            OrderStatus::PROCESSING->value => OrderStatus::PICKUP->value,
+            OrderStatus::PICKUP->value => OrderStatus::ON_THE_WAY->value,
+            OrderStatus::ON_THE_WAY->value => OrderStatus::DELIVERED->value,
+            OrderStatus::DELIVERED->value => 'deliveredAndPaid',
+            default => OrderStatus::CONFIRM->value,
         };
     }
 
     public function statusUpdate(Request $request)
     {
         $validated = $request->validate([
-            'order_id'     => 'required|integer',
-            'order_code'   => 'required|string',
+            'order_id' => 'required|integer',
+            'order_code' => 'required|string',
             'order_status' => 'nullable|string|max:255',
         ]);
 
-        $orderId   = $validated['order_id'];
+        $orderId = $validated['order_id'];
         $orderCode = ltrim($validated['order_code'], '#');
 
         $relations = ['customer.user', 'shop.user', 'address'];
 
-        $order      = null;
+        $order = null;
         $driverOrder = null;
         $isPreOrder = false;
-        $type       = 'order';
+        $type = 'order';
 
         if (module_exists('PreOrder')) {
-            $order = \Modules\PreOrder\App\Repositories\PreOrderRepository::query()
+            $order = PreOrderRepository::query()
                 ->with($relations)
                 ->where('id', $orderId)
                 ->where('order_code', $orderCode)
                 ->first();
 
             if ($order) {
-                $isPreOrder  = true;
-                $type        = 'preOrder';
-                $driverOrder = \Modules\PreOrder\App\Models\DriverPreOrder::query()
+                $isPreOrder = true;
+                $type = 'preOrder';
+                $driverOrder = DriverPreOrder::query()
                     ->where('pre_order_id', $orderId)
                     ->first();
             }
         }
 
-        //Fallback to normal Order
-        if (!$order) {
+        // Fallback to normal Order
+        if (! $order) {
             $order = OrderRepository::query()
                 ->with($relations)
                 ->where('id', $orderId)
@@ -241,11 +244,11 @@ class OrderController extends Controller
             }
         }
 
-        if (!$order) {
+        if (! $order) {
             return $this->json('Order not found', [], 422);
         }
 
-        if (!$driverOrder) {
+        if (! $driverOrder) {
             return $this->json('No driver assignment found for this order', [], 422);
         }
 
@@ -259,7 +262,7 @@ class OrderController extends Controller
         );
 
         if ($isPreOrder) {
-            \Modules\PreOrder\App\Repositories\PreOrderRepository::PreOrderStatusUpdateFromRider(
+            PreOrderRepository::PreOrderStatusUpdateFromRider(
                 $order,
                 $driverOrder,
                 $nextStatus
@@ -271,13 +274,12 @@ class OrderController extends Controller
                 $nextStatus
             );
         }
-        $order->type=$type;
+        $order->type = $type;
 
         return $this->json('Order status updated successfully', [
             'order' => RiderOrderDetailsResource::make($order),
         ]);
     }
-
 
     // status update
     // public function statusUpdate(Request $request)
@@ -464,7 +466,7 @@ class OrderController extends Controller
         $perPage = $request->per_page ?? 15;
 
         $search = $request->search;
-        if ($search && preg_match('/\d/', $search) && !preg_match('/\s/', $search) && str_contains($search, '#')) {
+        if ($search && preg_match('/\d/', $search) && ! preg_match('/\s/', $search) && str_contains($search, '#')) {
             $search = substr($search, 3);
         }
 
@@ -474,27 +476,27 @@ class OrderController extends Controller
         $orderStatus = $request->order_status;
 
         $orderWith = [
-            'order' => fn($q) => $q->select('id', 'customer_id', 'shop_id', 'order_code', 'prefix', 'payable_amount', 'order_status', 'payment_status', 'payment_method', 'address_id'),
-            'order.customer.user' => fn($q) => $q->select('id', 'name', 'phone'),
-            'order.shop.user' => fn($q) => $q->select('id', 'phone'),
-            'order.address'
+            'order' => fn ($q) => $q->select('id', 'customer_id', 'shop_id', 'order_code', 'prefix', 'payable_amount', 'order_status', 'payment_status', 'payment_method', 'address_id'),
+            'order.customer.user' => fn ($q) => $q->select('id', 'name', 'phone'),
+            'order.shop.user' => fn ($q) => $q->select('id', 'phone'),
+            'order.address',
         ];
 
         $preOrderWith = [
-            'preOrder' => fn($q) => $q->select('id', 'customer_id', 'shop_id', 'order_code', 'payable_amount', 'order_status', 'payment_status', 'payment_method', 'address_id'),
-            'preOrder.customer.user' => fn($q) => $q->select('id', 'name', 'phone'),
-            'preOrder.shop.user' => fn($q) => $q->select('id', 'phone'),
-            'preOrder.address'
+            'preOrder' => fn ($q) => $q->select('id', 'customer_id', 'shop_id', 'order_code', 'payable_amount', 'order_status', 'payment_status', 'payment_method', 'address_id'),
+            'preOrder.customer.user' => fn ($q) => $q->select('id', 'name', 'phone'),
+            'preOrder.shop.user' => fn ($q) => $q->select('id', 'phone'),
+            'preOrder.address',
         ];
 
-        $applyFilters = function ($query, $isPreOrder = false) use ($search, $startDate, $endDate, $filterType, $orderStatus) {
+        $applyFilters = function ($query, $isPreOrder = false) use ($search, $startDate, $endDate, $orderStatus) {
             $relation = $isPreOrder ? 'preOrder' : 'order';
 
             return $query->when($search, function ($q) use ($search, $relation, $isPreOrder) {
                 $q->whereHas($relation, function ($q) use ($search, $isPreOrder) {
                     $q->where(function ($sub) use ($search, $isPreOrder) {
                         $sub->where('order_code', 'like', "%$search%");
-                        if (!$isPreOrder) {
+                        if (! $isPreOrder) {
                             $sub->orWhereRaw("CONCAT(COALESCE(prefix, ''), order_code) LIKE ?", ["%{$search}%"]);
                         }
                         $sub->orWhereHas('customer.user', function ($userQuery) use ($search) {
@@ -504,9 +506,9 @@ class OrderController extends Controller
                     });
                 });
             })
-                ->when($startDate, fn($q) => $q->whereBetween('created_at', [$startDate, $endDate]))
-                ->when($orderStatus == 'to_deliver', fn($q) => $q->where('is_completed', false))
-                ->when($orderStatus == 'delivered', fn($q) => $q->where('is_completed', true));
+                ->when($startDate, fn ($q) => $q->whereBetween('created_at', [$startDate, $endDate]))
+                ->when($orderStatus == 'to_deliver', fn ($q) => $q->where('is_completed', false))
+                ->when($orderStatus == 'delivered', fn ($q) => $q->where('is_completed', true));
         };
 
         $ordersQuery = $applyFilters($driver->driverOrders()->with($orderWith));
@@ -529,11 +531,11 @@ class OrderController extends Controller
         $paginatedItems = $mergedOrders->forPage($page, $perPage)->values();
 
         return $this->json('all order list', [
-            'total'        => $mergedOrders->count(),
-            'all_orders'   => $totalDelivered + $totalToDeliver,
-            'to_deliver'   => $totalToDeliver,
-            'delivered'    => $totalDelivered,
-            'orders'       => RiderOrderResource::collection($paginatedItems),
+            'total' => $mergedOrders->count(),
+            'all_orders' => $totalDelivered + $totalToDeliver,
+            'to_deliver' => $totalToDeliver,
+            'delivered' => $totalDelivered,
+            'orders' => RiderOrderResource::collection($paginatedItems),
         ]);
     }
 }

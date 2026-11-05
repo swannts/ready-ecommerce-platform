@@ -1,15 +1,15 @@
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const isDark = ref(false);
 
 export function useTheme() {
     const applyTheme = () => {
         if (isDark.value) {
-            document.documentElement.classList.add('dark');
+            document.documentElement.classList.add("dark");
         } else {
-            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.remove("dark");
         }
-        localStorage.setItem('theme', isDark.value ? 'dark' : 'light');
+        localStorage.setItem("theme", isDark.value ? "dark" : "light");
     };
 
     const toggleTheme = () => {
@@ -18,11 +18,13 @@ export function useTheme() {
     };
 
     const initTheme = () => {
-        const saved = localStorage.getItem('theme');
+        const saved = localStorage.getItem("theme");
         if (saved) {
-            isDark.value = saved === 'dark';
+            isDark.value = saved === "dark";
         } else {
-            isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            isDark.value = window.matchMedia(
+                "(prefers-color-scheme: dark)",
+            ).matches;
         }
         applyTheme();
     };

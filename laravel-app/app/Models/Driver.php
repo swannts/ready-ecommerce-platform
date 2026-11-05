@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\PreOrder\App\Models\DriverPreOrder;
 
 class Driver extends Model
 {
@@ -29,11 +30,13 @@ class Driver extends Model
     {
         return $this->hasMany(DriverOrder::class, 'driver_id');
     }
+
     public function driverPreOrders(): ?HasMany
     {
         if (module_exists('PreOrder')) {
-            return $this->hasMany(\Modules\PreOrder\App\Models\DriverPreOrder::class, 'driver_id');
+            return $this->hasMany(DriverPreOrder::class, 'driver_id');
         }
+
         return null;
     }
 
@@ -50,6 +53,7 @@ class Driver extends Model
                 ->where('is_completed', 0)
                 ->count();
         }
+
         return $orderCount + $preOrderCount;
     }
 
@@ -61,6 +65,6 @@ class Driver extends Model
 
     public function driverLocation()
     {
-        return $this->hasOne(DriverLocation::class,'driver_id');
+        return $this->hasOne(DriverLocation::class, 'driver_id');
     }
 }

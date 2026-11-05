@@ -1,10 +1,9 @@
 <?php
 
 use App\Models\Product;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Modules\Purchase\App\Models\Purchase;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 use Modules\Purchase\App\Models\PurchaseReturn;
 
 return new class extends Migration

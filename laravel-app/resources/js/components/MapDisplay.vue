@@ -74,22 +74,18 @@ onMounted(() => {
             },
             (err) => {
                 console.warn("Location access denied");
-            }
+            },
         );
     }
 });
 
-watch(
-    [() => props.latitude, () => props.longitude],
-    () => {
-
-        center.value = {
-            lat: props.latitude,
-            lng: props.longitude,
-        };
-        emit("location-updated", center.value);
-    }
-);
+watch([() => props.latitude, () => props.longitude], () => {
+    center.value = {
+        lat: props.latitude,
+        lng: props.longitude,
+    };
+    emit("location-updated", center.value);
+});
 </script>
 
 <template>

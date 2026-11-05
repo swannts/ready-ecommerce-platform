@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Shop;
 use App\Models\Unit;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
 {
@@ -255,7 +256,7 @@ class ProductSeeder extends Seeder
         foreach (self::PRODUCTS as $item) {
             $shop = Shop::where('supplier_slug', $item['supplier'])->firstOrFail();
             $category = Category::where('slug', $item['category'])->firstOrFail();
-            $brand = Brand::where('slug', \Illuminate\Support\Str::slug($item['brand']))->firstOrFail();
+            $brand = Brand::where('slug', Str::slug($item['brand']))->firstOrFail();
             $media = Media::firstOrCreate(
                 ['src' => 'rice-catalog/'.basename($category->display_image)],
                 ['type' => 'image', 'name' => $item['variety'], 'extention' => 'svg']

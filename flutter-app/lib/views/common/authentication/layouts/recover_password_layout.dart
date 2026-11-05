@@ -43,7 +43,8 @@ class _RecoverPasswordLayoutState extends ConsumerState<RecoverPasswordLayout> {
 
   @override
   Widget build(BuildContext context) {
-    final materModelData = ref.watch(masterControllerProvider.notifier).materModel.data;
+    final materModelData =
+        ref.watch(masterControllerProvider.notifier).materModel.data;
 
     int? phoneMinLength = materModelData.phoneMinLength;
     int? phoneMaxLength = materModelData.phoneMaxLength;

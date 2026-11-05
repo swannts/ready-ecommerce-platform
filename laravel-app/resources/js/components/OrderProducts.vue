@@ -27,85 +27,118 @@
                     </div>
 
                     <!-- Rating -->
-                        <div class="flex gap-2">
-                            <div v-show="order.order_status === 'Delivered'">
+                    <div class="flex gap-2">
+                        <div v-show="order.order_status === 'Delivered'">
+                            <button
+                                v-if="!product.rating"
+                                class="px-4 py-1 w-full sm:w-20 bg-amber-50 border border-amber-400 text-amber-500 rounded-md md:rounded-lg text-xs font-normal"
+                                @click="showRating(product.id)"
+                            >
+                                {{ $t("Review") }}
+                            </button>
+
+                            <div v-else class="flex items-center gap-0">
+                                <span v-for="i in 5" :key="i">
+                                    <StarIcon
+                                        class="w-5 h-5"
+                                        :class="
+                                            i <= product.rating
+                                                ? 'text-amber-500'
+                                                : 'text-slate-200'
+                                        "
+                                    />
+                                </span>
+                            </div>
+                        </div>
+                        <div
+                            v-if="
+                                product.is_digital == true &&
+                                order.payment_status === 'Paid'
+                            "
+                        >
+                            <div class="relative">
                                 <button
-                                    v-if="!product.rating"
-                                    class="px-4 py-1 w-full sm:w-20 bg-amber-50 border border-amber-400 text-amber-500 rounded-md md:rounded-lg text-xs font-normal"
-                                    @click="showRating(product.id)"
+                                    type="button"
+                                    class="flex items-center justify-between w-full sm:w-24 px-2 py-1 bg-red-50 border border-red-400 rounded-lg text-red-500 text-[10px] font-medium hover:bg-white hover:text-red-500 transition"
+                                    @click="toggleDropdown(product.id)"
                                 >
-                                    {{ $t("Review") }}
+                                    <span
+                                        class="flex flex-wrap justify-start items-center gap-1"
+                                    >
+                                        <ArrowDownTrayIcon class="w-3 h-3" />
+                                        {{ $t("Download") }}
+                                    </span>
+                                    <svg
+                                        :class="[
+                                            'w-3 h-3 ml-1 transition-transform duration-300',
+                                            dropdownOpen == product.id
+                                                ? 'rotate-180'
+                                                : '',
+                                        ]"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M19 9l-7 7-7-7"
+                                        />
+                                    </svg>
                                 </button>
 
-                                <div v-else class="flex items-center gap-0">
-                                    <span v-for="i in 5" :key="i">
-                                        <StarIcon
-                                            class="w-5 h-5"
-                                            :class="
-                                                i <= product.rating
-                                                    ? 'text-amber-500'
-                                                    : 'text-slate-200'
-                                            "
-                                        />
-                                    </span>
-                                </div>
-                            </div>
-                            <div v-if="product.is_digital == true && order.payment_status === 'Paid'">
-                                <div class="relative">
-                                    <button
-                                        type="button"
-                                        class="flex items-center justify-between w-full sm:w-24 px-2 py-1 bg-red-50 border border-red-400 rounded-lg text-red-500 text-[10px] font-medium hover:bg-white hover:text-red-500 transition"
-                                        @click="toggleDropdown(product.id)"
+                                <div
+                                    v-if="dropdownOpen == product.id"
+                                    class="absolute right-0 z-10 mt-1 w-32 bg-white dark:bg-slate-800 border border-red-400 rounded-lg shadow-lg"
+                                >
+                                    <ul
+                                        class="p-2 text-[10px] text-slate-700 dark:text-slate-300"
                                     >
-                                        <span class="flex flex-wrap justify-start items-center gap-1">
-                                            <ArrowDownTrayIcon class="w-3 h-3" />
-                                            {{ $t("Download") }}
-                                        </span>
-                                        <svg
-                                            :class="[
-                                                'w-3 h-3 ml-1 transition-transform duration-300',
-                                                dropdownOpen == product.id ? 'rotate-180' : ''
-                                            ]"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            stroke-width="2"
-                                            viewBox="0 0 24 24"
+                                        <li
+                                            v-for="attachment in product.attachments"
                                         >
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </button>
-
-                                    <div
-                                        v-if="dropdownOpen == product.id"
-                                        class="absolute right-0 z-10 mt-1 w-32 bg-white dark:bg-slate-800 border border-red-400 rounded-lg shadow-lg"
-                                    >
-                                        <ul class="p-2 text-[10px] text-slate-700 dark:text-slate-300">
-                                            <li v-for="attachment in product.attachments">
-                                                <a :href="attachment.url"
-                                                    download
-                                                    class="flex items-center justify-start gap-1 py-2 px-2 hover:bg-red-100 transition rounded-t-lg uppercase"
-                                                >
-                                                    <FolderIcon class="w-3 h-3" />
-                                                    {{ attachment.extension }}
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a :href="product.license_download_link"
-                                                    class="flex items-center justify-start gap-1 py-2 px-2 hover:bg-red-100 transition rounded-b-lg"
-                                                >
-                                                    <ClipboardDocumentListIcon class="w-3 h-3" />
-                                                    {{ $t("License") }}
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                            <a
+                                                :href="attachment.url"
+                                                download
+                                                class="flex items-center justify-start gap-1 py-2 px-2 hover:bg-red-100 transition rounded-t-lg uppercase"
+                                            >
+                                                <FolderIcon class="w-3 h-3" />
+                                                {{ attachment.extension }}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a
+                                                :href="
+                                                    product.license_download_link
+                                                "
+                                                class="flex items-center justify-start gap-1 py-2 px-2 hover:bg-red-100 transition rounded-b-lg"
+                                            >
+                                                <ClipboardDocumentListIcon
+                                                    class="w-3 h-3"
+                                                />
+                                                {{ $t("License") }}
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-                <div class="flex flex-wrap items-center gap-3" :class="product.is_digital != true ? 'justify-between' : 'justify-end'">
+                </div>
+                <div
+                    class="flex flex-wrap items-center gap-3"
+                    :class="
+                        product.is_digital != true
+                            ? 'justify-between'
+                            : 'justify-end'
+                    "
+                >
                     <!-- Size and color -->
-                    <div class="flex items-center gap-1" v-if="product.is_digital != true">
+                    <div
+                        class="flex items-center gap-1"
+                        v-if="product.is_digital != true"
+                    >
                         <div
                             class="min-w-8 text-center px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded text-slate-800 dark:text-slate-200 text-xs font-normal"
                         >
@@ -118,13 +151,15 @@
                         </div>
                     </div>
                     <!-- quantity and price -->
-                    <div class="text-slate-800 dark:text-slate-200 text-base font-normal leading-normal">
+                    <div
+                        class="text-slate-800 dark:text-slate-200 text-base font-normal leading-normal"
+                    >
                         {{ product.order_qty }} X
                         {{
                             master.showCurrency(
                                 product.discount_price > 0
                                     ? product.discount_price
-                                    : product.price
+                                    : product.price,
                             )
                         }}
                     </div>
@@ -167,13 +202,17 @@
                         <DialogPanel
                             class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 text-left shadow-xl transition-all my-8 md:my-0 w-full sm:max-w-lg md:max-w-xl"
                         >
-                            <div class="bg-white dark:bg-slate-800 p-5 sm:p-8 relative">
+                            <div
+                                class="bg-white dark:bg-slate-800 p-5 sm:p-8 relative"
+                            >
                                 <!-- close button -->
                                 <div
                                     class="w-9 h-9 bg-slate-100 dark:bg-slate-700 rounded-[32px] absolute top-4 right-4 flex justify-center items-center cursor-pointer"
                                     @click="showRatingModal = false"
                                 >
-                                    <XMarkIcon class="w-6 h-6 text-slate-600 dark:text-slate-300" />
+                                    <XMarkIcon
+                                        class="w-6 h-6 text-slate-600 dark:text-slate-300"
+                                    />
                                 </div>
                                 <!-- end close button -->
 
@@ -192,13 +231,19 @@
                                         :star-size="42"
                                         inactiveColor="#cbd5e1"
                                     />
-                                    <div class="text-gray-600 dark:text-slate-300 text-lg">
+                                    <div
+                                        class="text-gray-600 dark:text-slate-300 text-lg"
+                                    >
                                         <span>{{ $t("Rating") }}:</span>
                                         {{ rating }}
                                     </div>
                                 </div>
                                 <div>
-                                    <label for="description" class="dark:text-slate-300">{{ $t('Message') }}</label>
+                                    <label
+                                        for="description"
+                                        class="dark:text-slate-300"
+                                        >{{ $t("Message") }}</label
+                                    >
                                     <textarea
                                         v-model="description"
                                         class="border border-gray-300 dark:border-slate-600 p-2 w-full rounded focus:border-primary outline-none bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
@@ -241,7 +286,7 @@ import {
 } from "@headlessui/vue";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 import { StarIcon } from "@heroicons/vue/24/solid";
-import { ArrowDownTrayIcon  } from "@heroicons/vue/20/solid";
+import { ArrowDownTrayIcon } from "@heroicons/vue/20/solid";
 import { FolderIcon } from "@heroicons/vue/20/solid";
 import { ClipboardDocumentListIcon } from "@heroicons/vue/20/solid";
 
@@ -302,7 +347,7 @@ const submitRating = () => {
                 order_id: props.order.id,
                 product_id: productID.value,
             },
-            { headers: { Authorization: `${authStore.token}` } }
+            { headers: { Authorization: `${authStore.token}` } },
         )
         .then((response) => {
             toast.success(response.data.message, {
@@ -329,5 +374,4 @@ const dropdownOpen = ref(null);
 function toggleDropdown(id) {
     dropdownOpen.value = dropdownOpen.value == id ? null : id;
 }
-
 </script>

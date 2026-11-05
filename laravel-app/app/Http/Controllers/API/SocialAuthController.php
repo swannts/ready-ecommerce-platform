@@ -7,6 +7,7 @@ use App\Http\Requests\SocialAuthRequest;
 use App\Http\Resources\UserResource;
 use App\Models\SocialAuth;
 use App\Repositories\UserRepository;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -29,7 +30,7 @@ class SocialAuthController extends Controller
      * Handle token exchange for a given provider (e.g. Google, Facebook, Twitter).
      *
      * @param  string  $provider
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function handleTokenExchange($provider, Request $request)
     {

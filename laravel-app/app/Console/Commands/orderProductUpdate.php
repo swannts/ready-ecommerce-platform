@@ -40,9 +40,9 @@ class orderProductUpdate extends Command
             });
         // Backfill buying_price from products
         OrderProduct::where(function ($q) {
-                $q->whereNull('buying_price')
-                    ->orWhere('buying_price', 0);
-            })
+            $q->whereNull('buying_price')
+                ->orWhere('buying_price', 0);
+        })
             ->with('product:id,buy_price')
             ->chunkById(500, function ($orderProducts) {
                 foreach ($orderProducts as $orderProduct) {
@@ -54,9 +54,9 @@ class orderProductUpdate extends Command
             });
         // Backfill price from products
         OrderProduct::where(function ($q) {
-                $q->whereNull('price')
-                    ->orWhere('price', 0);
-            })
+            $q->whereNull('price')
+                ->orWhere('price', 0);
+        })
             ->with('product:id,price,discount_price')
             ->chunkById(500, function ($orderProducts) {
                 foreach ($orderProducts as $orderProduct) {

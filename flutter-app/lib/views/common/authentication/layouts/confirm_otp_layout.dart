@@ -55,16 +55,16 @@ class _ConfirmOTPLayoutState extends ConsumerState<ConfirmOTPLayout> {
 
   Future initOTP() async {
     ref
-        .read(authControllerProvider.notifier).sendOTP(phone: widget.arguments.phoneNumber, isForgot: widget.arguments.isPasswordRecover).then((response) {
-
+        .read(authControllerProvider.notifier)
+        .sendOTP(
+            phone: widget.arguments.phoneNumber,
+            isForgot: widget.arguments.isPasswordRecover)
+        .then((response) {
       log("message---> ${response.data}");
       if (response.isSuccess) {
-
-        if(response.data != null){
+        if (response.data != null) {
           pinCodeController.text = response.data.toString();
         }
-
-
       }
       GlobalFunction.showCustomSnackbar(
           message: response.message, isSuccess: response.isSuccess);
@@ -101,7 +101,7 @@ class _ConfirmOTPLayoutState extends ConsumerState<ConfirmOTPLayout> {
     timer!.cancel();
     pinCodeController.removeListener(pinCodeListener);
 
-     pinCodeController.dispose();
+    pinCodeController.dispose();
 
     super.dispose();
   }

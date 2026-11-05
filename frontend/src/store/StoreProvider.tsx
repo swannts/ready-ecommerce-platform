@@ -5,20 +5,25 @@ import { Provider } from "react-redux";
 import { makeStore, AppStore } from "./index";
 import { hydrateCart } from "./slices/cartSlice";
 import { hydrateWishlist } from "./slices/wishlistSlice";
+import { hydrateCatalog } from "./slices/productsSlice";
+import { RiceCategory, RiceProduct } from "@/types/product";
 
 const CART_STORAGE_KEY = "ricemart_cart_v1";
 const WISHLIST_STORAGE_KEY = "ricemart_wishlist_v1";
 
 export default function StoreProvider({
   children,
+  initialCatalog,
 }: {
   children: React.ReactNode;
+  initialCatalog: { items: RiceProduct[]; categories: RiceCategory[] };
 }) {
   const storeRef = useRef<AppStore | null>(null);
 
   if (!storeRef.current) {
     // Create the store instance the first time this renders
     storeRef.current = makeStore();
+    storeRef.current.dispatch(hydrateCatalog(initialCatalog));
   }
 
   // Optional: Client-side local persistence rehydration and sync
@@ -52,11 +57,11 @@ export default function StoreProvider({
       try {
         localStorage.setItem(
           CART_STORAGE_KEY,
-          JSON.stringify(state.cart.items)
+          JSON.stringify(state.cart.items),
         );
         localStorage.setItem(
           WISHLIST_STORAGE_KEY,
-          JSON.stringify(state.wishlist.itemIds)
+          JSON.stringify(state.wishlist.itemIds),
         );
       } catch {
         // LocalStorage quota or access error
@@ -70,4 +75,3 @@ export default function StoreProvider({
 
   return <Provider store={storeRef.current}>{children}</Provider>;
 }
-

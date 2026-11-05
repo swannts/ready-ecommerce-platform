@@ -57,7 +57,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
         (p) =>
           p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           p.variety.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.supplierName.toLowerCase().includes(searchQuery.toLowerCase())
+          p.supplierName.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : [];
 
@@ -81,16 +81,25 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
             </span>
             <span className="text-[#686C64]">|</span>
             <span className="text-[#E7E1D7]">
-              B2B Wholesale Quotes: <span className="text-[#B88A35] font-medium">+1 (800) 742-3627</span>
+              B2B Wholesale Quotes:{" "}
+              <span className="text-[#B88A35] font-medium">
+                +1 (800) 742-3627
+              </span>
             </span>
           </div>
 
           <div className="flex items-center gap-4 text-xs">
-            <Link href="/wholesale" className="hover:text-[#B88A35] transition-colors">
+            <Link
+              href="/wholesale"
+              className="hover:text-[#B88A35] transition-colors"
+            >
               {t("Wholesale Portal")}
             </Link>
             <span className="text-[#686C64]">|</span>
-            <Link href="/suppliers" className="hover:text-[#B88A35] transition-colors">
+            <Link
+              href="/suppliers"
+              className="hover:text-[#B88A35] transition-colors"
+            >
               {t("Become a Supplier")}
             </Link>
             <span className="text-[#686C64]">|</span>
@@ -115,7 +124,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
 
           {/* Center: Desktop Navigation */}
           <nav
-            aria-label="Main Navigation"
+            aria-label={t("Main Navigation")}
             className="hidden lg:flex items-center gap-1 xl:gap-2 text-[15px] font-medium text-[#19221B]"
           >
             {/* Shop with Dropdown */}
@@ -127,7 +136,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
               <button
                 type="button"
                 className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg transition-colors hover:text-[#183A20] hover:bg-[#E7E1D7]/40 ${
-                  pathname.startsWith("/shop") ? "text-[#183A20] font-semibold" : ""
+                  pathname.startsWith("/shop")
+                    ? "text-[#183A20] font-semibold"
+                    : ""
                 }`}
                 aria-expanded={shopDropdownOpen}
               >
@@ -149,7 +160,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
                         onClick={() => setShopDropdownOpen(false)}
                       >
                         <span className="font-medium">{cat.name}</span>
-                        <span className="text-xs text-[#686C64]">{cat.productCount}</span>
+                        <span className="text-xs text-[#686C64]">
+                          {cat.productCount}
+                        </span>
                       </Link>
                     ))}
                     <div className="pt-2 border-t border-[#E7E1D7] mt-2">
@@ -220,21 +233,21 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
                     className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#19221B] hover:bg-[#FAF6EF] transition-colors"
                   >
                     <FileText className="w-4 h-4 text-[#B88A35]" />
-                    <span>Rice Grain Quality Guide</span>
+                    <span>{t("Rice Grain Quality Guide")}</span>
                   </Link>
                   <Link
                     href="/resources/wholesale-guide"
                     className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#19221B] hover:bg-[#FAF6EF] transition-colors"
                   >
                     <Building2 className="w-4 h-4 text-[#B88A35]" />
-                    <span>B2B Procurement Manual</span>
+                    <span>{t("B2B Procurement Manual")}</span>
                   </Link>
                   <Link
                     href="/contact"
                     className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#19221B] hover:bg-[#FAF6EF] transition-colors"
                   >
                     <HelpCircle className="w-4 h-4 text-[#B88A35]" />
-                    <span>Customer Support & FAQs</span>
+                    <span>{t("Customer Support & FAQs")}</span>
                   </Link>
                 </div>
               )}
@@ -243,14 +256,23 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
 
           {/* Right: Actions (Search, Wishlist, Cart, Account, Sign In) */}
           <div className="flex items-center gap-2 sm:gap-3">
-            <button type="button" onClick={() => setLocale(locale === "en" ? "bn" : "en")} className="px-2.5 py-2 rounded-lg border border-[#E7E1D7] text-xs font-bold text-[#183A20]" aria-label={locale === "en" ? "বাংলায় দেখুন" : "View in English"}>{locale === "en" ? "বাংলা" : "EN"}</button>
+            <button
+              type="button"
+              onClick={() => setLocale(locale === "en" ? "bn" : "en")}
+              className="px-2.5 py-2 rounded-lg border border-[#E7E1D7] text-xs font-bold text-[#183A20]"
+              aria-label={
+                locale === "en" ? "বাংলায় দেখুন" : t("View in English")
+              }
+            >
+              {locale === "en" ? "বাংলা" : "EN"}
+            </button>
             {/* Search Trigger */}
             <button
               type="button"
               onClick={triggerSearch}
               className="p-2.5 rounded-full text-[#19221B] hover:text-[#183A20] hover:bg-[#E7E1D7]/50 transition-colors"
-              aria-label="Search rice products"
-              title="Search rice products"
+              aria-label={t("Search rice products")}
+              title={t("Search rice products")}
             >
               <Search className="w-5 h-5" />
             </button>
@@ -287,8 +309,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
             <Link
               href="/login"
               className="hidden sm:inline-flex p-2.5 rounded-full text-[#19221B] hover:text-[#183A20] hover:bg-[#E7E1D7]/50 transition-colors"
-              aria-label="My Account"
-              title="My Account"
+              aria-label={t("My Account")}
+              title={t("My Account")}
             >
               <User className="w-5 h-5" />
             </Link>
@@ -306,10 +328,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2.5 rounded-lg text-[#19221B] hover:bg-[#E7E1D7]/50 lg:hidden transition-colors"
-              aria-label="Toggle mobile navigation"
+              aria-label={t("Toggle mobile navigation")}
               aria-expanded={mobileMenuOpen}
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
@@ -336,7 +362,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
                 className="flex items-center justify-between py-2 text-base font-semibold text-[#19221B] border-b border-[#E7E1D7]/50"
               >
                 <span>{t("Shop All Rice")}</span>
-                <span className="text-xs text-[#B88A35] font-normal">{t("View Catalog →")}</span>
+                <span className="text-xs text-[#B88A35] font-normal">
+                  {t("View Catalog →")}
+                </span>
               </Link>
 
               <div className="pl-3 space-y-2 border-l-2 border-[#E7E1D7]">
@@ -427,7 +455,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
               <input
                 type="text"
                 autoFocus
-                placeholder="Search rice (e.g. Basmati, Miniket, Nazirshail, Chinigura...)"
+                placeholder={t(
+                  "Search rice (e.g. Basmati, Miniket, Nazirshail, Chinigura...)",
+                )}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full text-base bg-transparent border-none text-[#19221B] placeholder-[#686C64] focus:outline-none"
@@ -473,7 +503,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
                       className="flex items-center justify-between p-3 rounded-xl hover:bg-[#FAF6EF] transition-colors border border-transparent hover:border-[#E7E1D7]"
                     >
                       <div>
-                        <div className="font-medium text-sm text-[#19221B]">{product.name}</div>
+                        <div className="font-medium text-sm text-[#19221B]">
+                          {product.name}
+                        </div>
                         <div className="text-xs text-[#686C64] mt-0.5">
                           {product.supplierName} • {product.origin}
                         </div>
@@ -483,7 +515,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
                           ${product.retailPricePerKg.toFixed(2)}/kg
                         </div>
                         <div className="text-[11px] text-[#B88A35] font-semibold">
-                          Wholesale from ${product.wholesaleTiers[0].unitPricePerKg.toFixed(2)}
+                          Wholesale from $
+                          {product.wholesaleTiers[0].unitPricePerKg.toFixed(2)}
                         </div>
                       </div>
                     </Link>
@@ -491,7 +524,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
                 </div>
               ) : (
                 <div className="text-center py-8 text-sm text-[#686C64]">
-                  No rice varieties found for &quot;{searchQuery}&quot;. Try searching for &quot;Basmati&quot; or &quot;Miniket&quot;.
+                  No rice varieties found for &quot;{searchQuery}&quot;. Try
+                  searching for &quot;Basmati&quot; or &quot;Miniket&quot;.
                 </div>
               )}
             </div>

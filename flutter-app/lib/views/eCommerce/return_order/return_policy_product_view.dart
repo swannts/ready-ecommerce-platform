@@ -9,4 +9,4 @@ class ReturnPolicyProductView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ReturnPolicyProductLayout(orderId: orderId);
   }
-} 
+}

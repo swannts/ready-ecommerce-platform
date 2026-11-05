@@ -735,7 +735,6 @@
 //   }
 // }
 
-
 import 'dart:async';
 import 'dart:developer';
 import 'dart:math' as math;
@@ -771,7 +770,8 @@ class EcommerceOrderTrackLayout extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<EcommerceOrderTrackLayout> createState() => _EcommerceOrderTrackLayoutState();
+  ConsumerState<EcommerceOrderTrackLayout> createState() =>
+      _EcommerceOrderTrackLayoutState();
 }
 
 class _EcommerceOrderTrackLayoutState
@@ -866,11 +866,9 @@ class _EcommerceOrderTrackLayoutState
       _endPosition!.longitude,
     );
 
-
     _animationController.duration = Duration(
       milliseconds: (distance * 60).clamp(2000, 6000).toInt(),
     );
-
 
     _startRotation = riderMarker!.rotation;
     _endRotation = _calculateBearing(_startPosition!, _endPosition!);
@@ -889,8 +887,10 @@ class _EcommerceOrderTrackLayoutState
   void _interpolateMarker() {
     final t = _animation.value;
 
-    final lat = _startPosition!.latitude + ((_endPosition!.latitude - _startPosition!.latitude) * t);
-    final lng = _startPosition!.longitude + ((_endPosition!.longitude - _startPosition!.longitude) * t);
+    final lat = _startPosition!.latitude +
+        ((_endPosition!.latitude - _startPosition!.latitude) * t);
+    final lng = _startPosition!.longitude +
+        ((_endPosition!.longitude - _startPosition!.longitude) * t);
 
     double diff = _endRotation - _startRotation;
     if (diff > 180) diff -= 360;
@@ -933,13 +933,11 @@ class _EcommerceOrderTrackLayoutState
 
     customerMarker = Marker(
       markerId: const MarkerId('customer'),
-      position:
-      LatLng(widget.customerLatitude!, widget.customerLongitude!),
+      position: LatLng(widget.customerLatitude!, widget.customerLongitude!),
       icon: customerIcon!,
     );
 
-    final riderPos =
-    LatLng(widget.riderLatitude!, widget.riderLongitude!);
+    final riderPos = LatLng(widget.riderLatitude!, widget.riderLongitude!);
 
     riderMarker = Marker(
       markerId: const MarkerId('rider'),
@@ -1018,65 +1016,77 @@ class _EcommerceOrderTrackLayoutState
     final locationAsync = ref.watch(locationProvider);
 
     return Scaffold(
-      body:locationAsync.isLoading ? Center(child: CircularProgressIndicator(),) : locationAsync.when(
-        data: (_) => GoogleMap(
-          initialCameraPosition: CameraPosition(
-            target: LatLng(
-              widget.customerLatitude!,
-              widget.customerLongitude!,
-            ),
-            zoom: 14,
-          ),
-          markers: {
-            if (customerMarker != null) customerMarker!,
-            if (riderMarker != null) riderMarker!,
-          },
-          polylines: polylines,
-          onMapCreated: (c) {
-            mapController = c;
-
-            // Ensure polyline after map ready
-            if (riderMarker != null) {
-              _drawPolyline(
-                riderMarker!.position,
-                LatLng(
-                  widget.customerLatitude!,
-                  widget.customerLongitude!,
+      body: locationAsync.isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : locationAsync.when(
+              data: (_) => GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(
+                    widget.customerLatitude!,
+                    widget.customerLongitude!,
+                  ),
+                  zoom: 14,
                 ),
-              );
-            }
-          },
-          myLocationEnabled: false,
-          myLocationButtonEnabled: false,
-        ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.error_outline, size: 48, color: Colors.red),
-              const SizedBox(height: 16),
-              // Text('Error: ${err.toString()}'),
-              Text("You have to allow location permission",
-                style: TextStyle(
-                    color: Colors.grey.shade500,
-                    fontSize: 16.sp
-                ),
+                markers: {
+                  if (customerMarker != null) customerMarker!,
+                  if (riderMarker != null) riderMarker!,
+                },
+                polylines: polylines,
+                onMapCreated: (c) {
+                  mapController = c;
 
-
+                  // Ensure polyline after map ready
+                  if (riderMarker != null) {
+                    _drawPolyline(
+                      riderMarker!.position,
+                      LatLng(
+                        widget.customerLatitude!,
+                        widget.customerLongitude!,
+                      ),
+                    );
+                  }
+                },
+                myLocationEnabled: false,
+                myLocationButtonEnabled: false,
               ),
-              const SizedBox(height: 16),
-              ElevatedButton(onPressed: (){
-                AppSettings.openAppSettings();
-              }, child: Text("1. Open Setting",style: TextStyle(color: Colors.red),)),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) => Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline,
+                        size: 48, color: Colors.red),
+                    const SizedBox(height: 16),
+                    // Text('Error: ${err.toString()}'),
+                    Text(
+                      "You have to allow location permission",
+                      style: TextStyle(
+                          color: Colors.grey.shade500, fontSize: 16.sp),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                        onPressed: () {
+                          AppSettings.openAppSettings();
+                        },
+                        child: Text(
+                          "1. Open Setting",
+                          style: TextStyle(color: Colors.red),
+                        )),
 
-              ElevatedButton(onPressed: (){
-                ref.refresh(locationProvider);
-              }, child: Text("2. Allow Location Permission",style: TextStyle(color: Colors.red),))
-            ],
-          ),
-        ),
-      ),
+                    ElevatedButton(
+                        onPressed: () {
+                          ref.refresh(locationProvider);
+                        },
+                        child: Text(
+                          "2. Allow Location Permission",
+                          style: TextStyle(color: Colors.red),
+                        ))
+                  ],
+                ),
+              ),
+            ),
     );
   }
 
@@ -1088,4 +1098,3 @@ class _EcommerceOrderTrackLayoutState
     super.dispose();
   }
 }
-

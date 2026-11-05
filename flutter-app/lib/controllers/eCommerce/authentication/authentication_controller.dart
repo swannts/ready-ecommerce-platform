@@ -42,7 +42,7 @@ class AuthController extends StateNotifier<bool> {
           .read(authServiceProvider)
           .sendOTP(phone: phone, isForgot: isForgot);
       final String message = response.data['message'];
-       var otp = response.data['data']['otp'];
+      var otp = response.data['data']['otp'];
       state = false;
       return CommonResponse(isSuccess: true, message: message, data: otp);
     } catch (error) {

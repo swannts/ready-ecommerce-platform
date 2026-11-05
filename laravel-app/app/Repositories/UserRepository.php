@@ -2,16 +2,16 @@
 
 namespace App\Repositories;
 
-use Carbon\Carbon;
 use App\Enums\Roles;
-use App\Models\User;
-use App\Models\Media;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Models\DriverLocation;
+use App\Models\Media;
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UserRepository extends Repository
 {
@@ -74,7 +74,7 @@ class UserRepository extends Repository
         $media = null;
 
         if ($profileUrl) {
-            $filename = 'users/' . Str::random(10) . '.jpg';
+            $filename = 'users/'.Str::random(10).'.jpg';
 
             $imageContent = Http::get($profileUrl)->body();
             Storage::disk('public')->put($filename, $imageContent);
@@ -253,6 +253,7 @@ class UserRepository extends Repository
             'phone_code' => $request->phone_code,
             'is_active' => true,
         ]);
+
         return $user;
     }
 

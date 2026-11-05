@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Gateway\Sslcommerz;
 
+use App\Enums\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Models\PaymentGateway;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class CallbackController extends Controller
 {
@@ -13,7 +16,7 @@ class CallbackController extends Controller
      * SSLCommerz redirects here after a payment attempt succeeds.
      * The amount/transaction are re-validated server-side before marking paid.
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function success(Payment $payment, Request $request)
     {
@@ -62,7 +65,7 @@ class CallbackController extends Controller
     /**
      * SSLCommerz redirects here when the payment fails.
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function fail(Payment $payment)
     {
@@ -72,7 +75,7 @@ class CallbackController extends Controller
     /**
      * SSLCommerz redirects here when the customer cancels.
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function cancel(Payment $payment)
     {
@@ -82,7 +85,7 @@ class CallbackController extends Controller
     /**
      * Server-to-server IPN notification.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function ipn(Payment $payment, Request $request)
     {
@@ -105,7 +108,7 @@ class CallbackController extends Controller
 
                 if (($validStatus === 'VALID' || $validStatus === 'VALIDATED')
                     && ($response->tran_id ?? null) === $payment->payment_token) {
-                    $payment->orders()->update(['payment_status' => \App\Enums\PaymentStatus::PAID->value]);
+                    $payment->orders()->update(['payment_status' => PaymentStatus::PAID->value]);
                     $payment->update(['is_paid' => true]);
                 }
             }

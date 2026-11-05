@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\API\ChatController;
 use App\Http\Controllers\API\Seller\BannerController;
 use App\Http\Controllers\API\Seller\DashboardController;
 use App\Http\Controllers\API\Seller\FileManagerController;
@@ -99,7 +98,7 @@ Route::prefix('/seller')->group(function () {
             Route::get('/unread-messages', 'unreadMessages');
         });
 
-        //return order
+        // return order
         Route::controller(ReturnOrderController::class)->group(function () {
             Route::get('/return-orders', 'index');
             Route::get('/return-order-details/{returnOrder}', 'show');

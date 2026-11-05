@@ -328,11 +328,8 @@ class EcommerceUpdateCustomerLocationLayout extends ConsumerStatefulWidget {
   final double? latitude;
   final double? longitude;
 
-  const EcommerceUpdateCustomerLocationLayout({
-    super.key,
-    this.latitude,
-    this.longitude
-  });
+  const EcommerceUpdateCustomerLocationLayout(
+      {super.key, this.latitude, this.longitude});
 
   @override
   ConsumerState<EcommerceUpdateCustomerLocationLayout> createState() =>
@@ -365,8 +362,6 @@ class _EcommerceTrackOrderLayoutState
   }
 
   Future<void> _updateAddress(LatLng position) async {
-
-
     final address = await getAddressFromLatLng(
       position.latitude,
       position.longitude,
@@ -410,200 +405,207 @@ class _EcommerceTrackOrderLayoutState
     return Scaffold(
       body: SafeArea(
         child: locationAsync.isLoading
-            ? const Center(child: CircularProgressIndicator()) :locationAsync.when(
-          data: (position) {
-            LatLng saveLatLng = LatLng(
-              widget.latitude ?? position.latitude,
-              widget.longitude ?? position.longitude,
-            );
+            ? const Center(child: CircularProgressIndicator())
+            : locationAsync.when(
+                data: (position) {
+                  LatLng saveLatLng = LatLng(
+                    widget.latitude ?? position.latitude,
+                    widget.longitude ?? position.longitude,
+                  );
 
-            // Set initial center position
-            if (centerPosition == null) {
-              centerPosition = saveLatLng;
-              _updateAddress(saveLatLng);
-            }
+                  // Set initial center position
+                  if (centerPosition == null) {
+                    centerPosition = saveLatLng;
+                    _updateAddress(saveLatLng);
+                  }
 
-            return Stack(
-              children: [
-                GoogleMap(
-                  key: const ValueKey('google_map_update'),
-                  initialCameraPosition: CameraPosition(
-                    target: saveLatLng,
-                    zoom: 17,
-                  ),
-                  onMapCreated: (controller) {
-                    mapController = controller;
-                  },
-                  myLocationEnabled: true,
-                  myLocationButtonEnabled: true,
-                  onCameraMove: (CameraPosition position) {
-                    setState(() {
-                      centerPosition = position.target;
-                      isMapMoving = true;
-                    });
-                  },
-                  onCameraIdle: () {
-                    setState(() {
-                      isMapMoving = false;
-                    });
-                    if (centerPosition != null) {
-                      _updateAddress(centerPosition!);
-                    }
-                  },
-                ),
-
-                // Center floating marker
-                Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                  return Stack(
                     children: [
-                      // Marker image
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        transform: Matrix4.translationValues(
-                          0,
-                          isMapMoving ? -20 : 0,
-                          0,
+                      GoogleMap(
+                        key: const ValueKey('google_map_update'),
+                        initialCameraPosition: CameraPosition(
+                          target: saveLatLng,
+                          zoom: 17,
                         ),
-                        child: Image.asset(
-                          Assets.png.markerPerson.path,
-                          width: 48,
-                          height: 48,
+                        onMapCreated: (controller) {
+                          mapController = controller;
+                        },
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: true,
+                        onCameraMove: (CameraPosition position) {
+                          setState(() {
+                            centerPosition = position.target;
+                            isMapMoving = true;
+                          });
+                        },
+                        onCameraIdle: () {
+                          setState(() {
+                            isMapMoving = false;
+                          });
+                          if (centerPosition != null) {
+                            _updateAddress(centerPosition!);
+                          }
+                        },
+                      ),
+
+                      // Center floating marker
+                      Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Marker image
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              transform: Matrix4.translationValues(
+                                0,
+                                isMapMoving ? -20 : 0,
+                                0,
+                              ),
+                              child: Image.asset(
+                                Assets.png.markerPerson.path,
+                                width: 48,
+                                height: 48,
+                              ),
+                            ),
+                            // Shadow/dot
+                            if (isMapMoving)
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.3),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                          ],
                         ),
                       ),
-                      // Shadow/dot
-                      if (isMapMoving)
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.3),
-                            shape: BoxShape.circle,
+
+                      // Back button
+                      Positioned(
+                        top: 10,
+                        left: 10,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Center(
+                              child: Icon(Icons.arrow_back),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      if (!isMapMoving)
+                        Positioned(
+                          top: 60.h,
+                          left: 16.w,
+                          right: 16.w,
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Text(
+                                    'Delivery Address:',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  if (currentAddress != null)
+                                    Text(
+                                      currentAddress!,
+                                      style: const TextStyle(fontSize: 12),
+                                    )
+                                  else
+                                    const Text(
+                                      'Move map to select location',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                      // Confirm button at bottom
+                      if (!isMapMoving)
+                        Positioned(
+                          bottom: 32.h,
+                          left: 16.w,
+                          right: 80.w,
+                          child: ElevatedButton(
+                            onPressed: centerPosition != null
+                                ? _confirmLocation
+                                : null,
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text(
+                              'Update Delivery Location',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
                     ],
-                  ),
-                ),
-
-                // Back button
-                Positioned(
-                  top: 10,
-                  left: 10,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
+                  );
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.error_outline,
+                          size: 48, color: Colors.red),
+                      const SizedBox(height: 16),
+                      // Text('Error: ${err.toString()}'),
+                      Text(
+                        "You have to allow location permission",
+                        style: TextStyle(
+                            color: Colors.grey.shade500, fontSize: 16.sp),
                       ),
-                      child: const Center(
-                        child: Icon(Icons.arrow_back),
-                      ),
-                    ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                          onPressed: () {
+                            AppSettings.openAppSettings();
+                          },
+                          child: Text(
+                            "1. Open Setting",
+                            style: TextStyle(color: Colors.red),
+                          )),
+
+                      ElevatedButton(
+                          onPressed: () {
+                            ref.refresh(locationProvider);
+                          },
+                          child: Text(
+                            "2. Allow Location Permission",
+                            style: TextStyle(color: Colors.red),
+                          ))
+                    ],
                   ),
                 ),
-
-
-             if(!isMapMoving)
-               Positioned(
-                 top: 60.h,
-                 left: 16.w,
-                 right: 16.w,
-                 child: Card(
-                   child: Padding(
-                     padding: const EdgeInsets.all(12.0),
-                     child: Column(
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                       mainAxisSize: MainAxisSize.min,
-                       children: [
-                         const Text(
-                           'Delivery Address:',
-                           style: TextStyle(
-                             fontWeight: FontWeight.bold,
-                             fontSize: 14,
-                           ),
-                         ),
-                         const SizedBox(height: 4),
-
-                         if (currentAddress != null)
-                           Text(
-                             currentAddress!,
-                             style: const TextStyle(fontSize: 12),
-                           )
-                         else
-                           const Text(
-                             'Move map to select location',
-                             style: TextStyle(
-                               fontSize: 12,
-                               fontStyle: FontStyle.italic,
-                             ),
-                           ),
-                       ],
-                     ),
-                   ),
-                 ),
-               ),
-
-                // Confirm button at bottom
-               if(!isMapMoving)
-                 Positioned(
-                   bottom: 32.h,
-                   left: 16.w,
-                   right: 80.w,
-                   child: ElevatedButton(
-                     onPressed: centerPosition != null
-                         ? _confirmLocation
-                         : null,
-                     style: ElevatedButton.styleFrom(
-                       padding: const EdgeInsets.symmetric(vertical: 16),
-                       shape: RoundedRectangleBorder(
-                         borderRadius: BorderRadius.circular(12),
-                       ),
-                     ),
-                     child: const Text(
-                       'Update Delivery Location',
-                       style: TextStyle(
-                         fontSize: 14,
-                         fontWeight: FontWeight.bold,
-                       ),
-                     ),
-                   ),
-                 ),
-              ],
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, stack) => Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.error_outline, size: 48, color: Colors.red),
-                const SizedBox(height: 16),
-               // Text('Error: ${err.toString()}'),
-                Text("You have to allow location permission",
-                  style: TextStyle(
-                    color: Colors.grey.shade500,
-                    fontSize: 16.sp
-                  ),
-
-
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(onPressed: (){
-                AppSettings.openAppSettings();
-                }, child: Text("1. Open Setting",style: TextStyle(color: Colors.red),)),
-
-                ElevatedButton(onPressed: (){
-                  ref.refresh(locationProvider);
-                }, child: Text("2. Allow Location Permission",style: TextStyle(color: Colors.red),))
-              ],
-            ),
-          ),
-        ),
+              ),
       ),
     );
   }

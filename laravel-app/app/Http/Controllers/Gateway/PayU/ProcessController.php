@@ -19,7 +19,7 @@ class ProcessController extends Controller
         $config = json_decode($paymentGateway->config);
 
         $paymentToken = Str::uuid()->toString();
-        $url =  $config->base_url;
+        $url = $config->base_url;
 
         $payment->update(['payment_token' => $paymentToken]);
 
@@ -33,26 +33,26 @@ class ProcessController extends Controller
         $firstname = 'John Doe';
         $email = 'admin@example.com';
 
-
-        $hashString = $key . '|' . $paymentToken . '|' . $payment->amount . '|' . $productinfo . '|' .
-                  $firstname . '|' . $email . '|||||||||||' . $salt;
+        $hashString = $key.'|'.$paymentToken.'|'.$payment->amount.'|'.$productinfo.'|'.
+                  $firstname.'|'.$email.'|||||||||||'.$salt;
 
         $hash = strtolower(hash('sha512', $hashString));
 
         // Prepare form data
         $data = [
-            'key'         => $key,
-            'txnid'       => $paymentToken,
-            'amount'      => $payment->amount,
+            'key' => $key,
+            'txnid' => $paymentToken,
+            'amount' => $payment->amount,
             'productinfo' => $productinfo,
-            'firstname'   => $firstname,
-            'email'       => $email,
-            'phone'       => '9999999999',
-            'furl'        => $cancelUrl,
-            'surl'        => $successUrl,
-            'hash'        => $hash,
+            'firstname' => $firstname,
+            'email' => $email,
+            'phone' => '9999999999',
+            'furl' => $cancelUrl,
+            'surl' => $successUrl,
+            'hash' => $hash,
             'service_provider' => 'payu_paisa',
         ];
+
         // Render a Blade view with an auto-submitting form
         return view('payment.payu', compact('data', 'url'));
     }

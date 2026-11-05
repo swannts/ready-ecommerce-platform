@@ -8,7 +8,7 @@ import { useAuth } from "./AuthStore";
 import { useMaster } from "./MasterStore";
 import { useGuestAddress } from "./GuestAddressStore";
 import { useMetaPixel } from "../composables/useMetaPixel";
-import router from '@/router'
+import router from "@/router";
 
 const toast = useToast();
 
@@ -103,63 +103,80 @@ export const useBasketStore = defineStore("basketStore", {
                     },
                 };
                 const authStore = useAuth();
-                axios.post("/cart/store", data, {
-                    headers: {
-                        Authorization: authStore.token,
-                        'X-Guest-Token': authStore.access_token
-                    },
-                }).then((response) => {
+                axios
+                    .post("/cart/store", data, {
+                        headers: {
+                            Authorization: authStore.token,
+                            "X-Guest-Token": authStore.access_token,
+                        },
+                    })
+                    .then((response) => {
+                        if (response.data.data.access_token) {
+                            authStore.setAccessToken(
+                                response.data.data.access_token,
+                            );
+                            this.addToCart(data, product);
+                            return;
+                        }
 
-                    if (response.data.data.access_token) {
-                        authStore.setAccessToken(response.data.data.access_token);
-                        this.addToCart(data, product);
-                        return
-                    }
+                        this.isLoadingCart = false;
 
+                        // After the guest-token retry above, so it only fires once.
+                        useMetaPixel().trackAddToCart(
+                            product,
+                            data.quantity ?? 1,
+                        );
 
-                    this.isLoadingCart = false;
+                        if (!data.is_buy_now) {
+                            this.total = response.data.data.total;
+                            this.products = response.data.data.cart_items;
+                            toast(content, {
+                                type: "default",
+                                hideProgressBar: true,
+                                icon: false,
+                                position:
+                                    masterStore.langDirection === "rtl"
+                                        ? "bottom-right"
+                                        : "bottom-left",
+                                toastClassName: "vue-toastification-alert",
+                                timeout: 3000,
+                            });
 
-                    // After the guest-token retry above, so it only fires once.
-                    useMetaPixel().trackAddToCart(product, data.quantity ?? 1);
-
-                    if (!data.is_buy_now) {
-                        this.total = response.data.data.total;
-                        this.products = response.data.data.cart_items;
-                        toast(content, {
-                            type: "default",
-                            hideProgressBar: true,
-                            icon: false,
-                            position: masterStore.langDirection === 'rtl' ? "bottom-right" : "bottom-left",
-                            toastClassName: "vue-toastification-alert",
-                            timeout: 3000,
-                        });
-
-                        if (response.data.data.info) {
-                            toast.warning(response.data.data.info, {
-                                position: authStore.langDirection === 'rtl' ? "bottom-right" : "bottom-left",
+                            if (response.data.data.info) {
+                                toast.warning(response.data.data.info, {
+                                    position:
+                                        authStore.langDirection === "rtl"
+                                            ? "bottom-right"
+                                            : "bottom-left",
+                                });
+                            }
+                        } else {
+                            // changing the route
+                            router.push({ name: "buynow" });
+                        }
+                    })
+                    .catch((error) => {
+                        this.isLoadingCart = false;
+                        if (error.response.status == 401) {
+                            toast.error("Please login first!", {
+                                position:
+                                    masterStore.langDirection === "rtl"
+                                        ? "bottom-right"
+                                        : "bottom-left",
+                            });
+                            const authStore = useAuth();
+                            authStore.logout();
+                            authStore.showLoginModal();
+                        } else {
+                            toast.error(error.response.data.message, {
+                                position:
+                                    masterStore.langDirection === "rtl"
+                                        ? "bottom-right"
+                                        : "bottom-left",
                             });
                         }
-                    } else {
-                        // changing the route
-                        router.push({ name: 'buynow' })
-
-                    }
-                }).catch((error) => {
-                    this.isLoadingCart = false;
-                    if (error.response.status == 401) {
-                        toast.error("Please login first!", {
-                            position: masterStore.langDirection === 'rtl' ? "bottom-right" : "bottom-left",
-                        });
-                        const authStore = useAuth();
-                        authStore.logout();
-                        authStore.showLoginModal();
-                    } else {
-                        toast.error(error.response.data.message, {
-                            position: masterStore.langDirection === 'rtl' ? "bottom-right" : "bottom-left",
-                        });
-                    }
-                    return error;
-                });
+                        return error;
+                    });
             }
         },
 
@@ -170,28 +187,34 @@ export const useBasketStore = defineStore("basketStore", {
         fetchCart() {
             const authStore = useAuth();
             if (authStore.token || authStore.access_token) {
-                axios.get("/carts", {
-                    headers: {
-                        Authorization: authStore.token,
-                        'X-Guest-Token': authStore.access_token
-                    },
-                }).then((response) => {
-                    this.total = response.data.data.total;
-                    this.products = response.data.data.cart_items;
+                axios
+                    .get("/carts", {
+                        headers: {
+                            Authorization: authStore.token,
+                            "X-Guest-Token": authStore.access_token,
+                        },
+                    })
+                    .then((response) => {
+                        this.total = response.data.data.total;
+                        this.products = response.data.data.cart_items;
 
-                    if (response.data.data.info) {
-                        toast.warning(response.data.data.info, {
-                            position: authStore.langDirection === 'rtl' ? "bottom-right" : "bottom-left",
-                        });
-                    }
-                }).catch((error) => {
-                    if (error.response.status === 401) {
-                        authStore.token = null;
-                        authStore.user = null;
-                        authStore.addresses = [];
-                        authStore.favoriteProducts = 0;
-                    }
-                });
+                        if (response.data.data.info) {
+                            toast.warning(response.data.data.info, {
+                                position:
+                                    authStore.langDirection === "rtl"
+                                        ? "bottom-right"
+                                        : "bottom-left",
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        if (error.response.status === 401) {
+                            authStore.token = null;
+                            authStore.user = null;
+                            authStore.addresses = [];
+                            authStore.favoriteProducts = 0;
+                        }
+                    });
             } else {
                 this.total = 0;
                 this.products = [];
@@ -223,65 +246,75 @@ export const useBasketStore = defineStore("basketStore", {
                         product: product,
                     },
                 };
-                axios.post("/cart/decrement",
-                    {
-                        product_id: product.id,
-                        cart_id: product.cart_id
-                    },
-                    {
-                        headers: {
-                            Authorization: authStore.token,
-                            'X-Guest-Token': authStore.access_token
+                axios
+                    .post(
+                        "/cart/decrement",
+                        {
+                            product_id: product.id,
+                            cart_id: product.cart_id,
                         },
-                    }
-                ).then((response) => {
-                    this.total = response.data.data.total;
-                    this.products = response.data.data.cart_items;
-                    this.fetchCheckoutProducts();
+                        {
+                            headers: {
+                                Authorization: authStore.token,
+                                "X-Guest-Token": authStore.access_token,
+                            },
+                        },
+                    )
+                    .then((response) => {
+                        this.total = response.data.data.total;
+                        this.products = response.data.data.cart_items;
+                        this.fetchCheckoutProducts();
 
-                    if (
-                        response.data.message == "product removed from cart"
-                    ) {
-                        const shopIds = this.products.map(
-                            (shop) => shop.shop_id
-                        );
-                        this.selectedShopIds = this.selectedShopIds.filter(
-                            (id) => shopIds.includes(id)
-                        );
-                        // const exists = shopIds.some((id) => selectedShopIds.includes(id));
+                        if (
+                            response.data.message == "product removed from cart"
+                        ) {
+                            const shopIds = this.products.map(
+                                (shop) => shop.shop_id,
+                            );
+                            this.selectedShopIds = this.selectedShopIds.filter(
+                                (id) => shopIds.includes(id),
+                            );
+                            // const exists = shopIds.some((id) => selectedShopIds.includes(id));
 
-                        if (this.products.length === 0) {
-                            this.selectedShopIds = [];
-                            this.checkoutProducts = [];
-                            this.total_amount = 0;
-                            this.delivery_charge = 0;
-                            this.coupon_discount = 0;
-                            this.payable_amount = 0;
-                        }
+                            if (this.products.length === 0) {
+                                this.selectedShopIds = [];
+                                this.checkoutProducts = [];
+                                this.total_amount = 0;
+                                this.delivery_charge = 0;
+                                this.coupon_discount = 0;
+                                this.payable_amount = 0;
+                            }
 
-                        toast(content, {
-                            type: "default",
-                            hideProgressBar: true,
-                            icon: false,
-                            position: masterStore.langDirection === 'rtl' ? "bottom-right" : "bottom-left",
-                            toastClassName: "vue-toastification-alert",
-                            timeout: 3000,
-                        });
-
-                        if (response.data.data.info) {
-                            toast.warning(response.data.data.info, {
-                                position: authStore.langDirection === 'rtl' ? "bottom-right" : "bottom-left",
+                            toast(content, {
+                                type: "default",
+                                hideProgressBar: true,
+                                icon: false,
+                                position:
+                                    masterStore.langDirection === "rtl"
+                                        ? "bottom-right"
+                                        : "bottom-left",
+                                toastClassName: "vue-toastification-alert",
+                                timeout: 3000,
                             });
+
+                            if (response.data.data.info) {
+                                toast.warning(response.data.data.info, {
+                                    position:
+                                        authStore.langDirection === "rtl"
+                                            ? "bottom-right"
+                                            : "bottom-left",
+                                });
+                            }
                         }
-                    }
-                }).catch((error) => {
-                    if (error.response.status == 401) {
-                        authStore.token = null;
-                        authStore.user = null;
-                        authStore.addresses = [];
-                        authStore.favoriteProducts = 0;
-                    }
-                });
+                    })
+                    .catch((error) => {
+                        if (error.response.status == 401) {
+                            authStore.token = null;
+                            authStore.user = null;
+                            authStore.addresses = [];
+                            authStore.favoriteProducts = 0;
+                        }
+                    });
             }
         },
 
@@ -293,35 +326,48 @@ export const useBasketStore = defineStore("basketStore", {
             const authStore = useAuth();
             const masterStore = useMaster();
             if (product) {
-                axios.post("/cart/increment", {
-                    product_id: product.id,
-                    cart_id: product.cart_id
-                }, {
-                    headers: {
-                        Authorization: authStore.token,
-                        'X-Guest-Token': authStore.access_token
-                    },
-                }).then((response) => {
-                    this.total = response.data.data.total;
-                    this.products = response.data.data.cart_items;
-                    this.fetchCheckoutProducts();
+                axios
+                    .post(
+                        "/cart/increment",
+                        {
+                            product_id: product.id,
+                            cart_id: product.cart_id,
+                        },
+                        {
+                            headers: {
+                                Authorization: authStore.token,
+                                "X-Guest-Token": authStore.access_token,
+                            },
+                        },
+                    )
+                    .then((response) => {
+                        this.total = response.data.data.total;
+                        this.products = response.data.data.cart_items;
+                        this.fetchCheckoutProducts();
 
-                    if (response.data.data.info) {
-                        toast.warning(response.data.data.info, {
-                            position: authStore.langDirection === 'rtl' ? "bottom-right" : "bottom-left",
+                        if (response.data.data.info) {
+                            toast.warning(response.data.data.info, {
+                                position:
+                                    authStore.langDirection === "rtl"
+                                        ? "bottom-right"
+                                        : "bottom-left",
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        toast.error(error.response.data.message, {
+                            position:
+                                masterStore.langDirection === "rtl"
+                                    ? "bottom-right"
+                                    : "bottom-left",
                         });
-                    }
-                }).catch((error) => {
-                    toast.error(error.response.data.message, {
-                        position: masterStore.langDirection === 'rtl' ? "bottom-right" : "bottom-left",
+                        if (error.response.status == 401) {
+                            authStore.token = null;
+                            authStore.user = null;
+                            authStore.addresses = [];
+                            authStore.favoriteProducts = 0;
+                        }
                     });
-                    if (error.response.status == 401) {
-                        authStore.token = null;
-                        authStore.user = null;
-                        authStore.addresses = [];
-                        authStore.favoriteProducts = 0;
-                    }
-                });
             }
         },
 
@@ -345,29 +391,43 @@ export const useBasketStore = defineStore("basketStore", {
             // buy-now checkout page with nothing to order.
             if (direction === "decrement" && product.quantity <= 1) return;
 
-            axios.post(`/cart/${direction}`, {
-                product_id: product.id,
-                cart_id: product.cart_id,
-                is_buy_now: true,
-            }, {
-                headers: {
-                    Authorization: authStore.token,
-                    'X-Guest-Token': authStore.access_token
-                },
-            }).then((response) => {
-                this.buyNowProduct = response.data.data.cart_items[0] ?? null;
-                this.buyNowRefreshKey++;
+            axios
+                .post(
+                    `/cart/${direction}`,
+                    {
+                        product_id: product.id,
+                        cart_id: product.cart_id,
+                        is_buy_now: true,
+                    },
+                    {
+                        headers: {
+                            Authorization: authStore.token,
+                            "X-Guest-Token": authStore.access_token,
+                        },
+                    },
+                )
+                .then((response) => {
+                    this.buyNowProduct =
+                        response.data.data.cart_items[0] ?? null;
+                    this.buyNowRefreshKey++;
 
-                if (response.data.data.info) {
-                    toast.warning(response.data.data.info, {
-                        position: masterStore.langDirection === 'rtl' ? "bottom-right" : "bottom-left",
+                    if (response.data.data.info) {
+                        toast.warning(response.data.data.info, {
+                            position:
+                                masterStore.langDirection === "rtl"
+                                    ? "bottom-right"
+                                    : "bottom-left",
+                        });
+                    }
+                })
+                .catch((error) => {
+                    toast.error(error.response?.data?.message, {
+                        position:
+                            masterStore.langDirection === "rtl"
+                                ? "bottom-right"
+                                : "bottom-left",
                     });
-                }
-            }).catch((error) => {
-                toast.error(error.response?.data?.message, {
-                    position: masterStore.langDirection === 'rtl' ? "bottom-right" : "bottom-left",
                 });
-            });
         },
 
         /**
@@ -377,32 +437,39 @@ export const useBasketStore = defineStore("basketStore", {
         removeFromBasket(product) {
             const authStore = useAuth();
             if (product) {
-                axios.post("/cart/delete",
-                    { product_id: product.id, cart_id: product.cart_id },
-                    {
-                        headers: {
-                            Authorization: authStore.token,
-                            'X-Guest-Token': authStore.access_token
+                axios
+                    .post(
+                        "/cart/delete",
+                        { product_id: product.id, cart_id: product.cart_id },
+                        {
+                            headers: {
+                                Authorization: authStore.token,
+                                "X-Guest-Token": authStore.access_token,
+                            },
                         },
-                    }
-                ).then((response) => {
-                    this.total = response.data.data.total;
-                    this.products = response.data.data.cart_items;
-                    this.fetchCheckoutProducts();
+                    )
+                    .then((response) => {
+                        this.total = response.data.data.total;
+                        this.products = response.data.data.cart_items;
+                        this.fetchCheckoutProducts();
 
-                    if (response.data.data.info) {
-                        toast.warning(response.data.data.info, {
-                            position: authStore.langDirection === 'rtl' ? "bottom-right" : "bottom-left",
-                        });
-                    }
-                }).catch((error) => {
-                    if (error.response.status == 401) {
-                        authStore.token = null;
-                        authStore.user = null;
-                        authStore.addresses = [];
-                        authStore.favoriteProducts = 0;
-                    }
-                });
+                        if (response.data.data.info) {
+                            toast.warning(response.data.data.info, {
+                                position:
+                                    authStore.langDirection === "rtl"
+                                        ? "bottom-right"
+                                        : "bottom-left",
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        if (error.response.status == 401) {
+                            authStore.token = null;
+                            authStore.user = null;
+                            authStore.addresses = [];
+                            authStore.favoriteProducts = 0;
+                        }
+                    });
             }
         },
 
@@ -415,7 +482,7 @@ export const useBasketStore = defineStore("basketStore", {
                 this.selectedShopIds.push(shop);
             } else {
                 this.selectedShopIds = this.selectedShopIds.filter(
-                    (item) => item !== shop
+                    (item) => item !== shop,
                 );
             }
             this.fetchCheckoutProducts();
@@ -448,49 +515,75 @@ export const useBasketStore = defineStore("basketStore", {
             const masterStore = useMaster();
             const guestAddressStore = useGuestAddress();
             if (authStore.token || authStore.access_token) {
-                const locationData = guestAddressStore.latitude && guestAddressStore.longitude
-                    ? { latitude: guestAddressStore.latitude, longitude: guestAddressStore.longitude }
-                    : {};
-                axios.post("/cart/checkout", {
-                    shop_ids: this.selectedShopIds,
-                    address_id: addressId && addressId,
-                    area_id: area_id && area_id,
-                    ...locationData,
-                }, {
-                    headers: {
-                        Authorization: authStore.token,
-                        'X-Guest-Token': authStore.access_token
-                    },
-                }).then((response) => {
-                    this.checkoutProducts = response.data.data.checkout_items;
-                    this.total_amount = response.data.data.checkout.total_amount;
-                    this.delivery_charge = response.data.data.checkout.delivery_charge;
-                    this.coupon_discount = response.data.data.checkout.coupon_discount;
-                    this.payable_amount = response.data.data.checkout.payable_amount;
-                    this.order_tax_amount = response.data.data.checkout.order_tax_amount;
-                    this.all_vat_taxes = response.data.data.checkout.all_vat_taxes;
-                    if (this.checkoutProducts.length === 0) {
-                        this.selectedShopIds = [];
-                    }
+                const locationData =
+                    guestAddressStore.latitude && guestAddressStore.longitude
+                        ? {
+                              latitude: guestAddressStore.latitude,
+                              longitude: guestAddressStore.longitude,
+                          }
+                        : {};
+                axios
+                    .post(
+                        "/cart/checkout",
+                        {
+                            shop_ids: this.selectedShopIds,
+                            address_id: addressId && addressId,
+                            area_id: area_id && area_id,
+                            ...locationData,
+                        },
+                        {
+                            headers: {
+                                Authorization: authStore.token,
+                                "X-Guest-Token": authStore.access_token,
+                            },
+                        },
+                    )
+                    .then((response) => {
+                        this.checkoutProducts =
+                            response.data.data.checkout_items;
+                        this.total_amount =
+                            response.data.data.checkout.total_amount;
+                        this.delivery_charge =
+                            response.data.data.checkout.delivery_charge;
+                        this.coupon_discount =
+                            response.data.data.checkout.coupon_discount;
+                        this.payable_amount =
+                            response.data.data.checkout.payable_amount;
+                        this.order_tax_amount =
+                            response.data.data.checkout.order_tax_amount;
+                        this.all_vat_taxes =
+                            response.data.data.checkout.all_vat_taxes;
+                        if (this.checkoutProducts.length === 0) {
+                            this.selectedShopIds = [];
+                        }
 
-                    if (!checkoutTracked && this.checkoutProducts.length > 0) {
-                        checkoutTracked = true;
-                        useMetaPixel().trackInitiateCheckout({
-                            products: flattenCheckoutProducts(this.checkoutProducts),
-                            value: this.payable_amount,
-                        });
-                    }
-                }).catch((error) => {
-                    if (error.response.status == 401) {
-                        authStore.token = null;
-                        authStore.user = null;
-                        authStore.addresses = [];
-                        authStore.favoriteProducts = 0;
-                        toast.error(error.response.data.message, {
-                            position: masterStore.langDirection === 'rtl' ? "bottom-right" : "bottom-left",
-                        });
-                    }
-                });
+                        if (
+                            !checkoutTracked &&
+                            this.checkoutProducts.length > 0
+                        ) {
+                            checkoutTracked = true;
+                            useMetaPixel().trackInitiateCheckout({
+                                products: flattenCheckoutProducts(
+                                    this.checkoutProducts,
+                                ),
+                                value: this.payable_amount,
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        if (error.response.status == 401) {
+                            authStore.token = null;
+                            authStore.user = null;
+                            authStore.addresses = [];
+                            authStore.favoriteProducts = 0;
+                            toast.error(error.response.data.message, {
+                                position:
+                                    masterStore.langDirection === "rtl"
+                                        ? "bottom-right"
+                                        : "bottom-left",
+                            });
+                        }
+                    });
             }
         },
 

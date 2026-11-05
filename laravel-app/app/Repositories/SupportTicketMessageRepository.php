@@ -22,7 +22,7 @@ class SupportTicketMessageRepository extends Repository
      * store new banner
      *
      * @param  $support_ticket_id
-     * @return supportTicket model
+     * @return SupportTicket model
      * */
     public static function storeByRequest(SupportTicketMessageRequest $request, SupportTicket $supportTicket): SupportTicketMessage
     {

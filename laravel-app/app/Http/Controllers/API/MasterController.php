@@ -18,6 +18,7 @@ use App\Models\VerifyManage;
 use App\Repositories\LanguageRepository;
 use App\Repositories\ThemeColorRepository;
 use Illuminate\Support\Facades\Cache;
+use Modules\PreOrder\App\Models\PreOrderSetting;
 
 class MasterController extends Controller
 {
@@ -110,7 +111,7 @@ class MasterController extends Controller
         $preOrderPolicy = '';
         $preOrderRefundPolicy = '';
         if (module_exists('PreOrder')) {
-            $preOrderSetting = \Modules\PreOrder\App\Models\PreOrderSetting::first();
+            $preOrderSetting = PreOrderSetting::first();
             if ($preOrderSetting && $preOrderSetting->pre_order_active) {
                 $preOrder = true;
                 $preOrderPolicy = $preOrderSetting->pre_order_policy;

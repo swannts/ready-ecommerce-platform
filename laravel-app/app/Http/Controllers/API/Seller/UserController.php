@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\API\Seller;
 
-use App\Models\Shop;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ShopInfoUpdateRequest;
+use App\Http\Requests\ShopSettingUpdateRequest;
+use App\Http\Requests\ShopUserUpdateRequest;
+use App\Http\Resources\SellerUserResource;
+use App\Models\Shop;
 use App\Repositories\ShopRepository;
 use App\Repositories\UserRepository;
-use App\Http\Resources\SellerUserResource;
-use App\Http\Requests\ShopInfoUpdateRequest;
-use App\Http\Requests\ShopUserUpdateRequest;
-use App\Http\Requests\ShopSettingUpdateRequest;
 
 class UserController extends Controller
 {
@@ -85,6 +85,4 @@ class UserController extends Controller
             'user' => SellerUserResource::make($shop->user),
         ]);
     }
-
-    
 }

@@ -1,5 +1,5 @@
 enum Environment { development, production }
- 
+
 class AppConstants {
   // Codecanyon
   static const String baseUrl = 'https://webreadyecommerce.razinsoft.com/api';

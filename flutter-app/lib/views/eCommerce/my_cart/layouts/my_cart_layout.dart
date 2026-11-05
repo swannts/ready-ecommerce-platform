@@ -67,11 +67,8 @@ class _EcommerceMyCartLayoutState extends ConsumerState<EcommerceMyCartLayout> {
         calculateCartSummery();
       }
 
-      print( ref.read(hiveServiceProvider).getLatitude());
-       print(ref.read(hiveServiceProvider).getLongitude());
-
-
-
+      print(ref.read(hiveServiceProvider).getLatitude());
+      print(ref.read(hiveServiceProvider).getLongitude());
     });
   }
 
@@ -84,13 +81,12 @@ class _EcommerceMyCartLayoutState extends ConsumerState<EcommerceMyCartLayout> {
         "sopids: ${ref.read(shopIdsProvider).toList().toString()} ${promoCodeController.text}}");
 
     ref.read(cartSummeryController.notifier).calculateCartSummery(
-          couponCode: promoCodeController.text,
-          shopIds: ref.read(shopIdsProvider).toList(),
-          // addressId: 1,/*------------------------ Add addressId-------------*/
-          isBuyNow: widget.isBuynow,
+        couponCode: promoCodeController.text,
+        shopIds: ref.read(shopIdsProvider).toList(),
+        // addressId: 1,/*------------------------ Add addressId-------------*/
+        isBuyNow: widget.isBuynow,
         latitude: ref.read(hiveServiceProvider).getLatitude(),
-        longitude: ref.read(hiveServiceProvider).getLongitude()
-        );
+        longitude: ref.read(hiveServiceProvider).getLongitude());
   }
 
   @override
@@ -244,15 +240,12 @@ class _EcommerceMyCartLayoutState extends ConsumerState<EcommerceMyCartLayout> {
                     ref
                         .read(shopIdsProvider.notifier)
                         .toggleShopId(cartItem.shopId);
-                    ref
-                        .read(cartSummeryController.notifier)
-                        .calculateCartSummery(
-                          couponCode: promoCodeController.text,
-                          shopIds: ref.read(shopIdsProvider).toList(),
-                          //addressId: 1,/*------------------------ Add addressId-------------*/
+                    ref.read(cartSummeryController.notifier).calculateCartSummery(
+                        couponCode: promoCodeController.text,
+                        shopIds: ref.read(shopIdsProvider).toList(),
+                        //addressId: 1,/*------------------------ Add addressId-------------*/
                         latitude: ref.read(hiveServiceProvider).getLatitude(),
-                        longitude: ref.read(hiveServiceProvider).getLongitude()
-                        );
+                        longitude: ref.read(hiveServiceProvider).getLongitude());
                   },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6.r),
@@ -504,12 +497,11 @@ class _EcommerceMyCartLayoutState extends ConsumerState<EcommerceMyCartLayout> {
                 onChanged: (v) {
                   ref.read(shopIdsProvider.notifier).toogleAllShopId();
                   ref.read(cartSummeryController.notifier).calculateCartSummery(
-                        couponCode: promoCodeController.text,
-                        shopIds: ref.read(shopIdsProvider).toList(),
-                        //  addressId: null,/*------------------------ Add addressId-------------*/
-                        latitude: ref.read(hiveServiceProvider).getLatitude(),
-                    longitude: ref.read(hiveServiceProvider).getLongitude()
-                      );
+                      couponCode: promoCodeController.text,
+                      shopIds: ref.read(shopIdsProvider).toList(),
+                      //  addressId: null,/*------------------------ Add addressId-------------*/
+                      latitude: ref.read(hiveServiceProvider).getLatitude(),
+                      longitude: ref.read(hiveServiceProvider).getLongitude());
                 },
               ),
               Gap(8.w)
@@ -545,13 +537,14 @@ class _EcommerceMyCartLayoutState extends ConsumerState<EcommerceMyCartLayout> {
                       ref
                           .read(cartSummeryController.notifier)
                           .calculateCartSummery(
-                            couponCode: promoCodeController.text.trim(),
-                            shopIds: ref.read(shopIdsProvider).toList(),
-                            //   addressId: 1,/*------------------------ Add addressId-------------*/
-                            showSnackbar: true,
-                          latitude: ref.read(hiveServiceProvider).getLatitude(),
-                          longitude: ref.read(hiveServiceProvider).getLongitude()
-                          );
+                              couponCode: promoCodeController.text.trim(),
+                              shopIds: ref.read(shopIdsProvider).toList(),
+                              //   addressId: 1,/*------------------------ Add addressId-------------*/
+                              showSnackbar: true,
+                              latitude:
+                                  ref.read(hiveServiceProvider).getLatitude(),
+                              longitude:
+                                  ref.read(hiveServiceProvider).getLongitude());
                     },
               child: Container(
                 height: 52.h,
@@ -804,7 +797,7 @@ class _EcommerceMyCartLayoutState extends ConsumerState<EcommerceMyCartLayout> {
                       ],
                     ),
                   ),
-                 Gap( 48.w),
+                  Gap(48.w),
                   Flexible(
                     flex: 3,
                     child: AbsorbPointer(

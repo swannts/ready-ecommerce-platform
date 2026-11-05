@@ -20,12 +20,12 @@ class PreOrderSettingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "pre_order_status" => "nullable",
-            "pre_order_for_shop" => "nullable",
-            "shop_commission" => "nullable|numeric",
-            "commission_type" => "nullable|string|in:percentage,fixed",
-            "pre_order_policy" => "nullable|string|max:300",
-            "pre_order_refund_policy" => "nullable|string|max:300",
+            'pre_order_status' => 'nullable',
+            'pre_order_for_shop' => 'nullable',
+            'shop_commission' => 'nullable|numeric',
+            'commission_type' => 'nullable|string|in:percentage,fixed',
+            'pre_order_policy' => 'nullable|string|max:300',
+            'pre_order_refund_policy' => 'nullable|string|max:300',
         ];
     }
 }

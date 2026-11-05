@@ -2,11 +2,11 @@
 
 namespace Modules\Purchase\App\Repositories;
 
-use App\Repositories\Repository;
 use App\Enums\Roles;
-use Illuminate\Http\Request;
-use App\Repositories\UserRepository;
 use App\Repositories\MediaRepository;
+use App\Repositories\Repository;
+use App\Repositories\UserRepository;
+use Illuminate\Http\Request;
 use Modules\Purchase\App\Models\Supplier;
 
 class SupplierRepository extends Repository

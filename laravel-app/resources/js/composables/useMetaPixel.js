@@ -17,7 +17,8 @@ import { useAuth } from "../stores/AuthStore";
  */
 
 const readMeta = (name) =>
-    document.querySelector(`meta[name="${name}"]`)?.getAttribute("content") ?? "";
+    document.querySelector(`meta[name="${name}"]`)?.getAttribute("content") ??
+    "";
 
 // Read once — these are rendered server side and never change during a session.
 const pixelId = readMeta("meta-pixel-id");
@@ -32,7 +33,9 @@ const FBCLID_STORAGE_KEY = "meta_fbclid";
  */
 export const rememberFbClickId = () => {
     try {
-        const fbclid = new URLSearchParams(window.location.search).get("fbclid");
+        const fbclid = new URLSearchParams(window.location.search).get(
+            "fbclid",
+        );
         if (fbclid) {
             localStorage.setItem(FBCLID_STORAGE_KEY, fbclid);
         }
@@ -64,7 +67,8 @@ export function useMetaPixel() {
     const isEnabled = () => Boolean(pixelId);
 
     /** The currency products are priced in, not the one the visitor selected. */
-    const currency = () => master.currency?.name || master.defaultCurrency || "USD";
+    const currency = () =>
+        master.currency?.name || master.defaultCurrency || "USD";
 
     /** Selling price of a product: discounted when there is a discount. */
     const priceOf = (product) => {
@@ -96,7 +100,9 @@ export function useMetaPixel() {
 
         try {
             if (typeof window.fbq === "function") {
-                window.fbq("track", eventName, customData, { eventID: eventId });
+                window.fbq("track", eventName, customData, {
+                    eventID: eventId,
+                });
             }
         } catch {
             // A blocked or half-loaded pixel must never break the page.
@@ -120,7 +126,7 @@ export function useMetaPixel() {
                 },
                 // Signed-in visitors match far better: the token lets the server
                 // hash their real email/phone instead of relying on cookies alone.
-                { headers: { Authorization: authStore.token } }
+                { headers: { Authorization: authStore.token } },
             )
             .catch(() => {});
     };
@@ -134,7 +140,8 @@ export function useMetaPixel() {
             content_type: "product",
             content_ids: [String(product.id)],
             content_name: product.name,
-            content_category: product.category || product.brand || product.shop?.name || null,
+            content_category:
+                product.category || product.brand || product.shop?.name || null,
             contents: [contentOf(product)],
             value: priceOf(product),
             currency: currency(),
@@ -179,11 +186,14 @@ export function useMetaPixel() {
                 content_type: "product",
                 content_ids: contents.map((item) => item.id),
                 contents,
-                num_items: contents.reduce((sum, item) => sum + item.quantity, 0),
+                num_items: contents.reduce(
+                    (sum, item) => sum + item.quantity,
+                    0,
+                ),
                 value: Number(value) || 0,
                 currency: currency(),
             },
-            userData
+            userData,
         );
     };
 

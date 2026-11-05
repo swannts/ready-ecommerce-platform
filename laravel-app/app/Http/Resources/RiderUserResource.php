@@ -26,7 +26,7 @@ class RiderUserResource extends JsonResource
             'date_of_birth' => $this->date_of_birth,
             'driving_lience' => $this->driving_lience,
             'vehicle_type' => $this->vehicle_type,
-            'location' =>$this->driver->driverLocation?->exists() ? DriverLocationResource::make($this->driver->driverLocation) : []
+            'location' => $this->driver->driverLocation?->exists() ? DriverLocationResource::make($this->driver->driverLocation) : [],
         ];
     }
 }

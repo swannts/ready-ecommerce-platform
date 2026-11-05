@@ -48,7 +48,10 @@ export interface B2BQuoteRequest {
   targetPricePerKg?: number;
   deliveryDestination: string;
   deliveryTimeframe: string;
-  packagingRequirement: "50kg Sacks" | "25kg Sacks" | "1 Ton Bulk Bags" | "Custom";
+  packagingRequirement:
+    | "50kg Sacks"
+    | "25kg Sacks"
+    | "1 Ton Bulk Bags"
+    | "Custom";
   notes?: string;
 }
-

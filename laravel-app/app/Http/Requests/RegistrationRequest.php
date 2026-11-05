@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\VerifyManage;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Cache;
 
@@ -19,7 +20,7 @@ class RegistrationRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -42,14 +43,14 @@ class RegistrationRequest extends FormRequest
         $phoneValidate = [$phoneRequired, 'min_digits:'.$min, 'max_digits:'.$max];
         $countryRequired = $this->routeIs('admin.customer.store') ? 'nullable' : 'nullable';
         $required = $this->routeIs('admin.customer.store') ? 'required' : 'nullable';
-        $confirmed = $this->routeIs('admin.customer.store') ? 'confirmed' :'' ;
+        $confirmed = $this->routeIs('admin.customer.store') ? 'confirmed' : '';
 
         return [
             'name' => ['required', 'string', 'min:5', 'max:100', 'regex:/^[a-zA-Z\s\.\'-]+$/', 'not_regex:/^\s*$/'],
             'phone' => $phoneValidate,
             'email' => [$emailRequired, 'email:rfc,dns', 'max:150'],
-            'password' => ['required','string','min:6', $confirmed],
-            'password_confirmation' => [$required,'min:6'],
+            'password' => ['required', 'string', 'min:6', $confirmed],
+            'password_confirmation' => [$required, 'min:6'],
             'country' => [$countryRequired, 'string', 'max:100'],
             'gender' => ['nullable', 'string'],
             'profile_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,svg', 'max:2048'],

@@ -1,12 +1,12 @@
 export const slugify = (text) => {
-    return String(text || '')
+    return String(text || "")
         .toLowerCase()
         .trim()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
 };
 
-const SHOP_SLUG_MAP_KEY = 'shopSlugIdMap';
+const SHOP_SLUG_MAP_KEY = "shopSlugIdMap";
 
 const readShopSlugMap = () => {
     try {

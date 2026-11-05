@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Country;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AreaResource;
+use App\Http\Resources\CountryResource;
+use App\Models\Country;
 use App\Repositories\AreaRepository;
 use Illuminate\Support\Facades\Cache;
-use App\Http\Resources\CountryResource;
 
 class CountryController extends Controller
 {
@@ -21,14 +21,13 @@ class CountryController extends Controller
             'countries' => CountryResource::collection($countries),
         ]);
     }
+
     public function indexAreas()
     {
-        $areas =  AreaRepository::query()->orderBy('name', 'asc')->isActive()->get();
+        $areas = AreaRepository::query()->orderBy('name', 'asc')->isActive()->get();
 
         return $this->json('all areas', [
             'areas' => AreaResource::collection($areas),
         ]);
     }
-
-
 }

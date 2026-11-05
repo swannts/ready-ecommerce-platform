@@ -77,6 +77,7 @@ class GeneraleSettingRepository extends Repository
             ]
         );
     }
+
     public static function updateByAiPromptRequest($request): void
     {
         $generaleSetting = GeneraleSetting::first();

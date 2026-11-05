@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { useLocale } from "@/lib/i18n";
 
 interface RiceLogoProps {
   variant?: "dark" | "light";
@@ -12,13 +15,14 @@ export const RiceLogo: React.FC<RiceLogoProps> = ({
   className = "",
   showSubtitle = true,
 }) => {
+  const { t } = useLocale();
   const isLight = variant === "light";
 
   return (
     <Link
       href="/"
       className={`group inline-flex items-center gap-3 transition-transform duration-200 hover:scale-[1.01] ${className}`}
-      aria-label="RiceMart Home"
+      aria-label={t("RiceMart Home")}
     >
       {/* Handcrafted Wheat / Rice Ear Emblem */}
       <div
@@ -91,4 +95,3 @@ export const RiceLogo: React.FC<RiceLogoProps> = ({
     </Link>
   );
 };
-

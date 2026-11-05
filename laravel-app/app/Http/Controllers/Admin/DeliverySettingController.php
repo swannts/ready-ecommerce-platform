@@ -11,6 +11,7 @@ class DeliverySettingController extends Controller
     public function index()
     {
         $generaleSetting = GeneraleSetting::first();
+
         return view('admin.delivery-setting.index', compact('generaleSetting'));
     }
 

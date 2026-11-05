@@ -13,4 +13,3 @@ export interface Supplier {
   bannerImage: string;
   avatarImage: string;
 }
-

@@ -20,12 +20,14 @@ export interface RiceProduct {
   categorySlug: string;
   brand: string;
   supplierId: string;
+  supplierSlug?: string;
   supplierName: string;
   supplierVerified: boolean;
   origin: string;
   description: string;
   grainType: "Extra Long" | "Long Grain" | "Medium Grain" | "Short Grain";
-  processingType: "Raw / White" | "Parboiled" | "Brown / Wholegrain" | "Aromatic / Aged";
+  processingType:
+    "Raw / White" | "Parboiled" | "Brown / Wholegrain" | "Aromatic / Aged";
   images: string[];
   retailPricePerKg: number;
   packagingOptions: PackagingOption[];
@@ -50,4 +52,3 @@ export interface RiceCategory {
   popularUses: string;
   productCount: number;
 }
-

@@ -43,16 +43,31 @@
     <!-- You may also like -->
     <section v-if="relatedProducts?.length > 0" class="mt-2 mb-6">
         <div class="flex items-center justify-between mb-4">
-            <h3 class="text-slate-800 text-base font-bold">{{ $t('You may also like') }}</h3>
-            <router-link :to="{ name: 'products' }"
-                class="text-primary text-xs font-semibold hover:underline">
-                {{ $t('View all') }}
+            <h3 class="text-slate-800 text-base font-bold">
+                {{ $t("You may also like") }}
+            </h3>
+            <router-link
+                :to="{ name: 'products' }"
+                class="text-primary text-xs font-semibold hover:underline"
+            >
+                {{ $t("View all") }}
             </router-link>
         </div>
 
-        <swiper :spaceBetween="12" :freeMode="true" :navigation="true"
-            :modules="modules" class="sidebar-swiper pb-2"
-            :breakpoints="{ 0: { slidesPerView: 2 }, 640: { slidesPerView: 3 }, 768: { slidesPerView: 4 }, 1024: { slidesPerView: 5 }, 1280: { slidesPerView: 6 } }">
+        <swiper
+            :spaceBetween="12"
+            :freeMode="true"
+            :navigation="true"
+            :modules="modules"
+            class="sidebar-swiper pb-2"
+            :breakpoints="{
+                0: { slidesPerView: 2 },
+                640: { slidesPerView: 3 },
+                768: { slidesPerView: 4 },
+                1024: { slidesPerView: 5 },
+                1280: { slidesPerView: 6 },
+            }"
+        >
             <swiper-slide v-for="p in relatedProducts" :key="p.id">
                 <ProductCard :product="p" />
             </swiper-slide>
@@ -61,13 +76,13 @@
 </template>
 
 <script setup>
-import { FreeMode, Navigation } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import { useMaster } from '../stores/MasterStore';
-import ProductCard from './ProductCard.vue';
-import 'swiper/css';
-import 'swiper/css/free-mode';
-import 'swiper/css/navigation';
+import { FreeMode, Navigation } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { useMaster } from "../stores/MasterStore";
+import ProductCard from "./ProductCard.vue";
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
 
 const masterStore = useMaster();
 const modules = [FreeMode, Navigation];
@@ -89,6 +104,10 @@ defineProps({
     font-size: 10px !important;
     font-weight: 900;
 }
-.sidebar-swiper .swiper-button-prev { left: -4px; }
-.sidebar-swiper .swiper-button-next { right: -4px; }
+.sidebar-swiper .swiper-button-prev {
+    left: -4px;
+}
+.sidebar-swiper .swiper-button-next {
+    right: -4px;
+}
 </style>

@@ -11,6 +11,7 @@ use App\Models\Scopes\PreOderProduct;
 use App\Models\Shop;
 use App\Repositories\ProductRepository;
 use App\Repositories\ShopRepository;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
@@ -91,7 +92,7 @@ class ShopController extends Controller
     /**
      * Get top 10 shops.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function topShops()
     {

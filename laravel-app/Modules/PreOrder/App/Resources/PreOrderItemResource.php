@@ -12,20 +12,21 @@ class PreOrderItemResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $rate= $this->currency_rate ?? 1;
-        $price= $this->price * $rate;
-        $discount= $this->discount * $rate;
-        $productPrice= $this->product_price * $rate;
+        $rate = $this->currency_rate ?? 1;
+        $price = $this->price * $rate;
+        $discount = $this->discount * $rate;
+        $productPrice = $this->product_price * $rate;
+
         return [
-            "id"=> $this->id,
-            "product_id"=>$this->product_id,
-            "product_slug"=>$this->product?->slug ?? '',
+            'id' => $this->id,
+            'product_id' => $this->product_id,
+            'product_slug' => $this->product?->slug ?? '',
             'product_name' => $this->product_name,
-            'product_price'=> $productPrice,
-            'discount'   =>$discount,
-            'quantity'   => $this->quantity,
-            'price'      => $price,
-            'total_price'=> $price * $this->quantity,
+            'product_price' => $productPrice,
+            'discount' => $discount,
+            'quantity' => $this->quantity,
+            'price' => $price,
+            'total_price' => $price * $this->quantity,
 
         ];
     }

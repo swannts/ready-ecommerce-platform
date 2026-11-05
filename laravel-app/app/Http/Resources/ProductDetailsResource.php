@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Number;
+use Modules\PreOrder\App\Resources\PreProductResource;
 
 class ProductDetailsResource extends JsonResource
 {
@@ -74,7 +75,7 @@ class ProductDetailsResource extends JsonResource
             'discount_price' => (float) number_format($discountPrice, 2, '.', ''),
             'discount_percentage' => (float) number_format($discountPercentage, 2, '.', ''),
             'discount_type' => $this->discount_type,
-            'discount'   => (float) number_format($this->discount, 2, '.', ''),
+            'discount' => (float) number_format($this->discount, 2, '.', ''),
             'rating' => (float) ($this->catalog_rating ?? $this->averageRating ?? 0.0),
             'total_reviews' => (string) Number::abbreviate($this->catalog_review_count ?? $this->reviews?->count() ?? 0, maxPrecision: 2),
             'total_sold' => (string) number_format($totalSold, 0, '.', ','),
@@ -109,14 +110,14 @@ class ProductDetailsResource extends JsonResource
                 'rating' => (float) round($shop?->averageRating, 1),
                 'estimated_delivery_time' => (string) ($shop?->estimated_delivery_time ?? '2-4 days'),
                 'delivery_charge' => (float) getDeliveryCharge(1),
-                'last_online' => $lastOnline
+                'last_online' => $lastOnline,
             ],
             'flash_sale' => $flashSaleProduct ? FlashSaleResource::make($flashSale) : null,
             'meta_title' => $this->meta_title ?? $name,
             'meta_description' => $this->meta_description ?? $name,
             'meta_keywords' => $this->meta_keywords,
             'is_preorder' => $isPreorder,
-            'pre_order_details' => $isPreorder ? \Modules\PreOrder\App\Resources\PreProductResource::make($this) : []
+            'pre_order_details' => $isPreorder ? PreProductResource::make($this) : [],
         ];
     }
 }

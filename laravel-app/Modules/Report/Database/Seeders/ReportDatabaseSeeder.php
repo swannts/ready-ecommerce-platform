@@ -11,6 +11,6 @@ class ReportDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-         $this->call(ReportPermissionSeeder::class);
+        $this->call(ReportPermissionSeeder::class);
     }
 }

@@ -2,13 +2,13 @@
 
 namespace Modules\Purchase\App\Http\Controllers;
 
-use App\Models\Order;
 use App\Enums\OrderStatus;
+use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\OrderProduct;
+use App\Models\PosCartProduct;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Models\PosCartProduct;
-use App\Http\Controllers\Controller;
 use Modules\Purchase\App\Models\ProductSku;
 
 class OrderController extends Controller
@@ -18,8 +18,7 @@ class OrderController extends Controller
         $productSku = ProductSku::where('sku', $request->sku)
             ->where('in_stock', true)
             ->first();
-        $orderId = (int)$request->order_id;
-
+        $orderId = (int) $request->order_id;
 
         if (! $productSku) {
             return $this->json('Sorry! Barcode not found', [], Response::HTTP_BAD_REQUEST);
@@ -28,7 +27,7 @@ class OrderController extends Controller
         $product = $productSku->product;
         $order = Order::withoutGlobalScopes()->find($orderId);
 
-        if (!$order) {
+        if (! $order) {
             return $this->json('Order not found', [], Response::HTTP_BAD_REQUEST);
         }
         if ($order->order_status->value == OrderStatus::CANCELLED->value) {
@@ -57,9 +56,8 @@ class OrderController extends Controller
         if (empty($request->scanned_barcodes)) {
             return back()->with('error', __('Please scan or add barcodes first'));
         }
-        $orderId = (int)$request->order_id;
+        $orderId = (int) $request->order_id;
         $order = Order::withoutGlobalScopes()->find($orderId);
-
 
         if ($order->order_status->value == OrderStatus::CANCELLED->value) {
             return back()->with('error', __('Order Cancelled'));
@@ -71,7 +69,7 @@ class OrderController extends Controller
         $scannedBarCodes = $request->scanned_barcodes;
 
         foreach ($scannedBarCodes as $key => $barcode) {
-            if (!$barcode) {
+            if (! $barcode) {
                 continue;
             }
 
@@ -82,7 +80,7 @@ class OrderController extends Controller
                     ->where('product_id', $productSku->product_id)
                     ->first();
 
-                if (!$orderProduct) {
+                if (! $orderProduct) {
                     continue;
                 }
 
@@ -122,6 +120,7 @@ class OrderController extends Controller
                 unset($skuNo[$request->sl]);
                 $product->update(['sku_no' => json_encode($skuNo)]);
             }
+
             return $this->json('Sorry! Barcode not found', [], Response::HTTP_BAD_REQUEST);
         }
 
@@ -130,7 +129,6 @@ class OrderController extends Controller
         }
 
         $data = [$request->sl => $request->sku];
-
 
         if ($product->sku_no) {
             $skuNo = json_decode($product->sku_no, true);

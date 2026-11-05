@@ -178,9 +178,7 @@ class _EcommerceOrderNowLayoutState
                 setState(() {
                   productQuantity++;
                 });
-                ref
-                    .read(buyNowSummeryController.notifier)
-                    .calculateCartSummery(
+                ref.read(buyNowSummeryController.notifier).calculateCartSummery(
                       couponCode: promoCodeController.text.trim().isEmpty
                           ? null
                           : promoCodeController.text.trim(),
@@ -570,7 +568,8 @@ class _EcommerceOrderNowLayoutState
                               double.parse(
                                 _getPayableAmount(),
                               ),
-                              ref.watch(buyNowSummeryController)['applyCoupon'] &&
+                              ref.watch(buyNowSummeryController)[
+                                          'applyCoupon'] &&
                                       promoCodeController.text.trim().isNotEmpty
                                   ? promoCodeController.text.trim()
                                   : null,

@@ -2,12 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Shop;
-use App\Models\User;
 use GPBMetadata\Google\Api\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Twilio\Rest\Chat;
 
 class ChatResource extends JsonResource
 {
@@ -27,8 +24,8 @@ class ChatResource extends JsonResource
             'message' => $this->message ?? null,
             'is_seen' => $this->is_seen ?? null,
             'created_at' => $this->created_at ?? null,
-            "shop_active_status" => $this->shop->last_online >= now() ? true : false,
-            "user_active_status" => $this->user->last_online >= now() ? true : false,
+            'shop_active_status' => $this->shop->last_online >= now() ? true : false,
+            'user_active_status' => $this->user->last_online >= now() ? true : false,
         ];
     }
 }

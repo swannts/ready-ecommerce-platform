@@ -2,13 +2,13 @@
 
 namespace Modules\Purchase\App\Repositories;
 
+use App\Models\Product;
+use App\Repositories\MediaRepository;
 use App\Repositories\Repository;
 use Carbon\Carbon;
-use App\Models\Product;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\MediaRepository;
-use Modules\Purchase\App\Models\Purchase;
 use Modules\Purchase\App\Models\ProductSku;
+use Modules\Purchase\App\Models\Purchase;
 use Modules\Purchase\App\Models\PurchaseProduct;
 
 class PurchaseRepository extends Repository
@@ -39,7 +39,6 @@ class PurchaseRepository extends Repository
             'note' => $request->note,
             'shop_id' => $shop?->id,
         ]);
-
 
         return $purchase;
     }
@@ -89,11 +88,11 @@ class PurchaseRepository extends Repository
     {
         return DB::transaction(function () use ($product, $purchase, $purchaseProduct, $request) {
 
-            if (!$purchaseProduct) {
+            if (! $purchaseProduct) {
                 $purchaseProduct = PurchaseProduct::create([
                     'purchase_id' => $purchase->id,
                     'product_id' => $product->id,
-                    'price' => 0
+                    'price' => 0,
                 ]);
                 $purchase->increment('total_product', 1);
             }
@@ -161,7 +160,6 @@ class PurchaseRepository extends Repository
             return $totalCount;
         });
     }
-
 
     public static function deleteProductBarcode($purchase, $request)
     {

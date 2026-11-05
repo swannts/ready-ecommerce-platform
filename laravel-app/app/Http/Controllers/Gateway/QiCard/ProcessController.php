@@ -14,7 +14,6 @@ class ProcessController extends Controller
      *
      * @return string
      */
-
     public static function process($paymentGateway, Payment $payment, ?array $info = null)
     {
         $config = json_decode($paymentGateway->config);
@@ -28,16 +27,16 @@ class ProcessController extends Controller
         $requestId = (string) Str::uuid();
 
         $payload = [
-            "requestId" => $requestId,
-            "amount" => $amountIQD,
-            "currency" => "IQD",
-            "locale" => "en_US",
-            "finishPaymentUrl" => $successUrl,
-            "notificationUrl" => "",
-            "customerInfo" => [
-                "firstName" => $info['name'] ?? 'Not Available',
-                "email" => $info['email'] ?? 'Not Available',
-                "phone" => $info['phone'] ?? '0000000000',
+            'requestId' => $requestId,
+            'amount' => $amountIQD,
+            'currency' => 'IQD',
+            'locale' => 'en_US',
+            'finishPaymentUrl' => $successUrl,
+            'notificationUrl' => '',
+            'customerInfo' => [
+                'firstName' => $info['name'] ?? 'Not Available',
+                'email' => $info['email'] ?? 'Not Available',
+                'phone' => $info['phone'] ?? '0000000000',
             ],
         ];
 
@@ -51,13 +50,13 @@ class ProcessController extends Controller
 
         $response = Http::withHeaders([
             'X-Terminal-Id' => $terminalId,
-            'Authorization' => 'Basic ' . base64_encode("{$username}:{$password}"),
+            'Authorization' => 'Basic '.base64_encode("{$username}:{$password}"),
         ])->post($baseUrl, $payload);
 
         if ($response->ok()) {
             $data = $response->json();
 
-            if (!empty($data['formUrl'])) {
+            if (! empty($data['formUrl'])) {
                 return $data['formUrl'];
             }
         }

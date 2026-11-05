@@ -5,11 +5,11 @@ namespace Modules\PreOrder\App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\CourierTracking;
 use App\Models\Driver;
+use App\Models\Product;
 use App\Repositories\DriverRepository;
-use App\Repositories\TransactionRepository;
-use App\Repositories\WalletRepository;
 use App\Services\SteadFastService;
 use Carbon\Carbon;
+use Endroid\QrCode\QrCode as EndroidQrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Http\Request;
 use Modules\PreOrder\App\Enums\PreOrderStatus;
@@ -18,9 +18,10 @@ use Modules\PreOrder\App\Enums\RefundStatus;
 use Modules\PreOrder\App\Models\PreOrder;
 use Modules\PreOrder\App\Models\PreOrderSetting;
 use Modules\PreOrder\App\Repositories\PreOrderRepository;
+use Modules\Purchase\App\Models\Supplier;
+use Modules\Purchase\App\Repositories\PurchaseRepository;
 use Mpdf\Config\ConfigVariables;
 use Mpdf\Config\FontVariables;
-use Endroid\QrCode\QrCode as EndroidQrCode;
 use Mpdf\Mpdf;
 
 class PreOrderController extends Controller
@@ -37,23 +38,25 @@ class PreOrderController extends Controller
         $status = request('status');
         $shop = generaleSetting('shop');
         $rootShop = generaleSetting('rootShop');
-        $data['isRoot'] =$shop->id === $rootShop->id ? true :false;
+        $data['isRoot'] = $shop->id === $rootShop->id ? true : false;
 
         $data['preOrders'] = PreOrderRepository::query()
             ->with('shop', 'customer.user')
             ->whereBetween('created_at', [$from, $to])
-            ->when(!$data['isRoot'], function ($q) use ($shop) {
+            ->when(! $data['isRoot'], function ($q) use ($shop) {
                 return $q->where('shop_id', $shop?->id);
             })
             ->when($status, function ($query) use ($status) {
                 return $query->where('order_status', $status);
             })
-            ->when($search, fn($q) => $q->whereLike('order_code', '%' . $search . '%'))
-            ->orderBy("created_at", "desc")
+            ->when($search, fn ($q) => $q->whereLike('order_code', '%'.$search.'%'))
+            ->orderBy('created_at', 'desc')
             ->paginate(10)
             ->withQueryString();
+
         return view('preorder::preOrder.index', $data);
     }
+
     public function show(PreOrder $preOrder)
     {
         $shop = generaleSetting('shop');
@@ -70,9 +73,10 @@ class PreOrderController extends Controller
         })->get();
         $data['suppliers'] = collect();
         if (module_exists('Purchase')) {
-            $data['suppliers'] = \Modules\Purchase\App\Models\Supplier::where('shop_id', $shop->id)->latest('id')->get();
+            $data['suppliers'] = Supplier::where('shop_id', $shop->id)->latest('id')->get();
         }
         $data['courierTracking'] = CourierTracking::where('pre_order_id', $preOrder->id)->latest('id')->first();
+
         return view('preorder::preOrder.show', $data);
     }
 
@@ -112,7 +116,7 @@ class PreOrderController extends Controller
         $rootShop = generaleSetting('rootShop');
         $allowedStatuses = PreOrderRepository::allowedNextStatuses($preOrder->order_status);
         $status = PreOrderStatus::tryFrom($request->status);
-        if (!in_array($status, $allowedStatuses)) {
+        if (! in_array($status, $allowedStatuses)) {
             return back()->with('error', __('Cannot change to this status.'));
         }
         $preOrder->update(['order_status' => $request->status]);
@@ -130,6 +134,7 @@ class PreOrderController extends Controller
             && $preOrder->paidTotal() > 0
             && ! $preOrder->hasActiveRefund()) {
             PreOrderRepository::processRefund($preOrder->fresh(), false);
+
             return back()->with('success', __('Order cancelled and paid amount refunded to the customer.'));
         }
 
@@ -138,6 +143,7 @@ class PreOrderController extends Controller
         if ($request->status == PreOrderStatus::REFUNDED->value
             && ! $preOrder->hasActiveRefund()) {
             PreOrderRepository::processRefund($preOrder->fresh(), true);
+
             return back()->with('success', __('Order refunded to the customer.'));
         }
 
@@ -154,6 +160,7 @@ class PreOrderController extends Controller
             return back()->with('error', __('There is no pending refund request to approve.'));
         }
         $preOrder->update(['refund_status' => RefundStatus::APPROVED->value]);
+
         return back()->with('success', __('Refund request approved.'));
     }
 
@@ -169,6 +176,7 @@ class PreOrderController extends Controller
             'refund_status' => RefundStatus::REJECTED->value,
             'refund_note' => $request->refund_note,
         ]);
+
         return back()->with('success', __('Refund request rejected.'));
     }
 
@@ -181,6 +189,7 @@ class PreOrderController extends Controller
             return back()->with('error', __('Refund must be approved before it can be paid.'));
         }
         PreOrderRepository::processRefund($preOrder, true);
+
         return back()->with('success', __('Refund paid to the customer successfully.'));
     }
 
@@ -209,7 +218,7 @@ class PreOrderController extends Controller
         ]);
 
         $item = $preOrder->preOrderItem;
-        $product = $item ? \App\Models\Product::withoutGlobalScopes()->find($item->product_id) : null;
+        $product = $item ? Product::withoutGlobalScopes()->find($item->product_id) : null;
         if (! $product) {
             return back()->with('error', __('Product not found for this pre-order.'));
         }
@@ -220,14 +229,14 @@ class PreOrderController extends Controller
 
         $note = __('Pre-order :code', ['code' => $preOrder->order_code]);
 
-        $purchase = \Modules\Purchase\App\Repositories\PurchaseRepository::storeByRequest(new Request([
+        $purchase = PurchaseRepository::storeByRequest(new Request([
             'name' => $preOrder->order_code,
             'supplier_id' => $request->supplier_id,
             'receive_date' => now()->format('Y-m-d'),
             'note' => $note,
         ]));
 
-        \Modules\Purchase\App\Repositories\PurchaseRepository::attachBarcode($product, $purchase, null, new Request([
+        PurchaseRepository::attachBarcode($product, $purchase, null, new Request([
             'product_id' => $product->id,
             'is_sku' => 'false',
             'quantity' => $item->quantity,
@@ -247,8 +256,9 @@ class PreOrderController extends Controller
         }
         $preOrder->update([
             'payment_status' => PrePaymentStatus::PAID->value,
-            'paid_amount' => $preOrder->payable_amount
+            'paid_amount' => $preOrder->payable_amount,
         ]);
+
         return back()->with('success', __('Payment status updated successfully'));
     }
 
@@ -263,7 +273,6 @@ class PreOrderController extends Controller
             return back()->with('error', __('Rider cannot be assigned.'));
         }
 
-
         $driver = Driver::find($request->rider);
 
         if (! $driver) {
@@ -277,7 +286,7 @@ class PreOrderController extends Controller
 
     public function orderInvoice(PreOrder $preOrder)
     {
-        $preOrderCode = '#' . $preOrder->order_code;
+        $preOrderCode = '#'.$preOrder->order_code;
         $qrCode = new EndroidQrCode($preOrderCode);
         $qrCode->setSize(100);
         $writer = new PngWriter;
@@ -306,10 +315,11 @@ class PreOrderController extends Controller
         ]);
         $view = view('preorder::PDF.invoice', compact('preOrder', 'qrCodeImage'))->render();
         $mPdf->WriteHTML($view);
+
         // Output the PDF as a download
         // return $mPdf->Output('invoice-' . $preOrder->order_code . '.pdf', 'D');
         // Output the PDF as a stream
-        return $mPdf->Output('invoice-' . $preOrder->order_code . '.pdf', 'I');
+        return $mPdf->Output('invoice-'.$preOrder->order_code.'.pdf', 'I');
     }
 
     public function orderPaymentInvoice(PreOrder $preOrder)
@@ -344,11 +354,11 @@ class PreOrderController extends Controller
         $view = view('preorder::PDF.payment-slip', compact('preOrder'))->render();
         $mPdf->WriteHTML($view);
 
-        $pdfContent = $mPdf->Output('payment-slip-' . $preOrder->order_code . '.pdf', 'S');
+        $pdfContent = $mPdf->Output('payment-slip-'.$preOrder->order_code.'.pdf', 'S');
 
         return response($pdfContent, 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="payment-slip-' . $preOrder->order_code . '.pdf"',
+            'Content-Disposition' => 'inline; filename="payment-slip-'.$preOrder->order_code.'.pdf"',
         ]);
     }
 }

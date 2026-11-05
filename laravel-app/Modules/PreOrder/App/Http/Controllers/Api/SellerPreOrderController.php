@@ -4,6 +4,7 @@ namespace Modules\PreOrder\App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Driver;
+use App\Models\Product;
 use App\Repositories\DriverRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -14,6 +15,7 @@ use Modules\PreOrder\App\Models\PreOrderSetting;
 use Modules\PreOrder\App\Repositories\PreOrderRepository;
 use Modules\PreOrder\App\Resources\SellerPreOrderDetailsResource;
 use Modules\PreOrder\App\Resources\SellerPreOrderResource;
+use Modules\Purchase\App\Repositories\PurchaseRepository;
 
 class SellerPreOrderController extends Controller
 {
@@ -339,7 +341,7 @@ class SellerPreOrderController extends Controller
         }
 
         $item = $preOrder->preOrderItem;
-        $product = $item ? \App\Models\Product::withoutGlobalScopes()->find($item->product_id) : null;
+        $product = $item ? Product::withoutGlobalScopes()->find($item->product_id) : null;
         if (! $product) {
             return $this->json(__('Product not found for this pre-order.'), [], 422);
         }
@@ -350,14 +352,14 @@ class SellerPreOrderController extends Controller
 
         $note = __('Pre-order :code', ['code' => $preOrder->order_code]);
 
-        $purchase = \Modules\Purchase\App\Repositories\PurchaseRepository::storeByRequest(new Request([
+        $purchase = PurchaseRepository::storeByRequest(new Request([
             'name' => $preOrder->order_code,
             'supplier_id' => $request->supplier_id,
             'receive_date' => now()->format('Y-m-d'),
             'note' => $note,
         ]));
 
-        \Modules\Purchase\App\Repositories\PurchaseRepository::attachBarcode($product, $purchase, null, new Request([
+        PurchaseRepository::attachBarcode($product, $purchase, null, new Request([
             'product_id' => $product->id,
             'is_sku' => 'false',
             'quantity' => $item->quantity,

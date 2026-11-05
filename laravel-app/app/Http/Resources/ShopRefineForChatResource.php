@@ -21,7 +21,7 @@ class ShopRefineForChatResource extends JsonResource
             'name' => $this->name,
             'logo' => $this->logo,
             'rating' => (float) number_format($this->averageRating, 1, '.', ''),
-            'last_online' => $lastOnline
+            'last_online' => $lastOnline,
         ];
     }
 }

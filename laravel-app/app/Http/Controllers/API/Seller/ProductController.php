@@ -15,6 +15,7 @@ use App\Http\Resources\SizeResource;
 use App\Http\Resources\UnitResource;
 use App\Models\Media;
 use App\Models\Product;
+use App\Models\user;
 use App\Repositories\NotificationRepository;
 use App\Repositories\ProductRepository;
 use Illuminate\Http\Request;
@@ -126,7 +127,7 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         /**
-         * @var \App\Models\user $user
+         * @var user $user
          */
         $user = auth()->user();
 
@@ -176,7 +177,7 @@ class ProductController extends Controller
     public function update(ProductRequest $request, Product $product)
     {
         /**
-         * @var \App\Models\User $user
+         * @var user $user
          */
         $user = auth()->user();
         $shop = generaleSetting('shop');

@@ -10,25 +10,27 @@ use Illuminate\View\Component;
 class ImagePicker extends Component
 {
     public string $name;
+
     public bool $multiple;
+
     public string $imagePath;
-    public string|null $value;
+
+    public ?string $value;
 
     /**
      * Create a new component instance.
      */
-
-    public function __construct(string $name, bool $multiple = false, string|null $value = null)
+    public function __construct(string $name, bool $multiple = false, ?string $value = null)
     {
         $this->name = $name;
         $this->multiple = $multiple;
         $this->value = $value;
 
         $imagePath = asset('default/default.jpg');
-        if($value && Storage::exists($value)){
+        if ($value && Storage::exists($value)) {
             $imagePath = Storage::url($value);
-        }elseif($value && asset($value)){
-            $imagePath =asset($value);
+        } elseif ($value && asset($value)) {
+            $imagePath = asset($value);
         }
         $this->imagePath = $imagePath;
     }

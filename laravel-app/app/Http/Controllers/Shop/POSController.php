@@ -2,32 +2,32 @@
 
 namespace App\Http\Controllers\Shop;
 
-use Mpdf\Mpdf;
 use App\Enums\Roles;
-use App\Models\Order;
-use App\Models\Coupon;
-use App\Models\PosCart;
-use App\Models\Customer;
-use App\Rules\EmailRule;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Models\PosCartProduct;
-use Mpdf\Config\FontVariables;
-use Mpdf\Config\ConfigVariables;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
-use App\Repositories\UserRepository;
-use Endroid\QrCode\Writer\PngWriter;
+use App\Http\Requests\PosApplyCouponRequest;
 use App\Http\Requests\PosCartRequest;
-use App\Repositories\OrderRepository;
-use App\Repositories\VatTaxRepository;
+use App\Http\Resources\PosCartProductResource;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\UserResource;
+use App\Models\Coupon;
+use App\Models\Customer;
+use App\Models\Order;
+use App\Models\PosCart;
+use App\Models\PosCartProduct;
+use App\Repositories\CustomerRepository;
+use App\Repositories\OrderRepository;
 use App\Repositories\PosCartRepository;
 use App\Repositories\ProductRepository;
-use App\Repositories\CustomerRepository;
+use App\Repositories\UserRepository;
+use App\Repositories\VatTaxRepository;
+use App\Rules\EmailRule;
 use Endroid\QrCode\QrCode as EndroidQrCode;
-use App\Http\Requests\PosApplyCouponRequest;
-use App\Http\Resources\PosCartProductResource;
+use Endroid\QrCode\Writer\PngWriter;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Mpdf\Config\ConfigVariables;
+use Mpdf\Config\FontVariables;
+use Mpdf\Mpdf;
 
 class POSController extends Controller
 {
@@ -88,7 +88,7 @@ class POSController extends Controller
     {
         $order = Order::withoutGlobalScopes()->findOrFail($orderId);
 
-        $orderCode = '#' . $order->prefix . $order->order_code;
+        $orderCode = '#'.$order->prefix.$order->order_code;
 
         $qrCode = new EndroidQrCode($orderCode);
         $qrCode->setSize(100);
@@ -126,7 +126,7 @@ class POSController extends Controller
         $mPdf->WriteHTML($view);
 
         // show stream
-        return $mPdf->Output('invoice-' . $order->prefix . $order->order_code . '.pdf', 'I');
+        return $mPdf->Output('invoice-'.$order->prefix.$order->order_code.'.pdf', 'I');
     }
 
     public function storeOrder(Request $request)
@@ -181,7 +181,7 @@ class POSController extends Controller
         return $this->json(__('Created Successfully'), [
             'user' => (object) [
                 'id' => $customer->id,
-                'name' => Str::limit($user->fullName, 30, '...') . '-(' . $user->phone . ')',
+                'name' => Str::limit($user->fullName, 30, '...').'-('.$user->phone.')',
             ],
         ], 200);
     }
@@ -200,14 +200,14 @@ class POSController extends Controller
 
         $shop = generaleSetting('shop');
 
-        $products = $shop->products()->where('is_digital',0)->when($brand, function ($query) use ($brand) {
+        $products = $shop->products()->where('is_digital', 0)->when($brand, function ($query) use ($brand) {
             return $query->where('brand_id', $brand);
         })->when($category, function ($product) use ($category) {
             return $product->whereHas('categories', function ($query) use ($category) {
                 return $query->where('category_id', $category);
             });
         })->when($search, function ($query) use ($search) {
-            return $query->where('name', 'like', '%' . $search . '%');
+            return $query->where('name', 'like', '%'.$search.'%');
         })->isActive();
         $total = $products->count();
         $products = $products->skip($skip)->take($perPage)->get();
@@ -345,7 +345,7 @@ class POSController extends Controller
 
     public function getProductDetail(Request $request)
     {
-        $product =ProductRepository::find($request->id);
+        $product = ProductRepository::find($request->id);
 
         return $this->json('Products', [
             'productDetail' => new ProductResource($product),

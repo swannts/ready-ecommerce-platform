@@ -40,7 +40,7 @@ class ThemeColorRepository extends Repository
         $updatedColors = [];
 
         foreach ($colorVariants as $key => $value) {
-            $updatedColors['variant_' . $key] = $value;
+            $updatedColors['variant_'.$key] = $value;
 
             if ($key == 100) {
                 $updatedColors['secondary'] = $value;
@@ -83,7 +83,6 @@ class ThemeColorRepository extends Repository
         $str = preg_replace('/--theme-color:\s*[^;]*;/', "--theme-color: {$primary};", $str);
         $str = preg_replace('/--theme-hover-bg:\s*[^;]*;/', "--theme-hover-bg: {$secondary};", $str);
 
-
         try {
             file_put_contents($file, $str);
         } catch (\Throwable $e) {
@@ -102,7 +101,6 @@ class ThemeColorRepository extends Repository
         } catch (\Throwable $e) {
             Log::error($e->getMessage());
         }
-
 
         // update lfm.css
         $file = public_path('vendor/laravel-filemanager/css/lfm.css');

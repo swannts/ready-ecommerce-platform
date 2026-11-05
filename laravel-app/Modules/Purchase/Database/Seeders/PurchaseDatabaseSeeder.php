@@ -11,6 +11,6 @@ class PurchaseDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-         $this->call(ProductStockRemoveSeeder::class);
+        $this->call(ProductStockRemoveSeeder::class);
     }
 }

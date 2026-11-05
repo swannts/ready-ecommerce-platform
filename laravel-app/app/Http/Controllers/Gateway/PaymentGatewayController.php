@@ -6,14 +6,18 @@ use App\Enums\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Models\PaymentGateway;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Modules\PreOrder\App\Enums\PreOrderStatus;
+use Modules\PreOrder\App\Enums\PrePaymentStatus;
 
 class PaymentGatewayController extends Controller
 {
     /**
      * Payment gateway
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      *
      * @throws \Exception
      */
@@ -52,7 +56,7 @@ class PaymentGatewayController extends Controller
     /**
      * Payment success
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function success(Request $request, $payment = null)
     {
@@ -63,7 +67,7 @@ class PaymentGatewayController extends Controller
         if ($payment->payment_from == 'preOrder' && module_exists('preOrder')) {
 
             $order = $payment->preOrders()->first();
-            $isBalancePayment = $order && $order->payment_status->value === \Modules\PreOrder\App\Enums\PrePaymentStatus::PREPAID->value;
+            $isBalancePayment = $order && $order->payment_status->value === PrePaymentStatus::PREPAID->value;
 
             $payment->update([
                 'is_paid' => true,
@@ -75,15 +79,15 @@ class PaymentGatewayController extends Controller
                 $order->update([
                     'paid_amount' => $newPaidAmount,
                     'payment_status' => $newPaidAmount >= $order->payable_amount
-                        ? \Modules\PreOrder\App\Enums\PrePaymentStatus::PAID->value
-                        : \Modules\PreOrder\App\Enums\PrePaymentStatus::PREPAID->value,
+                        ? PrePaymentStatus::PAID->value
+                        : PrePaymentStatus::PREPAID->value,
                 ]);
             } else {
                 // First (pre)payment on the pre-order.
                 $order?->update([
-                    'order_status' => \Modules\PreOrder\App\Enums\PreOrderStatus::PREPAYMENT_REQUESTED->value ?? 'prepayment_requested',
+                    'order_status' => PreOrderStatus::PREPAYMENT_REQUESTED->value ?? 'prepayment_requested',
                     'paid_amount' => $payment->amount,
-                    'payment_status' => \Modules\PreOrder\App\Enums\PrePaymentStatus::PREPAID->value ?? 'Prepaid',
+                    'payment_status' => PrePaymentStatus::PREPAID->value ?? 'Prepaid',
                 ]);
             }
         } else {
@@ -103,7 +107,7 @@ class PaymentGatewayController extends Controller
     /**
      * Payment cancel
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function cancel(Payment $payment)
     {
@@ -123,7 +127,7 @@ class PaymentGatewayController extends Controller
     /**
      * Payment cancel response show
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function paymentCancel(Payment $payment, Request $request)
     {

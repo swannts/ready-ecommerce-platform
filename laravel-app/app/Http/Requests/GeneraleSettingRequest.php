@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\EmailRule;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class GeneraleSettingRequest extends FormRequest
@@ -18,7 +19,7 @@ class GeneraleSettingRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -47,11 +48,11 @@ class GeneraleSettingRequest extends FormRequest
             'footerqrcode' => 'nullable|image|mimes:png,jpg,jpeg,png,gif|max:2048',
             'footer_payment_img' => 'nullable|image|mimes:png,jpg,jpeg,png,gif,svg,webp|max:2048',
             'footer_bg_image' => 'nullable|image|mimes:png,jpg,jpeg,png,gif,svg,webp|max:2048',
-            'return_order_within_days'=>'nullable|numeric',
-            'show_product_stock'=>'nullable|boolean',
-            'low_stock_alert'=>'nullable|boolean',
-            'low_stock_mail_notification'=>'nullable|boolean',
-            'low_stock_alert_quantity'=>'nullable|numeric',
+            'return_order_within_days' => 'nullable|numeric',
+            'show_product_stock' => 'nullable|boolean',
+            'low_stock_alert' => 'nullable|boolean',
+            'low_stock_mail_notification' => 'nullable|boolean',
+            'low_stock_alert_quantity' => 'nullable|numeric',
         ];
     }
 

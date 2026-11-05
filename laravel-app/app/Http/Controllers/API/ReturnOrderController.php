@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Order;
-use App\Models\ReturnOrder;
-use App\Models\OrderProduct;
-use Illuminate\Http\Request;
-use App\Models\ReturnOrderDetail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReturnOrderRequest;
-use App\Http\Resources\ReturnOrderResource;
-use App\Repositories\ReturnOrderRepository;
 use App\Http\Resources\ReturnOrderDetailsResource;
+use App\Http\Resources\ReturnOrderResource;
+use App\Models\Order;
+use App\Models\ReturnOrder;
+use App\Models\ReturnOrderDetail;
+use App\Repositories\ReturnOrderRepository;
+use Illuminate\Http\Request;
 
 class ReturnOrderController extends Controller
 {
@@ -37,6 +36,7 @@ class ReturnOrderController extends Controller
             'returnOrders' => ReturnOrderResource::collection($returnOrders),
         ]);
     }
+
     public function show(ReturnOrder $returnOrder)
     {
         $customer = auth()->user()->customer;
@@ -57,7 +57,7 @@ class ReturnOrderController extends Controller
             return $this->json("Cannot return order after {$days} days", [], 422);
         }
         if ($order->order_status->value != 'Delivered') {
-            return $this->json("This Order is not Delivered yet", [], 422);
+            return $this->json('This Order is not Delivered yet', [], 422);
         }
 
         foreach ($request->product_ids as $productId) {
@@ -75,8 +75,8 @@ class ReturnOrderController extends Controller
             ->pluck('product_id')
             ->toArray();
 
-        if (!empty($alreadyReturned)) {
-            return $this->json("Products with IDs " . implode(', ', $alreadyReturned) . " already returned", [], 422);
+        if (! empty($alreadyReturned)) {
+            return $this->json('Products with IDs '.implode(', ', $alreadyReturned).' already returned', [], 422);
         }
 
         $returnOrder = ReturnOrderRepository::storeByRequest($request);

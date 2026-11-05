@@ -28,7 +28,7 @@ class ProcessController extends Controller
             $paymentToken = Str::uuid()->toString();
 
             $payment->update([
-                'payment_token' => $paymentToken
+                'payment_token' => $paymentToken,
             ]);
 
             $info['payment_token'] = $paymentToken;

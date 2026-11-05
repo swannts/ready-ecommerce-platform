@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\API\Rider;
 
 use App\Enums\PaymentMethod;
-use App\Http\Requests\RiderRequest;
 use App\Events\RiderLocationUpdated;
 use App\Http\Controllers\Controller;
-use App\Repositories\UserRepository;
-use App\Http\Resources\RiderUserResource;
 use App\Http\Requests\DriverLocationRequest;
+use App\Http\Requests\RiderRequest;
 use App\Http\Resources\DriverLocationResource;
+use App\Http\Resources\RiderUserResource;
+use App\Repositories\UserRepository;
 
 class UserController extends Controller
 {
@@ -61,7 +61,7 @@ class UserController extends Controller
 
         $location = $user->driver->driverLocation;
 
-        event(new RiderLocationUpdated($user->driver->id,DriverLocationResource::make($location)));
+        event(new RiderLocationUpdated($user->driver->id, DriverLocationResource::make($location)));
 
         return $this->json('Location is updated successfully', [
             'location' => DriverLocationResource::make($user->driver->driverLocation),

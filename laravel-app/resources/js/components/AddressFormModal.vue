@@ -35,7 +35,9 @@
                             <DialogPanel
                                 class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 text-left shadow-xl transition-all my-8 md:my-0 w-full md:max-w-3xl"
                             >
-                                <div class="bg-white dark:bg-slate-800 p-5 sm:p-8 relative">
+                                <div
+                                    class="bg-white dark:bg-slate-800 p-5 sm:p-8 relative"
+                                >
                                     <!-- close button -->
                                     <div
                                         class="w-9 h-9 bg-slate-100 dark:bg-slate-700 rounded-[32px] absolute top-4 right-4 flex justify-center items-center cursor-pointer"
@@ -125,7 +127,7 @@
                                                         formData.phone =
                                                             formData.phone.replace(
                                                                 /[^\d]/g,
-                                                                ''
+                                                                '',
                                                             )
                                                     "
                                                 />
@@ -460,7 +462,7 @@
                                                     >
                                                         {{
                                                             $t(
-                                                                "Make it default address"
+                                                                "Make it default address",
                                                             )
                                                         }}
                                                     </label>

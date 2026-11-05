@@ -28,6 +28,6 @@ class LowStockAlertMail extends Mailable
     public function build()
     {
         return $this->subject('Low Stock Alert')
-                    ->view('mail.low_stock_alert');
+            ->view('mail.low_stock_alert');
     }
 }

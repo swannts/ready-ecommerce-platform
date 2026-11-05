@@ -7,8 +7,8 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\SubCategory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 class CatalogSlugSeeder extends Seeder
@@ -39,7 +39,7 @@ class CatalogSlugSeeder extends Seeder
         $query
             ->select([$model->getKeyName(), 'slug', $sourceColumn])
             ->orderBy($model->getKeyName())
-            ->chunkById(500, function ($records) use (&$usedSlugs, &$updated, $sourceColumn, $model) {
+            ->chunkById(500, function ($records) use (&$usedSlugs, &$updated, $sourceColumn) {
                 foreach ($records as $record) {
                     $baseValue = $record->slug ?: $record->{$sourceColumn} ?: 'item';
                     $baseSlug = Str::slug($baseValue);

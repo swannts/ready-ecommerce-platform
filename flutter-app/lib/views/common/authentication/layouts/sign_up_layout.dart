@@ -69,53 +69,52 @@ class _SignUpLayoutState extends State<SignUpLayout> {
                 return ref.watch(authControllerProvider)
                     ? const Center(child: CircularProgressIndicator())
                     : Padding(
-                  padding: EdgeInsetsGeometry.only(
-                    top: 16.w,
-                    left: 16.w,
-                    right: 16.w,
-                    bottom: MediaQuery.of(context).viewInsets.bottom + 10,
-                  ),
-                  child: CustomButton(
-                    buttonText: S.of(context).signUp,
-                    onPressed: () {
-                      FocusScope.of(context).unfocus();
-                      if (formKey.currentState!.validate()) {
-                        final SingUp singUpInfo = SingUp(
-                          name: controllers[0].text,
-                          phone: controllers[1].text,
-                          password: controllers[3].text,
-                          country: selectedCountry?.name ?? "",
-                          phoneCode: countryCode ?? '',
-                          email: controllers[2].text,
-                        );
-                        if (isChecked) {
-                          ref
-                              .read(authControllerProvider.notifier)
-                              .singUp(singUpInfo: singUpInfo)
-                              .then((response) {
-                            if (response.isSuccess) {
-                              _navigate(ref: ref);
-                            } else {
-                              GlobalFunction.showCustomSnackbar(
-                                message: response.message,
-                                isSuccess: false,
+                        padding: EdgeInsetsGeometry.only(
+                          top: 16.w,
+                          left: 16.w,
+                          right: 16.w,
+                          bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+                        ),
+                        child: CustomButton(
+                          buttonText: S.of(context).signUp,
+                          onPressed: () {
+                            FocusScope.of(context).unfocus();
+                            if (formKey.currentState!.validate()) {
+                              final SingUp singUpInfo = SingUp(
+                                name: controllers[0].text,
+                                phone: controllers[1].text,
+                                password: controllers[3].text,
+                                country: selectedCountry?.name ?? "",
+                                phoneCode: countryCode ?? '',
+                                email: controllers[2].text,
                               );
+                              if (isChecked) {
+                                ref
+                                    .read(authControllerProvider.notifier)
+                                    .singUp(singUpInfo: singUpInfo)
+                                    .then((response) {
+                                  if (response.isSuccess) {
+                                    _navigate(ref: ref);
+                                  } else {
+                                    GlobalFunction.showCustomSnackbar(
+                                      message: response.message,
+                                      isSuccess: false,
+                                    );
+                                  }
+                                });
+                              } else {
+                                GlobalFunction.showCustomSnackbar(
+                                  message:
+                                      'Please accept the terms and conditions!',
+                                  isSuccess: false,
+                                );
+                              }
                             }
-                          });
-                        } else {
-                          GlobalFunction.showCustomSnackbar(
-                            message:
-                            'Please accept the terms and conditions!',
-                            isSuccess: false,
-                          );
-                        }
-                      }
-                    },
-                  ),
-                );
+                          },
+                        ),
+                      );
               }),
             ),
-
             SizedBox(
               height: 30.h,
               child: Center(
@@ -193,7 +192,8 @@ class _SignUpLayoutState extends State<SignUpLayout> {
 
   Widget buildBody(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
-      final materModelData = ref.watch(masterControllerProvider.notifier).materModel.data;
+      final materModelData =
+          ref.watch(masterControllerProvider.notifier).materModel.data;
       final isPhoneRequired = materModelData.phoneRequired;
       int? phoneMinLength = materModelData.phoneMinLength;
       int? phoneMaxLength = materModelData.phoneMaxLength;
@@ -473,7 +473,6 @@ class _SignUpLayoutState extends State<SignUpLayout> {
               ],
             ),
             Gap(30.h),
-
           ],
         ),
       );
@@ -481,13 +480,19 @@ class _SignUpLayoutState extends State<SignUpLayout> {
   }
 
   _navigate({required WidgetRef ref}) {
-
-    if (ref.read(masterControllerProvider.notifier).materModel.data.registerOtpVerify == true) {
-
-
-      if(ref.read(masterControllerProvider.notifier).materModel.data.registerOtpType == 'email'){
+    if (ref
+            .read(masterControllerProvider.notifier)
+            .materModel
+            .data
+            .registerOtpVerify ==
+        true) {
+      if (ref
+              .read(masterControllerProvider.notifier)
+              .materModel
+              .data
+              .registerOtpType ==
+          'email') {
         if (context.mounted) {
-
           context.nav.pushNamed(
             Routes.registrationOtpScreen,
             arguments: RegConfirmOTPScreenArguments(
@@ -496,9 +501,8 @@ class _SignUpLayoutState extends State<SignUpLayout> {
             ),
           );
         }
-    } else{
+      } else {
         if (context.mounted) {
-
           context.nav.pushNamed(
             Routes.registrationOtpScreen,
             arguments: RegConfirmOTPScreenArguments(
@@ -508,9 +512,6 @@ class _SignUpLayoutState extends State<SignUpLayout> {
           );
         }
       }
-
-
-
     } else {
       if (context.mounted) {
         context.nav.pushNamedAndRemoveUntil(

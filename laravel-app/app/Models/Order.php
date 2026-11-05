@@ -3,17 +3,18 @@
 namespace App\Models;
 
 use App\Enums\OrderStatus;
-use Illuminate\Support\Str;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Models\Scopes\PosOrderFalse;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
+use Modules\Purchase\App\Models\ProductStockOut;
 
 class Order extends Model
 {
@@ -37,6 +38,7 @@ class Order extends Model
         if (Schema::hasColumn('order_products', 'sku')) {
             $pivotColumns[] = 'sku';
         }
+
         return $this->belongsToMany(Product::class, 'order_products')->withPivot($pivotColumns)->withoutGlobalScopes();
     }
 
@@ -138,19 +140,22 @@ class Order extends Model
         }
     }
 
-     public function productStockOuts(): ?HasMany
+    public function productStockOuts(): ?HasMany
     {
         if (function_exists('module_exists') && module_exists('Purchase')) {
-            return $this->hasMany(\Modules\Purchase\App\Models\ProductStockOut::class);
+            return $this->hasMany(ProductStockOut::class);
         }
+
         return null;
     }
+
     public function scopeCompleted($query)
     {
-        return $query->where('order_status','Delivered');
+        return $query->where('order_status', 'Delivered');
     }
+
     public function scopeCancelled($query)
     {
-        return $query->where('order_status','Cancelled');
+        return $query->where('order_status', 'Cancelled');
     }
 }

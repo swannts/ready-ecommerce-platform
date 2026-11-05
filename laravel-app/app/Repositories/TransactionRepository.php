@@ -73,7 +73,7 @@ class TransactionRepository extends Repository
             'note' => $description,
         ]);
 
-        $wallet->increment('balance', $amount);;
+        $wallet->increment('balance', $amount);
         if ($hasAdminUpdate) {
             self::adminWalletDeduct($amount);
         }

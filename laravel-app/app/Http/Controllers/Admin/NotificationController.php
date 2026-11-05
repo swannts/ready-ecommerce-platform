@@ -65,9 +65,9 @@ class NotificationController extends Controller
     {
         $shop = generaleSetting('shop');
         NotificationRepository::query()->where(function ($query) use ($shop) {
-                $query->where('shop_id', $shop->id)
-                    ->orWhereNull('shop_id');
-            })->whereNull('user_id')->update(['is_read' => true]);
+            $query->where('shop_id', $shop->id)
+                ->orWhereNull('shop_id');
+        })->whereNull('user_id')->update(['is_read' => true]);
 
         return back()->withSuccess(__('All notifications marked as read!'));
     }

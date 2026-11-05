@@ -11,6 +11,7 @@ class PreOrderPolicy
     {
         $shop = generaleSetting('shop');
         $rootShop = generaleSetting('rootShop');
+
         return $shop && $rootShop && $shop->id === $rootShop->id;
     }
 
@@ -22,6 +23,7 @@ class PreOrderPolicy
         if ($this->onlyAdminShop($user)) {
             return true;
         }
+
         return (bool) $setting->pre_order_for_shop;
     }
 

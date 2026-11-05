@@ -9,13 +9,14 @@ use Mpdf\Mpdf;
 
 class ProductLicenseController extends Controller
 {
-    public function downloadLicensePdf($license,Request $request){
+    public function downloadLicensePdf($license, Request $request)
+    {
         $licenseData = ProductLicenseRepository::query()->where('product_license', $license)->where('order_id', $request->order_id)->first();
 
         $setting = generaleSetting('setting');
         $logo = $setting->logo;
 
-        $html = view('PDF.license', compact('licenseData','logo'))->render();
+        $html = view('PDF.license', compact('licenseData', 'logo'))->render();
 
         // Create mPDF instance
         $mpdf = new Mpdf([

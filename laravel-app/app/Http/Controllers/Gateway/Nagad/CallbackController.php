@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Gateway\Nagad;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Models\PaymentGateway;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class CallbackController extends Controller
@@ -12,7 +13,7 @@ class CallbackController extends Controller
     /**
      * Handle the redirect back from Nagad and verify the payment.
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function index(Payment $payment, Request $request)
     {

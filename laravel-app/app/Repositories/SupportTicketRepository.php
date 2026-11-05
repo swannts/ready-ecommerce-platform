@@ -41,7 +41,7 @@ class SupportTicketRepository extends Repository
     public static function storeByRequest(SupportTicketRequest $request): SupportTicket
     {
         $latestId = SupportTicket::max('id');
-        $ticketNumber = rand(100000, 999999) . ($latestId + 1);
+        $ticketNumber = rand(100000, 999999).($latestId + 1);
 
         $supportTicket = self::create([
             'user_id' => auth()->id(),
@@ -64,11 +64,11 @@ class SupportTicketRepository extends Repository
 
         if (Schema::hasTable((new Notification)->getTable())) {
             // store notification
-            $content = 'Support Ticket created from: ' . auth()->user()->name . '. Ticket Number: #' . $supportTicket->ticket_number;
+            $content = 'Support Ticket created from: '.auth()->user()->name.'. Ticket Number: #'.$supportTicket->ticket_number;
             Notification::create([
                 'title' => 'New Support Ticket Created',
                 'content' => $content,
-                'url' => 'admin/support-tickets/' . $supportTicket->id,
+                'url' => 'admin/support-tickets/'.$supportTicket->id,
                 'icon' => 'bi-ticket-perforated-fill',
                 'type' => 'info',
             ]);
@@ -106,12 +106,12 @@ class SupportTicketRepository extends Repository
         $startDate = $supportTicket->start_date;
 
         $supportTicket->update([
-            'ticket_start' => $request->start_date . ' ' . $request->start_time,
-            'ticket_end' => $request->end_date . ' ' . $request->end_time,
+            'ticket_start' => $request->start_date.' '.$request->start_time,
+            'ticket_end' => $request->end_date.' '.$request->end_time,
             'status' => $supportTicket->status == 'pending' ? 'confirm' : $supportTicket->status,
         ]);
 
-        $message = 'Your support ticket ' . ($startDate ? ' scheduled has been created' : 'scheduled has been changed') . '. The scheduled time is from ' . Carbon::parse($request->start_date)->format('d F, Y') . ' ' . $request->start_time . ' to ' . Carbon::parse($request->end_date)->format('d F, Y') . ' ' . $request->end_time;
+        $message = 'Your support ticket '.($startDate ? ' scheduled has been created' : 'scheduled has been changed').'. The scheduled time is from '.Carbon::parse($request->start_date)->format('d F, Y').' '.$request->start_time.' to '.Carbon::parse($request->end_date)->format('d F, Y').' '.$request->end_time;
 
         $supportTicket->messages()->create([
             'sender_id' => auth()->id(),

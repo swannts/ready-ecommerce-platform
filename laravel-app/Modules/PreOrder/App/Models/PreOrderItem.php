@@ -3,8 +3,9 @@
 namespace Modules\PreOrder\App\Models;
 
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
 // use Modules\PreOrder\Database\Factories\PreOrderItemFactory;
 
 class PreOrderItem extends Model
@@ -15,12 +16,11 @@ class PreOrderItem extends Model
 
     public function order()
     {
-        return $this->belongsTo(PreOrder::class,'pre_order_id');
+        return $this->belongsTo(PreOrder::class, 'pre_order_id');
     }
 
     public function product()
     {
-        return $this->belongsTo(Product::class,'product_id')->withoutGlobalScopes();
+        return $this->belongsTo(Product::class, 'product_id')->withoutGlobalScopes();
     }
-
 }

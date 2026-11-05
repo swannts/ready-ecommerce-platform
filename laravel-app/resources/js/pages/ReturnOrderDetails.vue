@@ -1,6 +1,8 @@
 <template>
     <div>
-        <div class="bg-white dark:bg-slate-800 dark:bg-slate-800 px-3 text-slate-600 dark:text-slate-400 dark:text-slate-300 flex items-center gap-1 pt-2">
+        <div
+            class="bg-white dark:bg-slate-800 dark:bg-slate-800 px-3 text-slate-600 dark:text-slate-400 dark:text-slate-300 flex items-center gap-1 pt-2"
+        >
             <HomeIcon class="w-5 h-5 md:w-6 md:h-6" />
             <router-link
                 to="/returned-order-history"
@@ -76,7 +78,7 @@
                                         >
                                             {{
                                                 master.showCurrency(
-                                                    product.price
+                                                    product.price,
                                                 )
                                             }}
                                         </p>
@@ -102,16 +104,16 @@
                                     order?.status === 'Pending'
                                         ? 'bg-gray-500'
                                         : order?.status === 'Mismatch'
-                                        ? 'bg-orange-500'
-                                        : order?.status === 'Approved'
-                                        ? 'bg-blue-500'
-                                        : order?.status === 'Damaged'
-                                        ? 'bg-yellow-500'
-                                        : order?.status === 'Refunded'
-                                        ? 'bg-green-500'
-                                        : order?.status === 'Cancelled'
-                                        ? 'bg-red-500'
-                                        : ''
+                                          ? 'bg-orange-500'
+                                          : order?.status === 'Approved'
+                                            ? 'bg-blue-500'
+                                            : order?.status === 'Damaged'
+                                              ? 'bg-yellow-500'
+                                              : order?.status === 'Refunded'
+                                                ? 'bg-green-500'
+                                                : order?.status === 'Cancelled'
+                                                  ? 'bg-red-500'
+                                                  : ''
                                 "
                             >
                                 <p
@@ -196,7 +198,9 @@
                             </div>
 
                             <!-- shop address  -->
-                            <div class="p-3 space-y-3 bg-white dark:bg-slate-800 rounded-xl">
+                            <div
+                                class="p-3 space-y-3 bg-white dark:bg-slate-800 rounded-xl"
+                            >
                                 <div
                                     class="flex justify-start items-center gap-2"
                                 >
@@ -256,7 +260,9 @@
                     <p
                         class="text-gray-900 text-lg font-normal leading-relaxed"
                     >
-                        {{ order?.reject_note ? order?.reject_note : $t("None") }}
+                        {{
+                            order?.reject_note ? order?.reject_note : $t("None")
+                        }}
                     </p>
                 </div>
             </div>
@@ -304,7 +310,7 @@ watch(
             fetchReturnOrderDetails();
         }
         authStore.orderCancel = false;
-    }
+    },
 );
 
 onMounted(() => {

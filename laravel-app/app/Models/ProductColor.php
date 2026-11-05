@@ -13,14 +13,15 @@ class ProductColor extends Model
 
     protected $guarded = ['id'];
 
-     public function thumbnail(): Attribute
+    public function thumbnail(): Attribute
     {
         $thumbnail = asset('default/default.jpg');
         if ($this->img && Storage::exists($this->img)) {
             $thumbnail = Storage::url($this->img);
         }
+
         return new Attribute(
-            get: fn() => $thumbnail
+            get: fn () => $thumbnail
         );
     }
 }

@@ -29,7 +29,7 @@ class LowStockAlertListener implements ShouldQueue
             $products = $event->products ?? [];
             $shopId = $event->shopId ?? null;
 
-            if (empty($products) || !$shopId) {
+            if (empty($products) || ! $shopId) {
                 return;
             }
 
@@ -45,7 +45,7 @@ class LowStockAlertListener implements ShouldQueue
             $productNames = collect($products)->pluck('name')->implode(', ');
             $notification = NotificationRepository::storeByLowStockRequest((object) [
                 'title' => 'Low Stock Alert',
-                'content' => 'Products low on stock: ' . $productNames,
+                'content' => 'Products low on stock: '.$productNames,
                 'url' => null,
                 'icon' => 'bi-x-octagon-fill',
                 'type' => 'warning',

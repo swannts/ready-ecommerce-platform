@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
@@ -38,6 +40,7 @@ import {
 import { CheckoutCustomerInfo } from "@/types/cart";
 
 export default function CartPage() {
+  const { t } = useLocale();
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector(selectCartItems);
   const subtotal = useAppSelector(selectCartSubtotal);
@@ -51,10 +54,8 @@ export default function CartPage() {
   const checkoutStatus = useAppSelector((state) => state.cart.checkoutStatus);
   const lastOrder = useAppSelector((state) => state.cart.lastOrder);
   const checkoutError = useAppSelector((state) => state.cart.checkoutError);
-
   const [inputCoupon, setInputCoupon] = useState("");
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
-
   // Checkout form state
   const [formData, setFormData] = useState<CheckoutCustomerInfo>({
     fullName: "Kamal Uddin",
@@ -89,7 +90,7 @@ export default function CartPage() {
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#183A20] hover:text-[#B88A35] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Continue Shopping</span>
+            <span>{t("Continue Shopping")}</span>
           </Link>
 
           {cartItems.length > 0 && (
@@ -98,16 +99,21 @@ export default function CartPage() {
               onClick={() => dispatch(clearCart())}
               className="text-xs font-semibold text-[#686C64] hover:text-red-600 transition-colors self-start sm:self-auto"
             >
-              Clear Cart
+              {" "}
+              {t("Clear Cart")}{" "}
             </button>
           )}
         </div>
 
         <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#19221B] mb-2">
-          Your Shopping Cart
+          {" "}
+          {t("Your Shopping Cart")}{" "}
         </h1>
         <p className="text-sm text-[#686C64] mb-8">
-          Review your selected rice sacks, packaging sizes, and mill origin dispatch details.
+          {" "}
+          {t(
+            "Review your selected rice sacks, packaging sizes, and mill origin dispatch details.",
+          )}{" "}
         </p>
 
         {/* Empty State */}
@@ -117,16 +123,20 @@ export default function CartPage() {
               <ShoppingCart className="w-10 h-10" />
             </div>
             <h2 className="font-serif text-2xl font-bold text-[#19221B] mb-2">
-              Your Cart is Empty
+              {" "}
+              {t("Your Cart is Empty")}{" "}
             </h2>
             <p className="text-sm text-[#686C64] max-w-md mx-auto mb-6">
-              You haven&apos;t added any rice products to your cart yet. Browse our verified mill selections to find your preferred variety.
+              {" "}
+              {t(
+                "You haven&apos;t added any rice products to your cart yet. Browse our verified mill selections to find your preferred variety.",
+              )}{" "}
             </p>
             <Link
               href="/shop"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#183A20] hover:bg-[#102C1B] text-[#FFFDF8] font-bold text-sm transition-colors shadow-xs"
             >
-              <span>Explore Rice Catalog</span>
+              <span>{t("Explore Rice Catalog")}</span>
               <ArrowRight className="w-4 h-4 text-[#B88A35]" />
             </Link>
           </div>
@@ -138,38 +148,49 @@ export default function CartPage() {
             </div>
             <div className="text-center mb-6">
               <span className="text-xs font-bold uppercase tracking-wider text-[#B88A35]">
-                Order Confirmed
+                {" "}
+                {t("Order Confirmed")}{" "}
               </span>
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#19221B] mt-1">
-                Thank You for Your Order!
+                {" "}
+                {t("Thank You for Your Order!")}{" "}
               </h2>
               <p className="text-sm text-[#686C64] mt-1">
-                Order Reference: <span className="font-mono font-bold text-[#183A20]">{lastOrder.orderId}</span>
+                Order Reference:{" "}
+                <span className="font-mono font-bold text-[#183A20]">
+                  {lastOrder.orderId}
+                </span>
               </p>
             </div>
 
             <div className="bg-[#FAF6EF] rounded-2xl p-5 border border-[#E7E1D7] mb-6 space-y-3 text-xs sm:text-sm">
               <div className="flex justify-between border-b border-[#E7E1D7]/60 pb-2">
-                <span className="text-[#686C64]">Delivery Destination:</span>
+                <span className="text-[#686C64]">
+                  {t("Delivery Destination:")}
+                </span>
                 <span className="font-semibold text-[#19221B] text-right">
-                  {lastOrder.customer.shippingAddress}, {lastOrder.customer.city}
+                  {lastOrder.customer.shippingAddress},{" "}
+                  {lastOrder.customer.city}
                 </span>
               </div>
               <div className="flex justify-between border-b border-[#E7E1D7]/60 pb-2">
-                <span className="text-[#686C64]">Payment Method:</span>
+                <span className="text-[#686C64]">{t("Payment Method:")}</span>
                 <span className="font-semibold uppercase text-[#183A20]">
                   {lastOrder.customer.paymentMethod}
                 </span>
               </div>
               <div className="flex justify-between border-b border-[#E7E1D7]/60 pb-2">
-                <span className="text-[#686C64]">Total Items:</span>
+                <span className="text-[#686C64]">{t("Total Items:")}</span>
                 <span className="font-semibold text-[#19221B]">
-                  {lastOrder.items.reduce((acc, it) => acc + it.quantity, 0)} sacks
+                  {lastOrder.items.reduce((acc, it) => acc + it.quantity, 0)}{" "}
+                  sacks
                 </span>
               </div>
               <div className="flex justify-between text-base font-bold text-[#183A20] pt-1">
-                <span>Total Paid:</span>
-                <span className="font-serif text-lg">{formatCurrency(lastOrder.total)}</span>
+                <span>{t("Total Paid:")}</span>
+                <span className="font-serif text-lg">
+                  {formatCurrency(lastOrder.total)}
+                </span>
               </div>
             </div>
 
@@ -179,13 +200,15 @@ export default function CartPage() {
                 onClick={() => dispatch(resetCheckoutStatus())}
                 className="px-6 py-3 rounded-xl bg-[#FAF6EF] hover:bg-[#EFE7D8] text-[#183A20] text-sm font-bold border border-[#E7E1D7]"
               >
-                Place Another Order
+                {" "}
+                {t("Place Another Order")}{" "}
               </button>
               <Link
                 href="/shop"
                 className="px-6 py-3 rounded-xl bg-[#183A20] hover:bg-[#102C1B] text-[#FFFDF8] text-sm font-bold text-center"
               >
-                Browse Catalog
+                {" "}
+                {t("Browse Catalog")}{" "}
               </Link>
             </div>
           </div>
@@ -230,11 +253,11 @@ export default function CartPage() {
                             updateQuantity({
                               id: item.id,
                               quantity: item.quantity - 1,
-                            })
+                            }),
                           )
                         }
                         className="p-1.5 text-[#19221B] hover:text-[#183A20] hover:bg-[#E7E1D7]/50 rounded-l-lg transition-colors"
-                        aria-label="Decrease quantity"
+                        aria-label={t("Decrease quantity")}
                       >
                         <Minus className="w-3.5 h-3.5" />
                       </button>
@@ -248,11 +271,11 @@ export default function CartPage() {
                             updateQuantity({
                               id: item.id,
                               quantity: item.quantity + 1,
-                            })
+                            }),
                           )
                         }
                         className="p-1.5 text-[#19221B] hover:text-[#183A20] hover:bg-[#E7E1D7]/50 rounded-r-lg transition-colors"
-                        aria-label="Increase quantity"
+                        aria-label={t("Increase quantity")}
                       >
                         <Plus className="w-3.5 h-3.5" />
                       </button>
@@ -270,8 +293,8 @@ export default function CartPage() {
                       type="button"
                       onClick={() => dispatch(removeFromCart(item.id))}
                       className="p-2 text-[#686C64] hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                      aria-label="Remove item"
-                      title="Remove item"
+                      aria-label={t("Remove item")}
+                      title={t("Remove item")}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -284,11 +307,12 @@ export default function CartPage() {
             <div className="lg:col-span-4 space-y-4">
               <div className="bg-[#FFFDF8] rounded-2xl border border-[#E7E1D7] p-6 shadow-xs space-y-4">
                 <h2 className="font-serif text-xl font-bold text-[#19221B] border-b border-[#E7E1D7] pb-3">
-                  Order Summary
+                  {" "}
+                  {t("Order Summary")}{" "}
                 </h2>
 
                 <div className="flex justify-between text-sm">
-                  <span className="text-[#686C64]">Subtotal</span>
+                  <span className="text-[#686C64]">{t("Subtotal")}</span>
                   <span className="font-bold text-[#19221B]">
                     {formatCurrency(subtotal)}
                   </span>
@@ -300,19 +324,27 @@ export default function CartPage() {
                       <Tag className="w-3.5 h-3.5 text-[#B88A35]" />
                       Discount ({couponCode})
                     </span>
-                    <span className="font-bold">-{formatCurrency(discount)}</span>
+                    <span className="font-bold">
+                      -{formatCurrency(discount)}
+                    </span>
                   </div>
                 )}
 
                 <div className="flex justify-between text-sm">
-                  <span className="text-[#686C64]">Direct Mill Freight</span>
+                  <span className="text-[#686C64]">
+                    {t("Direct Mill Freight")}
+                  </span>
                   <span className="font-semibold text-[#183A20]">
-                    {deliveryFee === 0 ? "FREE (Orders $100+)" : formatCurrency(deliveryFee)}
+                    {deliveryFee === 0
+                      ? "FREE (Orders $100+)"
+                      : formatCurrency(deliveryFee)}
                   </span>
                 </div>
 
                 <div className="pt-3 border-t border-[#E7E1D7] flex justify-between text-base">
-                  <span className="font-bold text-[#19221B]">Grand Total</span>
+                  <span className="font-bold text-[#19221B]">
+                    {t("Grand Total")}
+                  </span>
                   <span className="font-serif text-2xl font-bold text-[#183A20]">
                     {formatCurrency(grandTotal)}
                   </span>
@@ -327,13 +359,14 @@ export default function CartPage() {
                     htmlFor="coupon-input"
                     className="block text-xs font-bold text-[#686C64] uppercase tracking-wider mb-2"
                   >
-                    Promotional Voucher
+                    {" "}
+                    {t("Promotional Voucher")}{" "}
                   </label>
                   <div className="flex gap-2">
                     <input
                       id="coupon-input"
                       type="text"
-                      placeholder="e.g. RICEMART10"
+                      placeholder={t("e.g. RICEMART10")}
                       value={inputCoupon}
                       onChange={(e) => setInputCoupon(e.target.value)}
                       className="grow px-3 py-2 rounded-xl text-xs bg-[#FAF6EF] border border-[#E7E1D7] focus:outline-none focus:border-[#183A20]"
@@ -362,13 +395,19 @@ export default function CartPage() {
                           onClick={() => dispatch(removeCoupon())}
                           className="underline hover:text-red-700 text-[11px]"
                         >
-                          Remove
+                          {" "}
+                          {t("Remove")}{" "}
                         </button>
                       )}
                     </div>
                   )}
                   <p className="text-[11px] text-[#686C64] mt-1">
-                    Try code <code className="font-mono font-bold text-[#183A20]">RICEMART10</code> for 10% off.
+                    Try code{" "}
+                    <code className="font-mono font-bold text-[#183A20]">
+                      {" "}
+                      {t("RICEMART10")}{" "}
+                    </code>{" "}
+                    for 10% off.
                   </p>
                 </form>
 
@@ -377,7 +416,7 @@ export default function CartPage() {
                   onClick={() => setCheckoutModalOpen(true)}
                   className="w-full py-4 rounded-xl bg-[#183A20] hover:bg-[#102C1B] text-[#FFFDF8] font-bold text-sm flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.99]"
                 >
-                  <span>Proceed to Checkout</span>
+                  <span>{t("Proceed to Checkout")}</span>
                   <ArrowRight className="w-4 h-4 text-[#B88A35]" />
                 </button>
 
@@ -387,7 +426,9 @@ export default function CartPage() {
                     className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#B88A35] hover:underline"
                   >
                     <Building2 className="w-3.5 h-3.5" />
-                    <span>Looking to buy in 500+ kg bulk? Get B2B Quote</span>
+                    <span>
+                      {t("Looking to buy in 500+ kg bulk? Get B2B Quote")}
+                    </span>
                   </Link>
                 </div>
               </div>
@@ -408,17 +449,18 @@ export default function CartPage() {
               type="button"
               onClick={() => setCheckoutModalOpen(false)}
               className="absolute top-5 right-5 p-2 rounded-full text-[#686C64] hover:bg-[#FAF6EF]"
-              aria-label="Close checkout"
+              aria-label={t("Close checkout")}
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="flex items-center gap-2 text-xs font-bold text-[#B88A35] tracking-widest uppercase mb-1">
               <Truck className="w-4 h-4" />
-              <span>Mill Direct Checkout</span>
+              <span>{t("Mill Direct Checkout")}</span>
             </div>
             <h2 className="font-serif text-2xl font-bold text-[#19221B] mb-2">
-              Delivery & Payment Details
+              {" "}
+              {t("Delivery & Payment Details")}{" "}
             </h2>
             <p className="text-xs text-[#686C64] mb-6">
               Total Payable:{" "}
@@ -437,7 +479,8 @@ export default function CartPage() {
             <form onSubmit={handleCheckout} className="space-y-4">
               <div>
                 <label className="block text-xs font-bold text-[#19221B] mb-1">
-                  Recipient Full Name
+                  {" "}
+                  {t("Recipient Full Name")}{" "}
                 </label>
                 <input
                   type="text"
@@ -453,7 +496,8 @@ export default function CartPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-[#19221B] mb-1">
-                    Email Address
+                    {" "}
+                    {t("Email Address")}{" "}
                   </label>
                   <input
                     type="email"
@@ -467,7 +511,8 @@ export default function CartPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-[#19221B] mb-1">
-                    Contact Phone Number
+                    {" "}
+                    {t("Contact Phone Number")}{" "}
                   </label>
                   <input
                     type="tel"
@@ -483,7 +528,8 @@ export default function CartPage() {
 
               <div>
                 <label className="block text-xs font-bold text-[#19221B] mb-1">
-                  Street Delivery Address
+                  {" "}
+                  {t("Street Delivery Address")}{" "}
                 </label>
                 <input
                   type="text"
@@ -502,7 +548,8 @@ export default function CartPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-[#19221B] mb-1">
-                    City / District
+                    {" "}
+                    {t("City / District")}{" "}
                   </label>
                   <input
                     type="text"
@@ -516,7 +563,8 @@ export default function CartPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-[#19221B] mb-1">
-                    Postal Code
+                    {" "}
+                    {t("Postal Code")}{" "}
                   </label>
                   <input
                     type="text"
@@ -532,7 +580,8 @@ export default function CartPage() {
 
               <div>
                 <label className="block text-xs font-bold text-[#19221B] mb-1">
-                  Payment Method
+                  {" "}
+                  {t("Payment Method")}{" "}
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   <label
@@ -553,7 +602,7 @@ export default function CartPage() {
                       className="sr-only"
                     />
                     <Truck className="w-4 h-4 text-[#B88A35]" />
-                    <span>Cash on Delivery</span>
+                    <span>{t("Cash on Delivery")}</span>
                   </label>
 
                   <label
@@ -574,7 +623,7 @@ export default function CartPage() {
                       className="sr-only"
                     />
                     <CreditCard className="w-4 h-4 text-[#B88A35]" />
-                    <span>Card / Online</span>
+                    <span>{t("Card / Online")}</span>
                   </label>
                 </div>
               </div>
@@ -587,11 +636,13 @@ export default function CartPage() {
                 {checkoutStatus === "submitting" ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin text-[#B88A35]" />
-                    <span>Processing Order via Redux Thunk...</span>
+                    <span>{t("Processing Order via Redux Thunk...")}</span>
                   </>
                 ) : (
                   <>
-                    <span>Confirm & Place Order ({formatCurrency(grandTotal)})</span>
+                    <span>
+                      Confirm & Place Order ({formatCurrency(grandTotal)})
+                    </span>
                     <ArrowRight className="w-4 h-4 text-[#B88A35]" />
                   </>
                 )}

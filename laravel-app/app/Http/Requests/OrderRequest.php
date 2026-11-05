@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\SubscriptionStatus;
 use App\Repositories\ShopRepository;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OrderRequest extends FormRequest
@@ -19,14 +19,14 @@ class OrderRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
-        $address='nullable|exists:addresses,id';
+        $address = 'nullable|exists:addresses,id';
         $tokens = cartAccessToken(request());
-        if($tokens['is_auth']){
-            $address='required|exists:addresses,id';
+        if ($tokens['is_auth']) {
+            $address = 'required|exists:addresses,id';
         }
 
         return [
@@ -65,6 +65,7 @@ class OrderRequest extends FormRequest
 
                 if (! $subscription) {
                     $validator->errors()->add('shop_ids', 'Some of the selected shops are not available.');
+
                     return;
                 }
             }

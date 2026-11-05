@@ -108,10 +108,6 @@ class Routes {
   // ------ Track Order View-------
   static const String trackOrderView = '/trackOrder';
 
-
-
-
-
   static String getCoreRouteName(String service) {
     return '$service$core';
   }
@@ -169,8 +165,6 @@ class Routes {
     return '$service$trackOrderView';
   }
 
-
-
   static String getMyMessageViewRouteName(String service) {
     return '$service$myMessageView';
   }
@@ -210,8 +204,6 @@ class Routes {
   static String getReturnOrderDetailsViewRouteName(String service) {
     return '$service$returnOrderDetails';
   }
-
-
 }
 
 Widget getDashboardView(String serviceName) {
@@ -382,7 +374,7 @@ Widget getCheckoutView(
   String? couponCode,
   bool? isBuyNow,
   bool? isDigital,
-    List<int> shopIds,
+  List<int> shopIds,
 ) {
   switch (serviceName) {
     case 'ecommerce':
@@ -391,7 +383,7 @@ Widget getCheckoutView(
         couponCode: couponCode,
         isBuyNow: isBuyNow,
         isDigital: isDigital,
-          shopIds: shopIds,
+        shopIds: shopIds,
       );
     case 'food':
       return const FoodHomeView();
@@ -451,12 +443,16 @@ Widget getMyOrderView(String serviceName, String? orderStatus) {
   }
 }
 
-
 // ------ Order Track View ----
-Widget getOrderTrackView(String serviceName,bool? hasAddress,double? latitude, double? longitude) {
+Widget getOrderTrackView(
+    String serviceName, bool? hasAddress, double? latitude, double? longitude) {
   switch (serviceName) {
     case 'ecommerce':
-      return EcommerceOrderTrackView(hasAddress: hasAddress,latitude: latitude,longitude: longitude,);
+      return EcommerceOrderTrackView(
+        hasAddress: hasAddress,
+        latitude: latitude,
+        longitude: longitude,
+      );
     case 'food':
       return const FoodHomeView();
     case 'grocery':
@@ -661,7 +657,7 @@ Widget handleCommonRoutes(String? routeName, RouteSettings settings) {
       return ConfirmOTPView(
         arguments: arguments,
       );
-      case Routes.registrationOtpScreen:
+    case Routes.registrationOtpScreen:
       final RegConfirmOTPScreenArguments arguments =
           settings.arguments as RegConfirmOTPScreenArguments;
       return RegistrationOtpView(
@@ -783,13 +779,7 @@ Route generatedRoutes(RouteSettings settings) {
     final bool? isDigital = arg[3];
     final List<int> shopIds = arg[4];
     final Widget view = getCheckoutView(
-      serviceName,
-      payableAmount,
-      couponCode,
-      isBuyNow,
-      isDigital,
-      shopIds
-    );
+        serviceName, payableAmount, couponCode, isBuyNow, isDigital, shopIds);
     return go(view, settings);
   } else if (serviceName != null &&
       settings.name == Routes.getAddUpdateAddressViewRouteName(serviceName)) {
@@ -800,13 +790,15 @@ Route generatedRoutes(RouteSettings settings) {
       settings.name == Routes.getProfileViewRouteName(serviceName)) {
     final Widget view = getProfileView(serviceName);
     return go(view, settings);
-  } else if (serviceName != null && settings.name == Routes.getMyOrderViewRouteName(serviceName)) {
+  } else if (serviceName != null &&
+      settings.name == Routes.getMyOrderViewRouteName(serviceName)) {
     final String? orderStatus = settings.arguments as String?;
     final Widget view = getMyOrderView(serviceName, orderStatus);
     return go(view, settings);
   }
   // ------ Order Track -----
-  else if (serviceName != null && settings.name == Routes.getTrackOrderRouteName(serviceName)) {
+  else if (serviceName != null &&
+      settings.name == Routes.getTrackOrderRouteName(serviceName)) {
     // final bool? hasAddress = settings.arguments as bool?;
     // final double? latitude = settings.arguments as double?;
     // final double? longitude = settings.arguments as double?;
@@ -817,8 +809,8 @@ Route generatedRoutes(RouteSettings settings) {
     final double? latitude = args[1] as double?;
     final double? longitude = args[2] as double?;
 
-
-    final Widget view = getOrderTrackView(serviceName, hasAddress,latitude,longitude);
+    final Widget view =
+        getOrderTrackView(serviceName, hasAddress, latitude, longitude);
     return go(view, settings);
   } else if (serviceName != null &&
       settings.name == Routes.getMyMessageViewRouteName(serviceName)) {

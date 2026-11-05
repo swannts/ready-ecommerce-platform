@@ -13,6 +13,7 @@ use App\Models\PosCart;
 use App\Models\PosCartProduct;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Modules\Purchase\App\Models\ProductSku;
 
 class PosCartRepository extends Repository
 {
@@ -321,8 +322,8 @@ class PosCartRepository extends Repository
             if (function_exists('module_exists') && module_exists('Purchase')) {
                 $skuArray = json_decode($product->pivot->sku_no, true);
 
-                if (is_array($skuArray) && !empty($skuArray)) {
-                    $productSkus = \Modules\Purchase\App\Models\ProductSku::whereIn('sku', $skuArray)->get();
+                if (is_array($skuArray) && ! empty($skuArray)) {
+                    $productSkus = ProductSku::whereIn('sku', $skuArray)->get();
                     foreach ($productSkus as $productSku) {
                         $productSku->update([
                             'in_stock' => false,
@@ -336,7 +337,7 @@ class PosCartRepository extends Repository
                 $order->productStockOuts()->create([
                     'order_id' => $order->id,
                     'product_id' => $product->id,
-                    'quantity' => $product->pivot->quantity
+                    'quantity' => $product->pivot->quantity,
                 ]);
             }
         }

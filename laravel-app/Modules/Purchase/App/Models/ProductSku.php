@@ -3,8 +3,8 @@
 namespace Modules\Purchase\App\Models;
 
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class ProductSku extends Model
 {

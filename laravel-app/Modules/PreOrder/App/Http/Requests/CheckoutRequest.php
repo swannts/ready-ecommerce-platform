@@ -2,10 +2,10 @@
 
 namespace Modules\PreOrder\App\Http\Requests;
 
-use Illuminate\Validation\Rule;
 use App\Models\Scopes\PreOderProduct;
 use App\Repositories\ProductRepository;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CheckoutRequest extends FormRequest
 {
@@ -24,18 +24,19 @@ class CheckoutRequest extends FormRequest
     {
         $customerId = auth()->user()->customer->id;
         $product = ProductRepository::query()->withoutGlobalScope(PreOderProduct::class)->where('id', $this->product_id)->first();
+
         return [
-            "product_id" => "required|exists:products,id",
-            "address_id" => [
+            'product_id' => 'required|exists:products,id',
+            'address_id' => [
                 'required',
                 Rule::exists('addresses', 'id')
                     ->where('customer_id', $customerId),
             ],
-            "quantity" => [
+            'quantity' => [
                 'required',
                 'integer',
-                'min:' . ($product?->min_order_quantity ?? 1),
-                'max:' . ($product?->preorder_quantity_limit ?? PHP_INT_MAX),
+                'min:'.($product?->min_order_quantity ?? 1),
+                'max:'.($product?->preorder_quantity_limit ?? PHP_INT_MAX),
             ],
         ];
     }

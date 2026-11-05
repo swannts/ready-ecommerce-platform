@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\VerifyManage;
 use App\Rules\EmailRule;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Cache;
 
@@ -20,7 +21,7 @@ class ShopProfileRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -44,8 +45,8 @@ class ShopProfileRequest extends FormRequest
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['nullable', 'string', 'max:255'],
-            'phone' => ['required', 'unique:users,phone,' . $user?->id, 'min_digits:' . $min, 'max_digits:' . $max],
-            'email' => ['required', 'string', 'max:255', 'unique:users,email,' . $user?->id, new EmailRule],
+            'phone' => ['required', 'unique:users,phone,'.$user?->id, 'min_digits:'.$min, 'max_digits:'.$max],
+            'email' => ['required', 'string', 'max:255', 'unique:users,email,'.$user?->id, new EmailRule],
             'gender' => ['nullable', 'string'],
             'password' => ['nullable', 'min:6', 'confirmed'],
             'address' => ['nullable', 'string'],

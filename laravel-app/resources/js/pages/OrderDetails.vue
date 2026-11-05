@@ -1,6 +1,8 @@
 <template>
     <div>
-        <div class="bg-white dark:bg-slate-800 dark:bg-slate-800 px-3 text-slate-600 dark:text-slate-400 dark:text-slate-300 flex items-center gap-1 pt-2">
+        <div
+            class="bg-white dark:bg-slate-800 dark:bg-slate-800 px-3 text-slate-600 dark:text-slate-400 dark:text-slate-300 flex items-center gap-1 pt-2"
+        >
             <HomeIcon class="w-5 h-5 md:w-6 md:h-6" />
             <router-link
                 to="/order-history"
@@ -31,7 +33,9 @@
                 class="grid grid-cols-3 gap-4 md:gap-6 p-3 md:p-4 xl:p-8 bg-white dark:bg-slate-800 rounded-lg md:rounded-2xl"
             >
                 <!-- column 1 -->
-                <div class="col-span-3 lg:col-span-2 bg-white dark:bg-slate-800 space-y-5">
+                <div
+                    class="col-span-3 lg:col-span-2 bg-white dark:bg-slate-800 space-y-5"
+                >
                     <div
                         class="rounded-xl md:rounded-2xl outline outline-1 outline-offset-[-1px] outline-slate-100 p-3 md:p-4 xl:p-6"
                     >
@@ -141,7 +145,7 @@ watch(
             fetchOrderDetails();
         }
         authStore.orderCancel = false;
-    }
+    },
 );
 
 onMounted(() => {
@@ -205,13 +209,9 @@ const handlePusherChanel = (riderId) => {
         encrypted: true,
     });
 
-
-
     channel.value = pusher.value.subscribe("rider-location." + riderId);
 
     channel.value.bind("rider.location.updated", function (data) {
-
-
         riderCoords.value = {
             lat: Number(data.location.latitude),
             lng: Number(data.location.longitude),

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('footer_items', function (Blueprint $table) {
-             $table->string('ar_title')->nullable()->after('title');
+            $table->string('ar_title')->nullable()->after('title');
         });
     }
 

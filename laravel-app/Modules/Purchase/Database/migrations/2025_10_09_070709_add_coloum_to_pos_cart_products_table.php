@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('pos_cart_products', function (Blueprint $table) {
-              $table->json('sku_no')->nullable();
+            $table->json('sku_no')->nullable();
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('pos_cart_products', function (Blueprint $table) {
-              $table->dropColumn('sku_no');
+            $table->dropColumn('sku_no');
         });
     }
 };

@@ -70,8 +70,8 @@ class MetaConversionsApi
      * Send a single event. Never throws — tracking must not break checkout.
      *
      * @param  string  $eventName  One of self::ALLOWED_EVENTS
-     * @param  string  $eventId    Shared with the browser pixel for deduplication
-     * @param  array   $customData value / currency / contents / content_ids ...
+     * @param  string  $eventId  Shared with the browser pixel for deduplication
+     * @param  array  $customData  value / currency / contents / content_ids ...
      */
     public function send(string $eventName, string $eventId, array $customData, Request $request): bool
     {

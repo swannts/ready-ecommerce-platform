@@ -27,6 +27,7 @@ class ShopUser extends Model
     {
         return $this->hasMany(ShopUserChats::class);
     }
+
     public function product()
     {
         return $this->belongsTo(Product::class);

@@ -22,7 +22,7 @@ class ProcessController extends Controller
         $paymentToken = Str::uuid()->toString();
 
         $payment->update([
-            'payment_token' => $paymentToken
+            'payment_token' => $paymentToken,
         ]);
 
         $successUrl = $cancelUrl = null;

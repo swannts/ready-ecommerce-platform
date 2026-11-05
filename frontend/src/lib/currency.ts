@@ -14,7 +14,7 @@ export const defaultCurrency: CurrencyConfig = {
 
 export function formatCurrency(
   amount: number,
-  config: CurrencyConfig = defaultCurrency
+  config: CurrencyConfig = defaultCurrency,
 ): string {
   const formattedNumber = amount.toLocaleString("en-US", {
     minimumFractionDigits: config.decimals,
@@ -25,4 +25,3 @@ export function formatCurrency(
     ? `${config.symbol}${formattedNumber}`
     : `${formattedNumber} ${config.symbol}`;
 }
-

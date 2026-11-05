@@ -1,6 +1,8 @@
 <template>
     <div>
-        <div class="bg-white dark:bg-slate-900 px-3 text-slate-600 dark:text-slate-300 flex items-center gap-1 pt-2">
+        <div
+            class="bg-white dark:bg-slate-900 px-3 text-slate-600 dark:text-slate-300 flex items-center gap-1 pt-2"
+        >
             <HomeIcon class="w-5 h-5 md:w-6 md:h-6" />
             <router-link
                 to="/order-history"
@@ -61,7 +63,7 @@
                                     >
                                         {{ truncate(product.name, 50) }}
                                     </p>
-    
+
                                     <div
                                         class="flex flex-wrap justify-between items-center gap-3"
                                     >
@@ -70,19 +72,19 @@
                                             class="flex items-center flex-wrap gap-1"
                                         >
                                             <div
-                                            v-if="product.sisdfze"
+                                                v-if="product.sisdfze"
                                                 class="min-w-8 text-center px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded text-slate-800 dark:text-slate-200 text-[10px] md:text-xs font-normal"
                                             >
                                                 {{ product.size }}
                                             </div>
                                             <div
-                                            v-if="product.color"
+                                                v-if="product.color"
                                                 class="px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded text-slate-800 dark:text-slate-200 text-[10px] md:text-xs font-normal"
                                             >
                                                 {{ product.color }}
                                             </div>
                                         </div>
-    
+
                                         <!-- quantity and price -->
                                         <div
                                             class="text-slate-800 dark:text-slate-200 text-base font-normal leading-normal"
@@ -92,18 +94,18 @@
                                                 master.showCurrency(
                                                     product.discount_price > 0
                                                         ? product.discount_price
-                                                        : product.price
+                                                        : product.price,
                                                 )
                                             }}
                                         </div>
                                     </div>
                                 </div>
-    
+
                                 <div
                                     v-if="product.is_returned"
                                     class="w-0 self-stretch origin-top-left outline outline-1 outline-offset-[-0.50px] outline-slate-200 dark:outline-slate-600"
                                 ></div>
-    
+
                                 <div v-if="product.is_returned">
                                     <button
                                         v-if="isNumberInArray(product.id)"
@@ -127,7 +129,6 @@
                                     </button>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -139,7 +140,11 @@
                     <p
                         class="text-zinc-800 dark:text-slate-200 text-base lg:text-lg font-medium leading-tight lg:leading-relaxed"
                     >
-                        {{ $t("Please fill out the form below to request a return or replacement.") }}
+                        {{
+                            $t(
+                                "Please fill out the form below to request a return or replacement.",
+                            )
+                        }}
                     </p>
 
                     <div class="space-y-1 lg:space-y-3 flex flex-col w-full">
@@ -252,7 +257,7 @@ import { useToast } from "vue-toastification";
 import { useAuth } from "../stores/AuthStore";
 import OrderDetailsPageHeader from "../components/OrderDetailsPageHeader.vue";
 import { useMaster } from "../stores/MasterStore";
-import {useTruncateText} from '../composables/useTruncateText'
+import { useTruncateText } from "../composables/useTruncateText";
 import { computed } from "vue";
 import axios from "axios";
 import localization from "../localization";
@@ -293,7 +298,7 @@ watch(
             fetchOrderDetails();
         }
         authStore.orderCancel = false;
-    }
+    },
 );
 
 onMounted(() => {
@@ -309,7 +314,7 @@ function isProductReturnable(product) {
     if (product.is_returned) {
         if (selectedProducts.value.includes(product.id)) {
             selectedProducts.value = selectedProducts.value.filter(
-                (id) => id !== product.id
+                (id) => id !== product.id,
             );
         } else {
             selectedProducts.value.push(product.id);
@@ -356,7 +361,7 @@ const sendReturnRequest = () => {
     formData.append("reason", returnProductsData.value.reason);
     formData.append(
         "bank_account_number",
-        returnProductsData.value.bank_account_number
+        returnProductsData.value.bank_account_number,
     );
 
     if (selectedProducts.value.length == 0) {

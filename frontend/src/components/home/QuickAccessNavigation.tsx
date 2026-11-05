@@ -1,6 +1,10 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { Sprout, Boxes, Store, Handshake, ChevronRight } from "lucide-react";
+
+import { useLocale } from "@/lib/i18n";
 
 interface QuickNavItem {
   id: string;
@@ -42,6 +46,7 @@ const quickNavItems: QuickNavItem[] = [
 ];
 
 export const QuickAccessNavigation: React.FC = () => {
+  const { t } = useLocale();
   return (
     <section className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-4 sm:-mt-6 mb-12 lg:mb-16">
       {/* Floating Card Container */}
@@ -63,10 +68,10 @@ export const QuickAccessNavigation: React.FC = () => {
 
                   <div>
                     <h3 className="font-semibold text-sm sm:text-base text-[#19221B] group-hover:text-[#183A20] transition-colors leading-snug">
-                      {item.title}
+                      {t(item.title)}
                     </h3>
                     <p className="text-xs text-[#686C64] mt-0.5 line-clamp-1">
-                      {item.subtitle}
+                      {t(item.subtitle)}
                     </p>
                   </div>
                 </div>
@@ -83,4 +88,3 @@ export const QuickAccessNavigation: React.FC = () => {
     </section>
   );
 };
-

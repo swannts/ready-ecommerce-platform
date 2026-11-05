@@ -14,11 +14,10 @@ class ReportPermissionSeeder extends Seeder
     {
         $allPermissionArray = config('Modules.Report.acl.permissions', []);
 
-
         foreach ($allPermissionArray as $modelType => $allPermissions) {
             foreach ($allPermissions as $permissionName => $permissionValues) {
                 foreach ($permissionValues as $permission) {
-                   Permission::firstOrCreate([
+                    Permission::firstOrCreate([
                         'name' => $modelType.'.'.$permissionName.'.'.$permission,
                         'guard_name' => 'web',
                     ]);

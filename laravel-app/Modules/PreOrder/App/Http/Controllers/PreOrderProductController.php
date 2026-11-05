@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Scopes\PreOderProduct;
+use App\Models\SubCategory;
+use App\Models\Unit;
 use Modules\PreOrder\App\Http\Requests\ProductRequest;
 use Modules\PreOrder\App\Models\PreOrderSetting;
 use Modules\PreOrder\App\Repositories\PreOrderProductRepository;
@@ -22,10 +24,10 @@ class PreOrderProductController extends Controller
         $isRoot = $shop->id === $rootShop->id ? true : false;
         $preOrderSetting = PreOrderSetting::firstOrFail();
         $this->authorize('preOrderForShop', $preOrderSetting);
-        $products = PreOrderProductRepository::query()->withoutGlobalScope(PreOderProduct::class)->where('is_preorder', true)->when(!$isRoot, function ($q) use ($shop) {
+        $products = PreOrderProductRepository::query()->withoutGlobalScope(PreOderProduct::class)->where('is_preorder', true)->when(! $isRoot, function ($q) use ($shop) {
             return $q->where('shop_id', $shop?->id);
         })->when(request('search'), function ($q) {
-            return $q->where('name', 'like', '%' . request('search') . '%');
+            return $q->where('name', 'like', '%'.request('search').'%');
         })->latest('id')->paginate(20)->withQueryString();
 
         return view('preorder::product.index', compact('products', 'preOrderSetting', 'isRoot'));
@@ -47,8 +49,9 @@ class PreOrderProductController extends Controller
             $data['htmlTree'] = $this->formatCategoryTree($data['categories']);
         }
         if ($data['project'] === 'ReadyEcommerce') {
-            $data['units'] = \App\Models\Unit::query()->isActive()->get();
+            $data['units'] = Unit::query()->isActive()->get();
         }
+
         return view('preorder::product.create', $data);
     }
 
@@ -58,13 +61,14 @@ class PreOrderProductController extends Controller
         $html = '<ul class="category-tree">';
         foreach ($categories as $category) {
             $checked = in_array($category->id, $selectedCategories) ? 'checked' : '';
-            $html .= '<li id="' . $category->id . '" class="category">';
-            $html .= '<input type="checkbox" name="categories[]" value="' . $category->id . '" id="category_' . $category->id . '" class="form-check-input category-checkbox" ' . $checked . '>';
-            $html .= '<label for="category_' . $category->id . '">' . $category->name . '</label>';
+            $html .= '<li id="'.$category->id.'" class="category">';
+            $html .= '<input type="checkbox" name="categories[]" value="'.$category->id.'" id="category_'.$category->id.'" class="form-check-input category-checkbox" '.$checked.'>';
+            $html .= '<label for="category_'.$category->id.'">'.$category->name.'</label>';
             $html .= $this->formatCategoryTree($category->subCategories, $selectedCategories);
             $html .= '</li>';
         }
         $html .= '</ul>';
+
         return $html;
     }
 
@@ -74,6 +78,7 @@ class PreOrderProductController extends Controller
     public function store(ProductRequest $request)
     {
         PreOrderProductRepository::storeByRequest($request);
+
         return to_route('shop.preOrder.product.index')->withSuccess(__('Product created successfully'));
     }
 
@@ -83,6 +88,7 @@ class PreOrderProductController extends Controller
     public function show($id)
     {
         $product = PreOrderProductRepository::query()->withoutGlobalScope(PreOderProduct::class)->findOrFail($id);
+
         return view('shop.product.show', compact('product'));
     }
 
@@ -109,12 +115,13 @@ class PreOrderProductController extends Controller
         }
         if ($data['project'] === 'ReadyEcommerce') {
             $categoryId = $data['product']->categories()?->latest('id')->first()?->id;
-            $data['subCategories'] = \App\Models\SubCategory::whereHas('categories', function ($query) use ($categoryId) {
+            $data['subCategories'] = SubCategory::whereHas('categories', function ($query) use ($categoryId) {
                 return $query->where('category_id', $categoryId);
             })->isActive()->get();
-            $data['units'] = \App\Models\Unit::query()->isActive()->get();
+            $data['units'] = Unit::query()->isActive()->get();
         }
         $data['metaKeywords'] = explode(',', $data['product']->meta_keywords) ?: [];
+
         return view('preorder::product.edit', $data);
     }
 
@@ -125,9 +132,9 @@ class PreOrderProductController extends Controller
     {
         $product = PreOrderProductRepository::query()->withoutGlobalScope(PreOderProduct::class)->findOrFail($id);
         PreOrderProductRepository::updateByRequest($request, $product);
+
         return to_route('shop.preOrder.product.index')->withSuccess(__('Product updated successfully'));
     }
-
 
     /**
      * Toggle the status of the specified product.
@@ -140,6 +147,7 @@ class PreOrderProductController extends Controller
         $product->update([
             'is_active' => ! $product->is_active,
         ]);
+
         return back()->withSuccess(__('Status updated successfully'));
     }
 
@@ -152,6 +160,7 @@ class PreOrderProductController extends Controller
         $this->authorize('canUsePreOrder', $setting);
         $product = PreOrderProductRepository::query()->withoutGlobalScopes()->findOrFail($id);
         $product->delete();
+
         return to_route('shop.preOrder.product.index')->withSuccess(__('Product deleted successfully'));
     }
 }

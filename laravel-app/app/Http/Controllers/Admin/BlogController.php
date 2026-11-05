@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Tag;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\BlogRequest;
 use App\Models\Blog;
+use App\Models\Tag;
+use App\Repositories\BlogRepository;
+use App\Repositories\CategoryRepository;
 use App\Services\Chat;
 use Illuminate\Http\Request;
-use App\Http\Requests\BlogRequest;
-use App\Http\Controllers\Controller;
-use App\Repositories\BlogRepository;
 use Illuminate\Support\Facades\Storage;
-use App\Repositories\CategoryRepository;
 
 class BlogController extends Controller
 {
@@ -90,7 +90,7 @@ class BlogController extends Controller
         return to_route('admin.blog.index')->withSuccess(__('Deleted successfully'));
     }
 
-     public function generateAIData(Request $request)
+    public function generateAIData(Request $request)
     {
 
         try {
@@ -99,7 +99,7 @@ class BlogController extends Controller
                 'title' => 'required|string',
             ]);
 
-            $chat = new Chat();
+            $chat = new Chat;
             $chat->systemMessage($request->title);
 
             $question = str_replace(
@@ -116,7 +116,7 @@ class BlogController extends Controller
 
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }

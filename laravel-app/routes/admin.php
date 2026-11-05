@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\FirebaseController;
 use App\Http\Controllers\Admin\FlashSaleController;
 use App\Http\Controllers\Admin\FooterController;
 use App\Http\Controllers\Admin\GeneraleSettingController;
+use App\Http\Controllers\Admin\GoogleMapConfigController;
 use App\Http\Controllers\Admin\GoogleReCaptchaController;
 use App\Http\Controllers\Admin\LanguageController;
 use App\Http\Controllers\Admin\MailConfigurationController;
@@ -38,7 +39,6 @@ use App\Http\Controllers\Admin\PaymentGatewayController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PusherConfigController;
-use App\Http\Controllers\Admin\GoogleMapConfigController;
 use App\Http\Controllers\Admin\ReturnOrderController;
 use App\Http\Controllers\Admin\ReviewsController;
 use App\Http\Controllers\Admin\RiderController;
@@ -61,6 +61,7 @@ use App\Http\Controllers\Admin\VerifyManageController;
 use App\Http\Controllers\Admin\WeightDeliveryChargeController;
 use App\Http\Controllers\Admin\WithdrawController;
 use Illuminate\Support\Facades\Route;
+use UniSharp\LaravelFilemanager\Lfm;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,10 +78,10 @@ Route::name('admin.')->group(function () {
     });
 
     Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['auth', 'checkPermission']], function () {
-        \UniSharp\LaravelFilemanager\Lfm::routes();
+        Lfm::routes();
     });
 
-    Route::get('/rider/{id}/location',[RiderController::class,'riderLocation'])->name('rider.location');
+    Route::get('/rider/{id}/location', [RiderController::class, 'riderLocation'])->name('rider.location');
 
     Route::middleware(['auth', 'checkPermission'])->group(function () {
         // Dashboard
@@ -587,15 +588,15 @@ Route::name('admin.')->group(function () {
         });
 
         // area route
-         Route::controller(AreaController::class)->group(function () {
-             Route::get('/areas', 'index')->name('area.index');
-             Route::get('/area/create', 'create')->name('area.create');
-             Route::get('/area/{area}/edit', 'edit')->name('area.edit');
-             Route::post('/area/store', 'store')->name('area.store');
-             Route::put('/area/{area}/update', 'update')->name('area.update');
-             Route::get('/area/{area}/toggle', 'toggle')->name('area.toggle');
-             Route::get('/area/{area}/destroy', 'destroy')->name('area.destroy');
-         });
+        Route::controller(AreaController::class)->group(function () {
+            Route::get('/areas', 'index')->name('area.index');
+            Route::get('/area/create', 'create')->name('area.create');
+            Route::get('/area/{area}/edit', 'edit')->name('area.edit');
+            Route::post('/area/store', 'store')->name('area.store');
+            Route::put('/area/{area}/update', 'update')->name('area.update');
+            Route::get('/area/{area}/toggle', 'toggle')->name('area.toggle');
+            Route::get('/area/{area}/destroy', 'destroy')->name('area.destroy');
+        });
 
         // footer route
         Route::controller(FooterController::class)->group(function () {
@@ -609,7 +610,7 @@ Route::name('admin.')->group(function () {
             Route::post('/footer/disabled', 'disabled')->name('footer.disabled');
         });
 
-         //  return order
+        //  return order
         Route::controller(ReturnOrderController::class)->group(function () {
             Route::get('/return-orders', 'index')->name('returnOrder.index');
             Route::get('/return-orders/{returnOrder}/show', 'show')->name('returnOrder.show');

@@ -16,7 +16,6 @@ class WeightDeliveryChargeRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
      */
     public function rules(): array
     {
@@ -25,7 +24,7 @@ class WeightDeliveryChargeRequest extends FormRequest
         return [
             'delivery_charge' => ['required', 'numeric', 'min:20'],
             'min_weight' => ['required', 'numeric', 'min:0', 'unique:weight_delivery_charges,min_weight,'.$acceptId],
-            'max_weight' => ['required', 'numeric', 'min:'.$this->min_weight,'unique:weight_delivery_charges,max_weight,'.$acceptId],
+            'max_weight' => ['required', 'numeric', 'min:'.$this->min_weight, 'unique:weight_delivery_charges,max_weight,'.$acceptId],
         ];
     }
 }

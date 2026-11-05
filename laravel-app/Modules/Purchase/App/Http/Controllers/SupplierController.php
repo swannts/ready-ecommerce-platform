@@ -2,12 +2,12 @@
 
 namespace Modules\Purchase\App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Modules\Purchase\App\Models\Supplier;
-use Modules\Purchase\App\Repositories\SupplierTransactionRepository;
+use Illuminate\Http\Request;
 use Modules\Purchase\App\Http\Requests\SupplierRequest;
+use Modules\Purchase\App\Models\Supplier;
 use Modules\Purchase\App\Repositories\SupplierRepository;
+use Modules\Purchase\App\Repositories\SupplierTransactionRepository;
 
 class SupplierController extends Controller
 {
@@ -20,13 +20,14 @@ class SupplierController extends Controller
         $search = request()->search;
         $suppliers = SupplierRepository::query()->where('shop_id', $shop->id)
             ->when($search, function ($query, $search) {
-                $query->where('name', 'like', '%' . $search . '%')
+                $query->where('name', 'like', '%'.$search.'%')
                     ->orWhereHas('user', function ($query) use ($search) {
-                        $query->where('name', 'like', '%' . $search . '%')
-                            ->orWhere('email', 'like', '%' . $search . '%')
-                            ->orWhere('phone', 'like', '%' . $search . '%');
+                        $query->where('name', 'like', '%'.$search.'%')
+                            ->orWhere('email', 'like', '%'.$search.'%')
+                            ->orWhere('phone', 'like', '%'.$search.'%');
                     });
             })->latest('id')->paginate(20);
+
         return view('purchase::supplier.index', compact('suppliers'));
     }
 
@@ -50,9 +51,10 @@ class SupplierController extends Controller
                 'supplier' => [
                     'id' => $supplier->id,
                     'name' => $supplier->name,
-                ]
+                ],
             ]);
         }
+
         return to_route('shop.supplier.index')->withSuccess(__('Supplier created successfully'));
     }
 
@@ -89,6 +91,7 @@ class SupplierController extends Controller
     public function update(SupplierRequest $request, Supplier $supplier)
     {
         SupplierRepository::updateByRequest($request, $supplier);
+
         return to_route('shop.supplier.index')->withSuccess(__('Supplier updated successfully'));
     }
 
@@ -98,6 +101,7 @@ class SupplierController extends Controller
     public function destroy(Supplier $supplier)
     {
         $supplier->delete();
+
         return to_route('shop.supplier.index')->withSuccess(__('Supplier deleted successfully'));
     }
 

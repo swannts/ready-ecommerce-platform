@@ -145,7 +145,7 @@ export const useMaster = defineStore("masterStore", {
                     this.locale = data.app_locale;
                     this.defaultLocale = data.app_locale;
                     const defaultLanguage = this.languages.find(
-                        (language) => language.name == this.locale
+                        (language) => language.name == this.locale,
                     );
                     if (defaultLanguage) {
                         this.langDirection = defaultLanguage.direction ?? "ltr";
@@ -154,7 +154,7 @@ export const useMaster = defineStore("masterStore", {
                 }
 
                 const defaultCurrency = this.currencies.find(
-                    (currency) => currency.is_default == true
+                    (currency) => currency.is_default == true,
                 );
                 if (this.defaultCurrency != this.currency.name) {
                     this.defaultCurrency = this.currency.name;

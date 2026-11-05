@@ -1,22 +1,30 @@
 <template>
     <div class="bg-white dark:bg-slate-800 rounded-xl p-6 h-full">
-        <div class="pb-3 text-slate-950 dark:text-white text-lg font-medium leading-normal tracking-tight">
-            {{ $t('Recently Viewed') }}
+        <div
+            class="pb-3 text-slate-950 dark:text-white text-lg font-medium leading-normal tracking-tight"
+        >
+            {{ $t("Recently Viewed") }}
         </div>
 
-        <div v-if="products.length > 0"
-            class="md:max-h-[calc(100vh-560px)] min-h-72 flex flex-col gap-2 border-t border-slate-200 dark:border-slate-700 overflow-y-auto">
+        <div
+            v-if="products.length > 0"
+            class="md:max-h-[calc(100vh-560px)] min-h-72 flex flex-col gap-2 border-t border-slate-200 dark:border-slate-700 overflow-y-auto"
+        >
             <div v-for="product in products" :key="product.id" class="mt-3">
                 <ProductCardHorizontal :product="product" />
             </div>
         </div>
 
-        <div v-else class="h-full flex justify-center items-center border-t border-slate-200 dark:border-slate-700">
-            <div class="text-center text-slate-400 text-lg font-normal leading-7 tracking-tight">
-                {{ $t('No products have been viewed recently') }}.
+        <div
+            v-else
+            class="h-full flex justify-center items-center border-t border-slate-200 dark:border-slate-700"
+        >
+            <div
+                class="text-center text-slate-400 text-lg font-normal leading-7 tracking-tight"
+            >
+                {{ $t("No products have been viewed recently") }}.
             </div>
         </div>
-
     </div>
 </template>
 
@@ -33,17 +41,19 @@ onMounted(() => {
 });
 
 const fetchViewProducts = () => {
-    axios.get('/recently-views', {
-        headers: {
-            Authorization: AuthStore.token
-        }
-    }).then((response) => {
-        products.value = response.data.data.products;
-    }).catch((error) => {
-        console.log(error);
-    });
-}
-
+    axios
+        .get("/recently-views", {
+            headers: {
+                Authorization: AuthStore.token,
+            },
+        })
+        .then((response) => {
+            products.value = response.data.data.products;
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};
 </script>
 <style scoped>
 /* width */
@@ -60,7 +70,7 @@ const fetchViewProducts = () => {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #94A3B8;
+    background: #94a3b8;
     border-radius: 5px;
 }
 

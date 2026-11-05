@@ -1,27 +1,41 @@
 <template>
     <div class="flex gap-3">
-        <img :src="product?.thumbnail ? product?.thumbnail : product?.thumbnails[0]?.thumbnail" alt=""
-            class="w-24 h-24 object-cover rounded-md">
+        <img
+            :src="
+                product?.thumbnail
+                    ? product?.thumbnail
+                    : product?.thumbnails[0]?.thumbnail
+            "
+            alt=""
+            class="w-24 h-24 object-cover rounded-md"
+        />
         <div class="flex flex-col gap-1">
-            <div class="text-slate-950 text-base font-medium leading-normal max-w-64 truncate">
+            <div
+                class="text-slate-950 text-base font-medium leading-normal max-w-64 truncate"
+            >
                 {{ product?.name }}
             </div>
-            <div class="text-slate-600 text-sm font-normal leading-tight">{{ t('has been remove to cart') }}.</div>
-            <button @click.stop="clicked" class="py-2 px-3 h-10 bg-primary rounded-lg text-white text-sm font-normal w-fit">
-                {{ t('Again Add to Cart') }}
+            <div class="text-slate-600 text-sm font-normal leading-tight">
+                {{ t("has been remove to cart") }}.
+            </div>
+            <button
+                @click.stop="clicked"
+                class="py-2 px-3 h-10 bg-primary rounded-lg text-white text-sm font-normal w-fit"
+            >
+                {{ t("Again Add to Cart") }}
             </button>
         </div>
     </div>
 </template>
 
 <script setup>
-import localization from '../localization';
-import { useBasketStore } from '../stores/BasketStore';
+import localization from "../localization";
+import { useBasketStore } from "../stores/BasketStore";
 const basketStore = useBasketStore();
 const t = localization.i18n.global.t;
 
 const props = defineProps({
-    product: Object
+    product: Object,
 });
 
 const clicked = () => {
@@ -31,11 +45,10 @@ const clicked = () => {
         quantity: 1,
         color: props.product?.color?.id ?? null,
         size: props.product?.size?.id ?? null,
-        unit: props.product?.unit ?? null
-    }
+        unit: props.product?.unit ?? null,
+    };
     basketStore.addToCart(formData, props.product);
-}
-
+};
 </script>
 
 <style>

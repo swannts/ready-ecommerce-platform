@@ -33,13 +33,15 @@ export const submitB2BQuoteThunk = createAsyncThunk<
     const completedQuote: B2BQuoteRequest = {
       ...quoteData,
       id: `RFQ-${Date.now().toString(36).toUpperCase()}-${Math.floor(
-        100 + Math.random() * 900
+        100 + Math.random() * 900,
       )}`,
     };
 
     return completedQuote;
   } catch {
-    return rejectWithValue("Failed to submit RFQ. Please retry or call our desk.");
+    return rejectWithValue(
+      "Failed to submit RFQ. Please retry or call our desk.",
+    );
   }
 });
 
@@ -73,8 +75,7 @@ export const b2bQuoteSlice = createSlice({
 export const { resetQuoteSubmission } = b2bQuoteSlice.actions;
 
 export const selectB2BQuotes = (state: RootState) => state.b2bQuote.quotes;
-export const selectB2BQuoteStatus = (state: RootState) =>
-  state.b2bQuote.status;
+export const selectB2BQuoteStatus = (state: RootState) => state.b2bQuote.status;
 export const selectLastSubmittedQuote = (state: RootState) =>
   state.b2bQuote.lastSubmittedQuote;
 

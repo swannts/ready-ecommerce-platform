@@ -16,7 +16,8 @@ class Notification extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function scopeunRead($query){
-         return $query->where('is_read',false);
+    public function scopeunRead($query)
+    {
+        return $query->where('is_read', false);
     }
 }

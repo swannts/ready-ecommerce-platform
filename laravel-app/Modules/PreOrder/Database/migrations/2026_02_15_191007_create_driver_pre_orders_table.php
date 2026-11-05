@@ -1,10 +1,10 @@
 <?php
 
 use App\Models\Driver;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Modules\PreOrder\App\Models\PreOrder;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use Modules\PreOrder\App\Models\PreOrder;
 
 return new class extends Migration
 {

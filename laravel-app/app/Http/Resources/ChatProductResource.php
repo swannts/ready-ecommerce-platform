@@ -32,9 +32,10 @@ class ChatProductResource extends JsonResource
 
         $price = $this->price;
         $discountPrice = $flashSaleProduct ? $flashSaleProduct->pivot->price : $this->discount_price;
+
         return [
             'id' => $this->id,
-            'name' =>  $this->name,
+            'name' => $this->name,
             'thumbnail' => $this->thumbnail,
             'discount_price' => (float) number_format($discountPrice, 2, '.', ''),
             'rating' => (float) $this->averageRating ?? 0.0,

@@ -1,10 +1,13 @@
 <template>
-    <div class="sticky top-0 bg-white dark:bg-slate-900 z-10 border-b border-transparent dark:border-slate-800">
+    <div
+        class="sticky top-0 bg-white dark:bg-slate-900 z-10 border-b border-transparent dark:border-slate-800"
+    >
         <NavbarMiddle />
         <div
             class="transition-[height] duration-300 ease-out"
             :class="showBottomNav ? 'overflow-visible' : 'overflow-hidden'"
-            :style="{ height: showBottomNav ? `${bottomNavHeight}px` : '0px' }">
+            :style="{ height: showBottomNav ? `${bottomNavHeight}px` : '0px' }"
+        >
             <div ref="bottomNavRef">
                 <NavbarBottom />
             </div>
@@ -15,7 +18,7 @@
 <script setup>
 import { nextTick, onMounted, onUnmounted, ref } from "vue";
 import NavbarMiddle from "../components/NavbarMiddle.vue";
-import NavbarBottom from "../components/NavbarBottom.vue"
+import NavbarBottom from "../components/NavbarBottom.vue";
 
 const showBottomNav = ref(true);
 const bottomNavRef = ref(null);
@@ -66,13 +69,13 @@ const onScroll = () => {
 onMounted(async () => {
     await nextTick();
     updateHeight();
-    window.addEventListener('resize', updateHeight);
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener("resize", updateHeight);
+    window.addEventListener("scroll", onScroll, { passive: true });
 });
 
 onUnmounted(() => {
-    window.removeEventListener('resize', updateHeight);
-    window.removeEventListener('scroll', onScroll);
+    window.removeEventListener("resize", updateHeight);
+    window.removeEventListener("scroll", onScroll);
 });
 </script>
 

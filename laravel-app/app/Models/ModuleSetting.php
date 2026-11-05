@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class ModuleSetting extends Model
 {
     use HasFactory;
+
     protected $fillable = ['name', 'enabled', 'is_first'];
 }

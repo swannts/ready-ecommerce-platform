@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -71,7 +72,7 @@ class CategorySeeder extends Seeder
             }
         }
 
-        foreach (\App\Models\Shop::whereNotNull('supplier_slug')->get() as $supplierShop) {
+        foreach (Shop::whereNotNull('supplier_slug')->get() as $supplierShop) {
             $supplierShop->categories()->sync(Category::where('status', true)->pluck('id'));
         }
     }

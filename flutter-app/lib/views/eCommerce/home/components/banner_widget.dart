@@ -61,7 +61,9 @@ class _BannerWidgetState extends ConsumerState<BannerWidget> {
                       decoration: BoxDecoration(
                         color: ref.watch(currentPageController) == index
                             ? colors(context).light
-                            : colors(context).accentColor!.withValues(alpha: 0.3),
+                            : colors(context)
+                                .accentColor!
+                                .withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(30.sp),
                       ),
                       height: 8.h,

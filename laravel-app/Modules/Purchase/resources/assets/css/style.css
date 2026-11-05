@@ -1,6 +1,6 @@
 .flashSaleThumbnail {
     cursor: pointer;
-    border: 1px solid #000
+    border: 1px solid #000;
 }
 .rounded-circle {
     object-fit: cover;
@@ -136,6 +136,6 @@
 }
 
 .text-design {
-   font-size: 14px;
-   font-weight:bold;
+    font-size: 14px;
+    font-weight: bold;
 }

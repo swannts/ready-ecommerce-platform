@@ -10,14 +10,13 @@ use Modules\PreOrder\App\Repositories\PreOrderRepository;
 
 class EarningReportController extends Controller
 {
-
     public function commissionList()
     {
         $data['from'] = request('from') ?? now()->subDays(30)->format('m/d/Y');
-        $data['to']   = request('to') ?? now()->format('m/d/Y');
+        $data['to'] = request('to') ?? now()->format('m/d/Y');
         $shopId = generaleSetting('shop')?->id;
-        $from   = Carbon::parse($data['from'])->startOfDay();
-        $to     = Carbon::parse($data['to'])->endOfDay();
+        $from = Carbon::parse($data['from'])->startOfDay();
+        $to = Carbon::parse($data['to'])->endOfDay();
         $search = request('search');
         $shop = generaleSetting('shop');
         $rootShop = generaleSetting('rootShop');
@@ -27,13 +26,13 @@ class EarningReportController extends Controller
             ->when($isRoot, function ($q) use ($shopId) {
                 $q->where('pre_orders.shop_id', '!=', $shopId);
             })
-            ->when(!$isRoot, function ($q) use ($shopId) {
+            ->when(! $isRoot, function ($q) use ($shopId) {
                 $q->where('pre_orders.shop_id', $shopId);
             })
             ->join('pre_order_items', 'pre_orders.id', '=', 'pre_order_items.pre_order_id');
         $data['preOrders'] = (clone $baseQuery)
             ->whereBetween('pre_orders.created_at', [$from, $to])
-            ->when($search, fn($q) => $q->filter(['search' => $search]))
+            ->when($search, fn ($q) => $q->filter(['search' => $search]))
             ->groupBy(
                 'pre_orders.id',
                 'pre_orders.admin_commission',
@@ -57,6 +56,7 @@ class EarningReportController extends Controller
                 SUM(pre_order_items.quantity * pre_order_items.price) AS totalOrderAmount,
                 (SUM(pre_order_items.quantity * pre_order_items.price)- SUM(pre_orders.admin_commission)) AS totalEarning
             ')->first();
+
         return view('preorder::Report.commissionList', $data);
     }
 
@@ -68,17 +68,17 @@ class EarningReportController extends Controller
     public function profitReport()
     {
         $data['from'] = request('from') ?? now()->subDays(30)->format('m/d/Y');
-        $data['to']   = request('to') ?? now()->format('m/d/Y');
+        $data['to'] = request('to') ?? now()->format('m/d/Y');
         $shopId = generaleSetting('shop')?->id;
-        $from   = Carbon::parse($data['from'])->startOfDay();
-        $to     = Carbon::parse($data['to'])->endOfDay();
+        $from = Carbon::parse($data['from'])->startOfDay();
+        $to = Carbon::parse($data['to'])->endOfDay();
         $search = request('search');
         $baseQuery = PreOrderRepository::query()
             ->delivered()
             ->where('pre_orders.shop_id', $shopId)
             ->join('pre_order_items', 'pre_orders.id', '=', 'pre_order_items.pre_order_id')
             ->whereBetween('pre_orders.created_at', [$from, $to])
-            ->when($search, fn($q) => $q->filter(['search' => $search]));
+            ->when($search, fn ($q) => $q->filter(['search' => $search]));
         $data['preOrders'] = (clone $baseQuery)
             ->groupBy(
                 'pre_orders.id',
@@ -102,6 +102,7 @@ class EarningReportController extends Controller
                 SUM(pre_order_items.quantity * pre_order_items.buying_price) AS totalBuying,
                 SUM(pre_order_items.quantity * (pre_order_items.price - pre_order_items.buying_price)) AS totalProfit
             ')->first();
+
         return view('preorder::Report.profitReport', $data);
     }
 
@@ -112,17 +113,17 @@ class EarningReportController extends Controller
     public function profitReportExport()
     {
         $data['from'] = request('from') ?? now()->subDays(30)->format('m/d/Y');
-        $data['to']   = request('to') ?? now()->format('m/d/Y');
+        $data['to'] = request('to') ?? now()->format('m/d/Y');
         $shopId = generaleSetting('shop')?->id;
-        $from   = Carbon::parse($data['from'])->startOfDay();
-        $to     = Carbon::parse($data['to'])->endOfDay();
+        $from = Carbon::parse($data['from'])->startOfDay();
+        $to = Carbon::parse($data['to'])->endOfDay();
         $search = request('search');
         $preOrders = PreOrderRepository::query()
             ->delivered()
             ->where('pre_orders.shop_id', $shopId)
             ->join('pre_order_items', 'pre_orders.id', '=', 'pre_order_items.pre_order_id')
             ->whereBetween('pre_orders.created_at', [$from, $to])
-            ->when($search, fn($query) => $query->filter(['search' => $search]))
+            ->when($search, fn ($query) => $query->filter(['search' => $search]))
             ->groupBy(
                 'pre_orders.id',
                 'pre_orders.created_at',
@@ -162,19 +163,20 @@ class EarningReportController extends Controller
             ]);
         }
         $timeStamp = date('Y-m-d_H-i-s');
+
         return Excel::download(
             new TemplateExport($exportData),
-            'preorder_profit_report_' . $timeStamp . '.xlsx'
+            'preorder_profit_report_'.$timeStamp.'.xlsx'
         );
     }
 
     public function commissionListExport()
     {
         $data['from'] = request('from') ?? now()->subDays(30)->format('m/d/Y');
-        $data['to']   = request('to') ?? now()->format('m/d/Y');
+        $data['to'] = request('to') ?? now()->format('m/d/Y');
         $shopId = generaleSetting('shop')?->id;
-        $from   = Carbon::parse($data['from'])->startOfDay();
-        $to     = Carbon::parse($data['to'])->endOfDay();
+        $from = Carbon::parse($data['from'])->startOfDay();
+        $to = Carbon::parse($data['to'])->endOfDay();
         $search = request('search');
         $shop = generaleSetting('shop');
         $rootShop = generaleSetting('rootShop');
@@ -184,12 +186,12 @@ class EarningReportController extends Controller
             ->when($isRoot, function ($q) use ($shopId) {
                 $q->where('pre_orders.shop_id', '!=', $shopId);
             })
-            ->when(!$isRoot, function ($q) use ($shopId) {
+            ->when(! $isRoot, function ($q) use ($shopId) {
                 $q->where('pre_orders.shop_id', $shopId);
             })
             ->join('pre_order_items', 'pre_orders.id', '=', 'pre_order_items.pre_order_id')
             ->whereBetween('pre_orders.created_at', [$from, $to])
-            ->when($search, fn($query) => $query->filter(['search' => $search]))
+            ->when($search, fn ($query) => $query->filter(['search' => $search]))
             ->groupBy(
                 'pre_orders.id',
                 'pre_orders.admin_commission',
@@ -212,7 +214,7 @@ class EarningReportController extends Controller
                 'Created Date',
                 'Total Product',
                 'Admin Commission',
-                'Selling Earning'
+                'Selling Earning',
             ],
         ]);
         $serialNo = 1;
@@ -227,9 +229,10 @@ class EarningReportController extends Controller
             ]);
         }
         $timeStamp = date('Y-m-d_H-i-s');
+
         return Excel::download(
             new TemplateExport($exportData),
-            'preorder_commission_report_' . $timeStamp . '.xlsx'
+            'preorder_commission_report_'.$timeStamp.'.xlsx'
         );
     }
 }

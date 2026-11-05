@@ -19,19 +19,17 @@ class PusherService {
       await pusher.init(
         apiKey: AppConstants.pusherApiKey,
         cluster: AppConstants.pusherCluster,
-
         onConnectionStateChange: (current, previous) {
           AppLog.kLog("🔌 Pusher: $previous → $current");
         },
-
         onEvent: (event) {
-
-          AppLog.kLog("PUSHER EVENT RECEIVED → ""Channel: ${event.channelName} | ""Event: ${event.eventName} | ""Raw Data: ${event.data}");
+          AppLog.kLog("PUSHER EVENT RECEIVED → "
+              "Channel: ${event.channelName} | "
+              "Event: ${event.eventName} | "
+              "Raw Data: ${event.data}");
 
           if (event.eventName == "rider.location.updated") {
-
             AppLog.kLog(" OUR EVENT MATCHED! Raw data: ${event.data}");
-
 
             try {
               final data = jsonDecode(event.data ?? '{}');

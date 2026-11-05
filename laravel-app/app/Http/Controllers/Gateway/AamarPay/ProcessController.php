@@ -20,7 +20,7 @@ class ProcessController extends Controller
         $paymentToken = Str::uuid()->toString();
 
         $payment->update([
-            'payment_token' => $paymentToken
+            'payment_token' => $paymentToken,
         ]);
 
         $successUrl = $cancelUrl = null;
@@ -49,7 +49,7 @@ class ProcessController extends Controller
 
         $endPoint = $paymentGateway->mode == 'live' ? 'https://secure.aamarpay.com/index.php' : 'https://sandbox.aamarpay.com/index.php';
 
-        $transitionID = str_pad($payment->id, 6, '0', STR_PAD_LEFT) . '-' . now()->timestamp;
+        $transitionID = str_pad($payment->id, 6, '0', STR_PAD_LEFT).'-'.now()->timestamp;
 
         $curl = curl_init();
 
@@ -89,7 +89,7 @@ class ProcessController extends Controller
             return $response->payment_url;
         }
 
-        $error = is_object($response) ? json_encode($response, JSON_PRETTY_PRINT) : (string)$response;
+        $error = is_object($response) ? json_encode($response, JSON_PRETTY_PRINT) : (string) $response;
 
         return json_encode(['error' => $error]);
     }

@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
+import { cookies } from "next/headers";
 import { Playfair_Display, Inter } from "next/font/google";
 import StoreProvider from "@/store/StoreProvider";
-import { CatalogBootstrap } from "@/components/layout/CatalogBootstrap";
-import { LocaleProvider } from "@/lib/i18n";
+import { Locale, LocaleProvider } from "@/lib/i18n";
+import { getCategories, getProducts } from "@/lib/api";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -39,16 +40,24 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const storedLocale = cookieStore.get("ricemart_locale_v1")?.value;
+  const locale: Locale = storedLocale === "bn" ? "bn" : "en";
+  const [items, categories] = await Promise.all([
+    getProducts({ sortBy: "featured" }, locale).catch(() => []),
+    getCategories(locale).catch(() => []),
+  ]);
+
   return (
-    <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
+    <html lang={locale} className={`${playfair.variable} ${inter.variable}`}>
       <body className="antialiased min-h-screen flex flex-col bg-[#FAF6EF] text-[#19221B]">
-        <StoreProvider>
-          <LocaleProvider><CatalogBootstrap />{children}</LocaleProvider>
+        <StoreProvider initialCatalog={{ items, categories }}>
+          <LocaleProvider initialLocale={locale}>{children}</LocaleProvider>
         </StoreProvider>
       </body>
     </html>

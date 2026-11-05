@@ -132,7 +132,6 @@ class HiveService {
     }
 
     log("-------clearDefaultAddress----------");
-
   }
 
   // get default deliveryAddress
@@ -149,27 +148,27 @@ class HiveService {
     return null;
   }
 
-
-  Future<void> saveCustomerLocation({required double latitude,required double longitude})async {
+  Future<void> saveCustomerLocation(
+      {required double latitude, required double longitude}) async {
     final locationBox = Hive.box(AppConstants.appSettingsBox);
 
-     await locationBox.put(AppConstants.latitude, latitude);
-     await locationBox.put(AppConstants.longitude, longitude);
+    await locationBox.put(AppConstants.latitude, latitude);
+    await locationBox.put(AppConstants.longitude, longitude);
 
     log("--> Saved User Location: $latitude | $longitude");
-    GlobalFunction.showCustomSnackbar(message: "User Location has been saved", isSuccess: true);
-
+    GlobalFunction.showCustomSnackbar(
+        message: "User Location has been saved", isSuccess: true);
   }
 
-  double? getLatitude(){
+  double? getLatitude() {
     final locationBox = Hive.box(AppConstants.appSettingsBox);
-    return locationBox.get(AppConstants.latitude,defaultValue: null);
-  }
-  double? getLongitude(){
-    final locationBox = Hive.box(AppConstants.appSettingsBox);
-    return locationBox.get(AppConstants.longitude,defaultValue: null);
+    return locationBox.get(AppConstants.latitude, defaultValue: null);
   }
 
+  double? getLongitude() {
+    final locationBox = Hive.box(AppConstants.appSettingsBox);
+    return locationBox.get(AppConstants.longitude, defaultValue: null);
+  }
 
   // Get user first open status
   Future<bool?> getUserFirstOpenStatus() async {

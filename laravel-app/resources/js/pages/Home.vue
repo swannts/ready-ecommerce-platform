@@ -1,6 +1,11 @@
 <template>
     <div>
-        <HeroBanner :banners="banner" :ads="ads" :supportItems="supportItems" :isLoading="isLoading" />
+        <HeroBanner
+            :banners="banner"
+            :ads="ads"
+            :supportItems="supportItems"
+            :isLoading="isLoading"
+        />
         <Categories :categories="categories" :isLoading="isLoginCategory" />
         <div v-if="incomingFlashSale">
             <FlashSaleIncoming :flashSale="incomingFlashSale" />
@@ -14,7 +19,10 @@
             <TopRatedShops :shops="topRatedShops" :isLoading="isLoading" />
         </div>
         <JustForYou :justForYou="justForYou" :isLoading="isLoading" />
-        <RecentlyViews :products="recentlyViewProducts" :isLoading="isLoginRecentlyView" />
+        <RecentlyViews
+            :products="recentlyViewProducts"
+            :isLoading="isLoginRecentlyView"
+        />
     </div>
 </template>
 
@@ -69,55 +77,64 @@ const supportItems = ref([]);
 
 const getData = () => {
     isLoading.value = true;
-    axios.get("/home?page=1&per_page=12", {
-        headers: {
-            Authorization: authStore.token,
-        },
-    }).then((response) => {
-        ads.value = response.data.data.ads;
-        banner.value = response.data.data.banners;
-        supportItems.value = response.data.data.support_items;
-        categories.value = response.data.data.categories.slice(0, 12);
-        justForYou.value = response.data.data.just_for_you;
-        popularProducts.value = response.data.data.popular_products;
-        bestDealProducts.value = response.data.data.best_deal_products;
-        topRatedShops.value = response.data.data.shops.slice(0, 6);
-        incomingFlashSale.value = response.data.data.incoming_flash_sale;
-        runningFlashSale.value = response.data.data.running_flash_sale;
-        isLoading.value = false;
-    }).catch((error) => {
-        isLoading.value = false;
-    });
+    axios
+        .get("/home?page=1&per_page=12", {
+            headers: {
+                Authorization: authStore.token,
+            },
+        })
+        .then((response) => {
+            ads.value = response.data.data.ads;
+            banner.value = response.data.data.banners;
+            supportItems.value = response.data.data.support_items;
+            categories.value = response.data.data.categories.slice(0, 12);
+            justForYou.value = response.data.data.just_for_you;
+            popularProducts.value = response.data.data.popular_products;
+            bestDealProducts.value = response.data.data.best_deal_products;
+            topRatedShops.value = response.data.data.shops.slice(0, 6);
+            incomingFlashSale.value = response.data.data.incoming_flash_sale;
+            runningFlashSale.value = response.data.data.running_flash_sale;
+            isLoading.value = false;
+        })
+        .catch((error) => {
+            isLoading.value = false;
+        });
 
     // fetch categories
     isLoginCategory.value = true;
-    master.fetchCategories().then(() => {
-        setTimeout(() => {
+    master
+        .fetchCategories()
+        .then(() => {
+            setTimeout(() => {
+                isLoginCategory.value = false;
+            }, 500);
+        })
+        .catch(() => {
             isLoginCategory.value = false;
-        }, 500);
-    }).catch(() => {
-        isLoginCategory.value = false;
-    });
+        });
 };
 
 const fetchViewProducts = () => {
     if (authStore.token) {
         isLoginRecentlyView.value = true;
-        axios.get("/recently-views", {
-            headers: {
-                Authorization: authStore.token,
-            },
-        }).then((response) => {
-            recentlyViewProducts.value = response.data.data.products;
-            isLoginRecentlyView.value = false;
-        }).catch((error) => {
-            isLoginRecentlyView.value = false;
-            if (error.response.status === 401) {
-                authStore.token = null;
-                authStore.user = null;
-                authStore.addresses = [];
-            }
-        });
+        axios
+            .get("/recently-views", {
+                headers: {
+                    Authorization: authStore.token,
+                },
+            })
+            .then((response) => {
+                recentlyViewProducts.value = response.data.data.products;
+                isLoginRecentlyView.value = false;
+            })
+            .catch((error) => {
+                isLoginRecentlyView.value = false;
+                if (error.response.status === 401) {
+                    authStore.token = null;
+                    authStore.user = null;
+                    authStore.addresses = [];
+                }
+            });
     }
 };
 </script>

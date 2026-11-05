@@ -17,7 +17,7 @@ class RiderSeeder extends Seeder
     {
         $user = User::where('email', 'rider@readyecommerce.com')->first();
 
-        if (!$user) {
+        if (! $user) {
             $user = User::factory()->create([
                 'name' => 'Demo Rider',
                 'email' => 'rider@readyecommerce.com',

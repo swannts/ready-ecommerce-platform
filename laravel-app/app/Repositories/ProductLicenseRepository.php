@@ -23,6 +23,7 @@ class ProductLicenseRepository extends Repository
     {
         $productLicense = ProductLicenseRepository::query()->where('id', $key)->where('product_id', $product_id)->first();
         $productLicense->product_license = $license;
+
         return $productLicense->save();
     }
 }

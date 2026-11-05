@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\VerifyManage;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Cache;
 
@@ -19,7 +20,7 @@ class AddressRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -32,16 +33,17 @@ class AddressRequest extends FormRequest
 
         $tokens = cartAccessToken(request());
         $email = 'nullable';
-        if (!$tokens['is_auth']) {
+        if (! $tokens['is_auth']) {
             $email = 'required';
         }
+
         return [
             'name' => ['required', 'string', 'min:5', 'max:100', 'regex:/^[a-zA-Z\s\.\'-]+$/', 'not_regex:/^\s*$/'],
-            'phone' => ['required', 'digits_between:' . $min . ',' . $max],
+            'phone' => ['required', 'digits_between:'.$min.','.$max],
             'area' => 'nullable|string|max:255',
             'flat_no' => 'nullable|string|max:255',
             'post_code' => 'nullable|string|max:255',
-            'address_line' => ['required','string','min:10','max:255','not_regex:/^\s*$/'],
+            'address_line' => ['required', 'string', 'min:10', 'max:255', 'not_regex:/^\s*$/'],
             'address_line2' => 'nullable|string|max:255',
             'address_type' => 'required|string|max:255',
             'is_default' => 'nullable|boolean',

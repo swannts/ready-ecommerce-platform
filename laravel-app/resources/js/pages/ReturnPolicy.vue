@@ -1,15 +1,19 @@
 <template>
     <div class="main-container py-6">
-        <div class="text-xl md:text-xl font-semibold text-slate-800 dark:text-slate-100 pb-2 md:pb-3 border-b">
+        <div
+            class="text-xl md:text-xl font-semibold text-slate-800 dark:text-slate-100 pb-2 md:pb-3 border-b"
+        >
             {{ content?.title }}
         </div>
-        <div class="mt-6 prose max-w-none w-full" v-html="content?.description"></div>
-
+        <div
+            class="mt-6 prose max-w-none w-full"
+            v-html="content?.description"
+        ></div>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
 const content = ref({});
 
@@ -19,9 +23,8 @@ onMounted(() => {
 });
 
 const fetchData = () => {
-    axios.get('/legal-pages/return-and-refund-policy').then((response) => {
+    axios.get("/legal-pages/return-and-refund-policy").then((response) => {
         content.value = response.data.data.content;
     });
-}
-
+};
 </script>

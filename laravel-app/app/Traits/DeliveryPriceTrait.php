@@ -8,7 +8,6 @@ use App\Repositories\AreaRepository;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-
 trait DeliveryPriceTrait
 {
     protected static function getDeliverySettings()
@@ -25,7 +24,7 @@ trait DeliveryPriceTrait
         }
 
         $areaData = AreaRepository::query()->where('id', $areaId)->first();
-        $baseRate    = $areaData->delivery_amount ?? 0;
+        $baseRate = $areaData->delivery_amount ?? 0;
 
         if (! $settings?->is_distance_charge) {
             return round($baseRate, 2);
@@ -135,10 +134,10 @@ trait DeliveryPriceTrait
                 $response = Http::timeout(5)->get(
                     'https://maps.googleapis.com/maps/api/distancematrix/json',
                     [
-                        'origins'      => "{$originLat},{$originLng}",
+                        'origins' => "{$originLat},{$originLng}",
                         'destinations' => "{$destLat},{$destLng}",
-                        'units'        => 'metric',
-                        'key'          => $apiKey,
+                        'units' => 'metric',
+                        'key' => $apiKey,
                     ]
                 );
 
@@ -148,19 +147,21 @@ trait DeliveryPriceTrait
                     ($json['status'] ?? '') === 'OK' &&
                     ($json['rows'][0]['elements'][0]['status'] ?? '') === 'OK'
                 ) {
-                    $element     = $json['rows'][0]['elements'][0];
-                    $distanceKm  = round($element['distance']['value'] / 1000, 3);  // metres → km
+                    $element = $json['rows'][0]['elements'][0];
+                    $distanceKm = round($element['distance']['value'] / 1000, 3);  // metres → km
                     $durationMin = round($element['duration']['value'] / 60, 1);    // seconds → min
+
                     return compact('distanceKm', 'durationMin');
                 }
             } catch (\Throwable $e) {
-                Log::warning('orderPriceTrait::order Google API error: ' . $e->getMessage());
+                Log::warning('orderPriceTrait::order Google API error: '.$e->getMessage());
             }
         }
 
         // ── Fallback: Haversine ────────────────────────────────────
-        $distanceKm  = static::orderHaversineKm($originLat, $originLng, $destLat, $destLng);
+        $distanceKm = static::orderHaversineKm($originLat, $originLng, $destLat, $destLng);
         $durationMin = static::orderEstimateDuration($distanceKm);
+
         return compact('distanceKm', 'durationMin');
     }
 
@@ -184,7 +185,6 @@ trait DeliveryPriceTrait
 
         return round($earthRadius * $c, 3);
     }
-
 
     protected static function orderEstimateDuration(float $distanceKm): float
     {

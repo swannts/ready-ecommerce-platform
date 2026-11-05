@@ -18,6 +18,7 @@ class ApiLocale
         $response = $next($request);
         $response->headers->set('Content-Language', $locale);
         $response->headers->set('Vary', 'Accept-Language');
+
         return $response;
     }
 }

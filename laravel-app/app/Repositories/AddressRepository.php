@@ -3,10 +3,10 @@
 namespace App\Repositories;
 
 use App\Enums\Roles;
-use App\Models\Address;
-use Illuminate\Http\Request;
-use App\Models\CartAccessToken;
 use App\Http\Requests\AddressRequest;
+use App\Models\Address;
+use App\Models\CartAccessToken;
+use Illuminate\Http\Request;
 
 class AddressRepository extends Repository
 {
@@ -49,7 +49,7 @@ class AddressRepository extends Repository
             'is_default' => $customer->addresses ? $isDefault : true,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
-            'area_id' => $request->area_id
+            'area_id' => $request->area_id,
         ]);
     }
 
@@ -86,7 +86,6 @@ class AddressRepository extends Repository
 
         return $address;
     }
-
 
     public static function storeByGuestUser(Request $request): Address
     {

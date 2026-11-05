@@ -15,6 +15,7 @@ class ReturnOrder extends Model
     {
         return $this->belongsTo(Order::class);
     }
+
     public function shop()
     {
         return $this->belongsTo(Shop::class);

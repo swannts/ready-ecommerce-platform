@@ -170,7 +170,7 @@ class OrderController extends Controller
         // return $mPdf->Output('invoice-'.$order->prefix.$order->order_code.'.pdf', 'D');
 
         // Output the PDF as a stream
-        return $mPdf->Output('invoice-' . $order->prefix . $order->order_code . '.pdf', 'I');
+        return $mPdf->Output('invoice-'.$order->prefix.$order->order_code.'.pdf', 'I');
     }
 
     public function paymentSlip($id)

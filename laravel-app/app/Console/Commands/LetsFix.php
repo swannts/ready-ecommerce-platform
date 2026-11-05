@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\GeneraleSetting;
 use Illuminate\Console\Command;
 
 class LetsFix extends Command
@@ -25,7 +26,7 @@ class LetsFix extends Command
      */
     public function handle()
     {
-        $settings = \App\Models\GeneraleSetting::first();
+        $settings = GeneraleSetting::first();
 
         $settings->update([
             'product_description' => 'Product name: {product_name}. Short description: {short_description}. Write a long, SEO-friendly product description that includes relevant keywords, highlights unique features, and encourages buyers to take action.',

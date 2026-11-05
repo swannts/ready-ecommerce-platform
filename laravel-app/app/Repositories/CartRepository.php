@@ -12,11 +12,11 @@ use App\Models\Product;
 use App\Models\Shop;
 use App\Traits\DeliveryPriceTrait;
 use Illuminate\Support\Number;
-use Mpdf\Tag\B;
 
 class CartRepository extends Repository
 {
     use DeliveryPriceTrait;
+
     public static function model()
     {
         return Cart::class;
@@ -38,6 +38,7 @@ class CartRepository extends Repository
                 if (! $product) {
                     $cart->delete();
                     $info = 'Some products are removed from cart due to unavailability';
+
                     continue;
                 }
 
@@ -107,7 +108,7 @@ class CartRepository extends Repository
                     'discount_price' => (float) number_format($discountPrice, 2, '.', ''),
                     'discount_percentage' => (float) number_format($discountPercentage, 2, '.', ''),
                     'discount_type' => (bool) $product->discount_type,
-                    'discount'    => (float) $product->discount,
+                    'discount' => (float) $product->discount,
                     'rating' => (float) $product->averageRating,
                     'total_reviews' => (string) Number::abbreviate($product->reviews->count(), maxPrecision: 2),
                     'total_sold' => (string) number_format($totalSold, 0, '.', ','),
@@ -185,7 +186,7 @@ class CartRepository extends Repository
             'size' => $size,
             'color' => $color,
             'unit' => $unit,
-            'access_token' => $tokens['access_token'] ?? ''
+            'access_token' => $tokens['access_token'] ?? '',
         ]);
     }
 
@@ -234,7 +235,6 @@ class CartRepository extends Repository
                 (float) $deliveryLongitude,
             )
             : ['distanceKm' => 0.0, 'durationMin' => 0.0];
-
 
         foreach ($carts ?? [] as $cart) {
 

@@ -155,7 +155,7 @@ class PageSeeder extends Seeder
 
         foreach ($pages as $page) {
             $exists = Page::where('slug', $page['slug'])->first();
-            if (!$exists) {
+            if (! $exists) {
                 Page::create($page);
             }
         }

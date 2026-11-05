@@ -11,7 +11,7 @@ export const useGuestAddress = defineStore("guestAddress", {
         address_type: "home",
         latitude: null,
         longitude: null,
-        errors: {}
+        errors: {},
     }),
     actions: {
         captureLocation() {
@@ -25,7 +25,7 @@ export const useGuestAddress = defineStore("guestAddress", {
                         resolve();
                     },
                     () => resolve(),
-                    { timeout: 5000 }
+                    { timeout: 5000 },
                 );
             });
         },
@@ -40,5 +40,4 @@ export const useGuestAddress = defineStore("guestAddress", {
             this.errors = {};
         },
     },
-
 });

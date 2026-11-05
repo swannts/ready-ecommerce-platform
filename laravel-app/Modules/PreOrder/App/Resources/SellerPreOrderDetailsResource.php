@@ -5,6 +5,7 @@ namespace Modules\PreOrder\App\Resources;
 use App\Http\Resources\AddressResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\PreOrder\App\Enums\PreOrderStatus;
 use Modules\PreOrder\App\Repositories\PreOrderRepository;
 
 class SellerPreOrderDetailsResource extends JsonResource
@@ -41,9 +42,9 @@ class SellerPreOrderDetailsResource extends JsonResource
             'is_purchasable' => module_exists('Purchase')
                 && ! $this->purchase_id
                 && ! in_array($this->order_status->value, [
-                    \Modules\PreOrder\App\Enums\PreOrderStatus::CANCELLED->value,
-                    \Modules\PreOrder\App\Enums\PreOrderStatus::DELIVERED->value,
-                    \Modules\PreOrder\App\Enums\PreOrderStatus::REFUNDED->value,
+                    PreOrderStatus::CANCELLED->value,
+                    PreOrderStatus::DELIVERED->value,
+                    PreOrderStatus::REFUNDED->value,
                 ], true),
             'created_at' => $this->created_at,
             'placed_at' => $this->created_at->format('d M, Y h:i A'),

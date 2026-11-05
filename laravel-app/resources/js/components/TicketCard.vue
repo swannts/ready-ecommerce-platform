@@ -1,13 +1,23 @@
 <template>
-    <div class="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer" @click="goToDetails()">
+    <div
+        class="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer"
+        @click="goToDetails()"
+    >
         <!---- header -->
-        <div class="flex justify-between items-center  gap-1.5 flex-wrap pb-3 border-b border-slate-200 dark:border-slate-700">
-            <span class=" text-slate-500 text-sm font-normal">
+        <div
+            class="flex justify-between items-center gap-1.5 flex-wrap pb-3 border-b border-slate-200 dark:border-slate-700"
+        >
+            <span class="text-slate-500 text-sm font-normal">
                 {{ supportTicket.created_at }}
             </span>
             <div class="flex gap-2 items-center">
-                <span class="text-blue-500 text-sm">#{{ supportTicket.ticket_no }}</span>
-                <span class="px-2 py-1 rounded-xl capitalize text-xs ticketStatus" :class="supportTicket.status">
+                <span class="text-blue-500 text-sm"
+                    >#{{ supportTicket.ticket_no }}</span
+                >
+                <span
+                    class="px-2 py-1 rounded-xl capitalize text-xs ticketStatus"
+                    :class="supportTicket.status"
+                >
                     {{ supportTicket.status }}
                 </span>
             </div>
@@ -15,53 +25,68 @@
 
         <!---- content -->
 
-        <div class="flex justify-between items-center  gap-2 flex-wrap pt-3">
+        <div class="flex justify-between items-center gap-2 flex-wrap pt-3">
             <div class="flex flex-col gap-1">
-                <div class="text-slate-500 text-sm font-normal">{{ $t('Order Number') }}</div>
+                <div class="text-slate-500 text-sm font-normal">
+                    {{ $t("Order Number") }}
+                </div>
                 <div class="text-slate-900 dark:text-white text-sm">
-                    {{ supportTicket.order_number || $t('N/A') }}
+                    {{ supportTicket.order_number || $t("N/A") }}
                 </div>
             </div>
 
             <div class="flex flex-col gap-1 overflow-auto">
-                <div class="text-slate-500 text-sm font-normal">{{ $t('Issue Type') }}</div>
-                <div class="text-slate-900 dark:text-white text-sm truncate max-w-60 lg:min-w-60">
+                <div class="text-slate-500 text-sm font-normal">
+                    {{ $t("Issue Type") }}
+                </div>
+                <div
+                    class="text-slate-900 dark:text-white text-sm truncate max-w-60 lg:min-w-60"
+                >
                     {{ supportTicket.issue_type }}
                 </div>
             </div>
 
             <div class="flex flex-col gap-1 overflow-hidden">
-                <div class="text-slate-500 text-sm font-normal">{{ $t('Subject') }}</div>
-                <div class="text-slate-900 dark:text-white text-sm truncate max-w-80 lg:min-w-80">
+                <div class="text-slate-500 text-sm font-normal">
+                    {{ $t("Subject") }}
+                </div>
+                <div
+                    class="text-slate-900 dark:text-white text-sm truncate max-w-80 lg:min-w-80"
+                >
                     {{ supportTicket.subject }}
                 </div>
             </div>
 
-            <div class="h-8 w-8 bg-slate-100 dark:bg-slate-700 rounded-2xl flex justify-center items-center">
-                <ChevronRightIcon class="w-5 h-5 text-slate-600 dark:text-slate-400" />
+            <div
+                class="h-8 w-8 bg-slate-100 dark:bg-slate-700 rounded-2xl flex justify-center items-center"
+            >
+                <ChevronRightIcon
+                    class="w-5 h-5 text-slate-600 dark:text-slate-400"
+                />
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ChevronRightIcon } from '@heroicons/vue/24/outline';
-import { useRouter } from 'vue-router';
+import { ChevronRightIcon } from "@heroicons/vue/24/outline";
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 
 const props = defineProps({
-    supportTicket: Object
-})
+    supportTicket: Object,
+});
 
 const goToDetails = () => {
-    router.push({ name: 'support-ticket-details', params: { ticketNumber: props.supportTicket.ticket_no } })
-}
-
+    router.push({
+        name: "support-ticket-details",
+        params: { ticketNumber: props.supportTicket.ticket_no },
+    });
+};
 </script>
 
 <style scoped>
-
 .ticketStatus.pending {
     @apply text-yellow-600 bg-yellow-100;
 }
@@ -77,5 +102,4 @@ const goToDetails = () => {
 .ticketStatus.cancel {
     @apply text-red-600 bg-red-100;
 }
-
 </style>

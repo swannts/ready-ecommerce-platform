@@ -1,10 +1,10 @@
 <?php
 
 use App\Models\Media;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Modules\Purchase\App\Models\Supplier;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use Modules\Purchase\App\Models\Supplier;
 
 return new class extends Migration
 {
@@ -28,7 +28,6 @@ return new class extends Migration
     }
 
     /**
-     * 
      * Reverse the migrations.
      */
     public function down(): void

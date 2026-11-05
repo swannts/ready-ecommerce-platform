@@ -34,7 +34,8 @@ class Address extends Model
     //     return $this->belongsTo(Area::class, 'area_id');
     // }
 
-    public function getArea(){
+    public function getArea()
+    {
         return $this->hasOne(Area::class, 'id', 'area_id');
     }
 

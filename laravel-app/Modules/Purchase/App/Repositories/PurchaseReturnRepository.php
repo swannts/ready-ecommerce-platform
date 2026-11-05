@@ -3,12 +3,12 @@
 namespace Modules\Purchase\App\Repositories;
 
 use App\Repositories\Repository;
-use Modules\Purchase\App\Models\Purchase;
-use Modules\Purchase\App\Models\PurchaseReturn;
-use Modules\Purchase\App\Models\PurchaseProduct;
-use Modules\Purchase\App\Models\ProductSku;
-use Modules\Purchase\App\Models\PurchaseReturnProduct;
 use Illuminate\Support\Facades\DB;
+use Modules\Purchase\App\Models\ProductSku;
+use Modules\Purchase\App\Models\Purchase;
+use Modules\Purchase\App\Models\PurchaseProduct;
+use Modules\Purchase\App\Models\PurchaseReturn;
+use Modules\Purchase\App\Models\PurchaseReturnProduct;
 use Modules\Purchase\App\Models\ReturnProductSku;
 
 class PurchaseReturnRepository extends Repository
@@ -26,7 +26,7 @@ class PurchaseReturnRepository extends Repository
                 $requestSkus = $request->return_sku;
                 if (
                     empty($requestPurchaseProducts) ||
-                    collect($requestPurchaseProducts)->filter(fn($qty) => !is_null($qty) && $qty > 0)->isEmpty()
+                    collect($requestPurchaseProducts)->filter(fn ($qty) => ! is_null($qty) && $qty > 0)->isEmpty()
                 ) {
                     return back()->with('error', __('Select Return Quantity.'));
                 }
@@ -79,7 +79,7 @@ class PurchaseReturnRepository extends Repository
                     } else {  // --- Product with SKU ---
                         foreach ($requestSkus ?? [] as $sku) {
                             $productSku = ProductSku::where('sku', $sku)->where('in_stock', true)->first();
-                            if (!$productSku) {
+                            if (! $productSku) {
                                 continue;
                             }
 
@@ -113,7 +113,7 @@ class PurchaseReturnRepository extends Repository
                 // Final update on lot return
                 $purchaseReturn->update([
                     'is_returned' => 1,
-                    'total_product' => $purchaseReturn->purchaseReturnProducts->count()
+                    'total_product' => $purchaseReturn->purchaseReturnProducts->count(),
                 ]);
 
                 return $purchaseReturn;

@@ -67,8 +67,8 @@ class SellerUserResource extends JsonResource
                 'rating' => (float) number_format($shop->averageRating, 1, '.', ''),
                 'total_reviews' => (int) $shop->reviews->count(),
                 'description' => $shop->description,
-                'latitude' =>$shop->latitude,
-                'longitude' =>$shop->longitude,
+                'latitude' => $shop->latitude,
+                'longitude' => $shop->longitude,
             ],
             'banners' => BannerResource::collection($shop->banners),
         ];

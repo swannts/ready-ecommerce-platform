@@ -34,6 +34,7 @@ class ShopUserResource extends JsonResource
         $lastMsg = Str::limit(($lastMessage->message ?? $lasMessageProduct?->name), 12, '...');
 
         $lastTime = optional($lastMessage?->created_at ? Carbon::parse($lastMessage->created_at) : null)?->diffForHumans();
+
         return [
             'id' => $this->id ?? null,
             'shop' => ShopRefineForChatResource::make($this->shop ?? null),
@@ -41,7 +42,7 @@ class ShopUserResource extends JsonResource
             'product' => ChatProductResource::make($this->product ?? null),
             'last_message' => $lastMsg ?? null,
             'last_message_time' => $lastTime,
-             'is_read' => (bool) ($lastMessage ? $lastMessage->is_seen : false),
+            'is_read' => (bool) ($lastMessage ? $lastMessage->is_seen : false),
             'unread_message_user' => $unreadChatUser,
             'unread_message_shop' => $unreadChatShop,
         ];

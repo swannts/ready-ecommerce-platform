@@ -6,7 +6,7 @@ class EcommerceCheckoutView extends StatelessWidget {
   final bool? isBuyNow;
   final double payableAmount;
   final String? couponCode;
-   final List<int> shopIds;
+  final List<int> shopIds;
 
   const EcommerceCheckoutView({
     super.key,

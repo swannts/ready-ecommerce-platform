@@ -14,12 +14,12 @@ class BrandResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $isAr = (request()->header('accept-language') ?? 'en') !== 'en';
+        $isBn = $request->attributes->get('api_locale', 'en') === 'bn';
 
         return [
             'id' => $this->id,
             'slug' => $this->slug,
-            'name' => ($isAr && !empty($this->name_ar)) ? $this->name_ar : $this->name,
+            'name' => $isBn ? ($this->name_bn ?: $this->name) : $this->name,
             'thumbnail' => $this->thumbnail,
             'product_count' => $this->whenCounted('products'),
         ];

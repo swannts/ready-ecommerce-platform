@@ -2,22 +2,23 @@
 
 namespace Modules\Purchase\App\Http\Controllers;
 
-use Mpdf\Mpdf;
-use Carbon\Carbon;
-use App\Models\Product;
-use Illuminate\Http\Request;
-use Mpdf\Config\FontVariables;
-use Mpdf\Config\ConfigVariables;
 use App\Http\Controllers\Controller;
-use Modules\Purchase\App\Models\Purchase;
-use Modules\Purchase\App\Models\Supplier;
-use Modules\Purchase\App\Models\PurchaseProduct;
-use Modules\Purchase\App\Resources\ProductSearchResource;
+use App\Models\Product;
+use App\Models\Scopes\PreOderProduct;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Modules\Purchase\App\Http\Requests\PurchaseAttachProductRequest;
 use Modules\Purchase\App\Http\Requests\PurchaseRequest;
+use Modules\Purchase\App\Models\Purchase;
+use Modules\Purchase\App\Models\PurchaseProduct;
+use Modules\Purchase\App\Models\Supplier;
 use Modules\Purchase\App\Repositories\PurchaseRepository;
 use Modules\Purchase\App\Repositories\SupplierRepository;
-use Modules\Purchase\App\Http\Requests\PurchaseAttachProductRequest;
 use Modules\Purchase\App\Repositories\SupplierTransactionRepository;
+use Modules\Purchase\App\Resources\ProductSearchResource;
+use Mpdf\Config\ConfigVariables;
+use Mpdf\Config\FontVariables;
+use Mpdf\Mpdf;
 
 class PurchaseController extends Controller
 {
@@ -37,6 +38,7 @@ class PurchaseController extends Controller
             ->when($supplier, function ($query) use ($supplier) {
                 return $query->where('supplier_id', $supplier);
             })->latest('id')->paginate(20);
+
         return view('purchase::purchase.index', compact('suppliers', 'purchases'));
     }
 
@@ -47,6 +49,7 @@ class PurchaseController extends Controller
     {
         $shop = generaleSetting('shop');
         $suppliers = Supplier::where('shop_id', $shop->id)->latest('id')->get();
+
         return view('purchase::purchase.create', compact('suppliers'));
     }
 
@@ -56,6 +59,7 @@ class PurchaseController extends Controller
     public function store(PurchaseRequest $request)
     {
         $purchase = PurchaseRepository::storeByRequest($request);
+
         return to_route('shop.purchase.show', $purchase->id)->withSuccess(__('Purchase Created successfully'));
     }
 
@@ -65,23 +69,28 @@ class PurchaseController extends Controller
     public function show(Purchase $purchase)
     {
         $purchaseProducts = $purchase->purchaseProducts()->with('product')->paginate(20);
+
         return view('purchase::purchase.show', compact('purchase', 'purchaseProducts'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Purchase $purchase) {
+    public function edit(Purchase $purchase)
+    {
         $shop = generaleSetting('shop');
         $suppliers = Supplier::where('shop_id', $shop->id)->latest('id')->get();
+
         return view('purchase::purchase.edit', compact('suppliers', 'purchase'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(PurchaseRequest $request, Purchase $purchase) {
+    public function update(PurchaseRequest $request, Purchase $purchase)
+    {
         $purchase = PurchaseRepository::updateByRequest($request, $purchase);
+
         return to_route('shop.purchase.show', $purchase->id)->withSuccess(__('Purchase Updated successfully'));
     }
 
@@ -91,13 +100,13 @@ class PurchaseController extends Controller
     public function destroy(Purchase $purchase)
     {
         $purchase->delete();
+
         return back()->withSuccess(__('Purchase deleted successfully'));
     }
 
-
     public function makeReceived(Purchase $purchase, Request $request)
     {
-        if ($purchase->purchaseProducts->count() <=0) {
+        if ($purchase->purchaseProducts->count() <= 0) {
             return back()->withError(__('Product not found'));
         }
         $purchase->update([
@@ -162,7 +171,6 @@ class PurchaseController extends Controller
         return back()->withSuccess(__('Delete Successfully'));
     }
 
-
     public function purchaseStockSummary()
     {
         $shop = generaleSetting('shop');
@@ -207,8 +215,7 @@ class PurchaseController extends Controller
 
     public function purchaseInvoice(Purchase $purchase)
     {
-        $purchaseCode = '#' . 'PUR' . $purchase?->purchase_code;
-
+        $purchaseCode = '#'.'PUR'.$purchase?->purchase_code;
 
         $defaultConfig = (new ConfigVariables)->getDefaults();
         $fontDirs = $defaultConfig['fontDir'];
@@ -242,7 +249,7 @@ class PurchaseController extends Controller
         $mPdf->WriteHTML($view);
 
         // Output the PDF as a download
-        return $mPdf->Output('invoice-' . 'PUR' . $purchase->id . '.pdf', 'D');
+        return $mPdf->Output('invoice-'.'PUR'.$purchase->id.'.pdf', 'D');
     }
 
     public function productStockSummary(Request $request)
@@ -252,18 +259,18 @@ class PurchaseController extends Controller
         $endDate = null;
         $dateRange = $request->date_range;
         $productIds = $request->product_id;
-        $Allproduct = Product::withoutGlobalScope(\App\Models\Scopes\PreOderProduct::class)->where('shop_id', $shop->id)->latest('id')->get();
+        $Allproduct = Product::withoutGlobalScope(PreOderProduct::class)->where('shop_id', $shop->id)->latest('id')->get();
 
         if ($dateRange && str_contains($dateRange, ' - ')) {
             [$startDate, $endDate] = explode(' - ', $dateRange, 2);
             try {
                 $startDate = Carbon::createFromFormat('Y-m-d', trim($startDate))->startOfDay();
-                $endDate   = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
+                $endDate = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
             } catch (\Exception $e) {
                 $startDate = $endDate = null;
             }
         }
-        $query = Product::withoutGlobalScope(\App\Models\Scopes\PreOderProduct::class)
+        $query = Product::withoutGlobalScope(PreOderProduct::class)
             ->with(['purchaseProducts', 'orderProducts'])
             ->where('shop_id', $shop->id);
 
@@ -274,9 +281,9 @@ class PurchaseController extends Controller
         $products = $query->get()->map(function ($product) use ($startDate, $endDate) {
             if (empty($startDate) || empty($endDate)) {
                 $purchasedQty = $product->purchaseProducts()->sum('quantity');
-                $soldQty      = $product->productStockOuts()->sum('quantity');
+                $soldQty = $product->productStockOuts()->sum('quantity');
                 // $availableStock = ($purchasedQty - $soldQty);
-                //take product quantity
+                // take product quantity
                 $availableStock = $product->quantity;
             } else {
                 // Purchased
@@ -292,10 +299,11 @@ class PurchaseController extends Controller
                         $query->whereBetween('created_at', [$startDate, $endDate]);
                     })
                     ->sum('quantity');
-                //take product quantity
+                // take product quantity
                 $availableStock = $product->quantity;
                 // $availableStock = ($purchasedQty - $soldQty);
             }
+
             return [
                 'product_id' => $product->id,
                 'product_name' => $product->name,
@@ -304,6 +312,7 @@ class PurchaseController extends Controller
                 'available_stock' => $availableStock,
             ];
         });
+
         return view('purchase::stock.index', compact('products', 'Allproduct'));
     }
 }

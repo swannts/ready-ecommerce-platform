@@ -2,25 +2,24 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\AddressRequest;
+use App\Http\Requests\OrderRequest;
+use App\Http\Resources\OrderDetailsResource;
+use App\Http\Resources\OrderResource;
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Product;
-use App\Models\Customer;
-use App\Enums\OrderStatus;
-use App\Enums\PaymentMethod;
 use App\Models\VerifyManage;
-use Illuminate\Http\Request;
-use App\Http\Requests\OrderRequest;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\AddressRequest;
-use App\Http\Resources\OrderResource;
-use App\Repositories\OrderRepository;
-use Illuminate\Support\Facades\Cache;
 use App\Repositories\AddressRepository;
-use App\Repositories\ProductRepository;
+use App\Repositories\OrderRepository;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\OrderDetailsResource;
-use App\Http\Resources\ProductDetailsResource;
 
 class OrderController extends Controller
 {
@@ -46,7 +45,7 @@ class OrderController extends Controller
             return $query->where('order_status', $orderStatus);
         })->latest('id');
 
-        if ($orderStatus == "digital") {
+        if ($orderStatus == 'digital') {
             $orders = $customer->orders()
                 ->whereHas('products', function ($q) {
                     $q->where('is_digital', true);
@@ -88,7 +87,7 @@ class OrderController extends Controller
     /**
      * Store a newly created order in storage.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(OrderRequest $request)
     {
@@ -96,10 +95,10 @@ class OrderController extends Controller
         $customer = Customer::firstWhere('id', $tokens['customer_id']) ?? null;
 
         $isGuest = false;
-        if (!$request->address_id) {
+        if (! $request->address_id) {
             $validated = Validator::make(
                 $request->all(),
-                (new AddressRequest())->rules()
+                (new AddressRequest)->rules()
             )->validate();
             $validatedRequest = new Request($validated);
 
@@ -130,7 +129,7 @@ class OrderController extends Controller
             $accountVerified = true;
         }
 
-        if ($verifyManage?->order_place_account_verify && ! $accountVerified && !$isGuest) {
+        if ($verifyManage?->order_place_account_verify && ! $accountVerified && ! $isGuest) {
             return $this->json('Please verify your account first. without verify account you can not place order', [], 422);
         }
 

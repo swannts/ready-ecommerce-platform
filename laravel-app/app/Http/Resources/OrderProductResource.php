@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use App\Models\ReturnOrderDetail;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
@@ -44,8 +44,8 @@ class OrderProductResource extends JsonResource
             'size' => $this->pivot->size ?? null,
             'rating' => $review ? (float) $review->rating : null,
             'unit' => $this->pivot->unit ?? null,
-             'is_returned' => $isReturnable,
-             'is_digital' => (bool) $this->is_digital,
+            'is_returned' => $isReturnable,
+            'is_digital' => (bool) $this->is_digital,
             'license' => $license,
             'license_download_link' => $license ? $licenseDownloadLink : null,
             'attachments' => $this->additionalAttachments(),

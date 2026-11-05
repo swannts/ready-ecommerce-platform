@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\ProductRepository;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class BulkProductImportController extends Controller
 {
@@ -129,7 +130,7 @@ class BulkProductImportController extends Controller
 
         $path = $file->getRealPath();
 
-        $data = \PhpOffice\PhpSpreadsheet\IOFactory::load($path);
+        $data = IOFactory::load($path);
 
         $rows = $data->getActiveSheet()->toArray();
         $rows = array_slice($rows, 1);

@@ -27,7 +27,7 @@ class PreOrderServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'Database/migrations'));
-        $this->mergeConfigFrom(__DIR__ . '/../../config/acl.php', 'Modules.PreOrder.acl');
+        $this->mergeConfigFrom(__DIR__.'/../../config/acl.php', 'Modules.PreOrder.acl');
         $this->publishes([module_path($this->name, 'resources/assets') => public_path('modules/PreOrder')], 'preorder-assets');
     }
 
@@ -132,7 +132,7 @@ class PreOrderServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->nameLower);
 
-        Blade::componentNamespace(config('modules.namespace').'\\' . $this->name . '\\View\\Components', $this->nameLower);
+        Blade::componentNamespace(config('modules.namespace').'\\'.$this->name.'\\View\\Components', $this->nameLower);
     }
 
     /**

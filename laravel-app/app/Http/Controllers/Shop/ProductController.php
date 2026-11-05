@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers\Shop;
 
-use App\Services\Chat;
-use App\Models\User;
+use App\Events\AdminProductRequestEvent;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductRequest;
 use App\Models\Media;
 use App\Models\Product;
 use App\Models\SubCategory;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\ProductRequest;
-use App\Repositories\ProductRepository;
-use Illuminate\Support\Facades\Storage;
-use App\Events\AdminProductRequestEvent;
+use App\Models\User;
 use App\Repositories\FlashSaleRepository;
-use Illuminate\Support\Facades\Validator;
 use App\Repositories\NotificationRepository;
 use App\Repositories\ProductLicenseRepository;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Repositories\ProductRepository;
+use App\Services\Chat;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -66,7 +64,8 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $generaleSetting = generaleSetting('setting');
-        $currency=$generaleSetting?->currency ?? '$';
+        $currency = $generaleSetting?->currency ?? '$';
+
         return view('shop.product.show', compact('product', 'currency'));
     }
 
@@ -130,7 +129,7 @@ class ProductController extends Controller
 
             $data = (object) [
                 'title' => $message,
-                'content' => 'New product Created Request from ' . $shop->name,
+                'content' => 'New product Created Request from '.$shop->name,
                 'url' => '/admin/products?status=0',
                 'icon' => 'bi-shop',
                 'type' => 'success',
@@ -197,7 +196,7 @@ class ProductController extends Controller
 
             $data = (object) [
                 'title' => $message,
-                'content' => 'Product Updated Request from ' . $shop->name,
+                'content' => 'Product Updated Request from '.$shop->name,
                 'url' => '/admin/products?status=1',
                 'icon' => 'bi-shop',
                 'type' => 'success',
@@ -245,6 +244,7 @@ class ProductController extends Controller
         }
         $product->attachments()->detach();
         $product->delete();
+
         return back()->withSuccess(__('Product deleted successfully'));
     }
 
@@ -298,7 +298,7 @@ class ProductController extends Controller
                 'short_description' => 'nullable|string',
             ]);
 
-            $chat = new Chat();
+            $chat = new Chat;
             $chat->systemMessage($request->name);
 
             $question = str_replace(
@@ -314,7 +314,7 @@ class ProductController extends Controller
             return response()->json($response);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }

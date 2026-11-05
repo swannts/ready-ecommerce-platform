@@ -51,7 +51,8 @@ const Blog = () => import("../pages/Blog.vue");
 const BlogDetails = () => import("../pages/BlogDetails.vue");
 const PolicyPages = () => import("../pages/PolicyPages.vue");
 const Massages = () => import("../pages/Messages.vue");
-const DigitalProductOrderHistory = () => import("../pages/DigitalProductOrderHistory.vue");
+const DigitalProductOrderHistory = () =>
+    import("../pages/DigitalProductOrderHistory.vue");
 const PreOrderHistory = () => import("../pages/PreOrderHistory.vue");
 const PreOrderDetails = () => import("../pages/PreOrderDetails.vue");
 
@@ -258,7 +259,6 @@ const routes = [
             title: "Return Products",
         },
     },
-
 
     {
         path: "/returned-order-history",
@@ -469,14 +469,14 @@ router.beforeEach((to, from, next) => {
     document.title = pageTitle ? `${pageTitle} - ${appName}` : appName;
 
     // Pages with their own data-driven SEO skip this default
-    const dynamicSeoRoutes = ['productDetails', 'blog-details', 'shop-detail'];
+    const dynamicSeoRoutes = ["productDetails", "blog-details", "shop-detail"];
     if (!dynamicSeoRoutes.includes(to.name)) {
         const { setMeta } = useSeo();
         setMeta({
             title: pageTitle || null,
-            description: master.footerDescription || '',
-            image: master.logo || '',
-            type: 'website',
+            description: master.footerDescription || "",
+            image: master.logo || "",
+            type: "website",
         });
     }
 

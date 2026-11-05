@@ -94,6 +94,7 @@ class Category extends Model
             get: fn () => $thumbnail
         );
     }
+
     public function icon(): Attribute
     {
         return Attribute::make(

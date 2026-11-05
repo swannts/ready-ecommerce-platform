@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Gateway\Rocket;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Models\PaymentGateway;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class ProcessController extends Controller
 {
     /**
      * Render the hosted Rocket checkout and auto-submit to the gateway.
      *
-     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     * @return View|RedirectResponse
      */
     public function index($id)
     {

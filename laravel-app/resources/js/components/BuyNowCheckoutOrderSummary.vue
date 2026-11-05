@@ -1,7 +1,11 @@
 <template>
     <div>
-        <div class="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
-            <div class="text-slate-950 dark:text-white text-lg font-medium leading-7">
+        <div
+            class="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700"
+        >
+            <div
+                class="text-slate-950 dark:text-white text-lg font-medium leading-7"
+            >
                 {{ $t("Order Summary") }}
             </div>
 
@@ -51,7 +55,7 @@
                             (
                                 orderData.total_amount -
                                 orderData.coupon_discount
-                            ).toFixed(2)
+                            ).toFixed(2),
                         )
                     }}
                 </div>
@@ -108,7 +112,9 @@
                 </div>
             </div>
 
-            <div class="w-full h-[0px] border border-slate-500 dark:border-slate-600"></div>
+            <div
+                class="w-full h-[0px] border border-slate-500 dark:border-slate-600"
+            ></div>
 
             <!-- Total Payable -->
             <div class="my-4 flex justify-between gap-4">
@@ -125,8 +131,13 @@
             </div>
 
             <!-- Have a coupon -->
-            <div v-if="authStore.user" class="p-4 mt-6 bg-slate-100 dark:bg-slate-700 rounded-xl">
-                <div class="text-black dark:text-slate-200 text-base font-normal leading-normal">
+            <div
+                v-if="authStore.user"
+                class="p-4 mt-6 bg-slate-100 dark:bg-slate-700 rounded-xl"
+            >
+                <div
+                    class="text-black dark:text-slate-200 text-base font-normal leading-normal"
+                >
                     {{ $t("Have a coupon") }}?
                 </div>
 
@@ -167,115 +178,156 @@
 
             <!-- Payment Method -->
             <div class="mt-6">
-            <div class="text-slate-950 dark:text-white text-lm font-medium leading-7 mb-4">
-                {{ $t("Payment Method") }}
-            </div>
-
-            <div class="space-y-3">
-                <label
-                    v-if="master.cashOnDelivery && props.isDigitalProduct != true"
-                    for="cash"
-                    class="flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition"
-                    :class="
-                        paymentType === 'cash'
-                            ? 'border-primary bg-primary-50 dark:bg-slate-700'
-                            : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
-                    "
-                >
-                    <input
-                        v-model="paymentType"
-                        id="cash"
-                        name="payment"
-                        type="radio"
-                        class="radioBtn2"
-                        value="cash"
-                    />
-                    <div class="p-2 bg-white dark:bg-slate-700 rounded-xl border border-slate-200 dark:border-slate-600 shrink-0">
-                        <img :src="'assets/icons/money-2.svg'" alt="" class="w-6 h-6" />
-                    </div>
-                    <div class="min-w-0">
-                        <div class="text-slate-950 dark:text-white text-sm font-medium leading-normal">
-                            {{ $t("Cash on Delivery") }}
-                        </div>
-                        <div class="text-slate-500 dark:text-slate-400 text-xs font-normal leading-normal">
-                            {{ $t("Pay with cash upon delivery") }}
-                        </div>
-                    </div>
-                </label>
-
                 <div
-                    v-if="master.onlinePayment"
-                    class="rounded-xl border transition"
-                    :class="
-                        paymentType === 'card'
-                            ? 'border-primary bg-primary-50 dark:bg-slate-700'
-                            : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
-                    "
+                    class="text-slate-950 dark:text-white text-lm font-medium leading-7 mb-4"
                 >
-                    <label for="card" class="flex items-center gap-3 p-3 cursor-pointer">
+                    {{ $t("Payment Method") }}
+                </div>
+
+                <div class="space-y-3">
+                    <label
+                        v-if="
+                            master.cashOnDelivery &&
+                            props.isDigitalProduct != true
+                        "
+                        for="cash"
+                        class="flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition"
+                        :class="
+                            paymentType === 'cash'
+                                ? 'border-primary bg-primary-50 dark:bg-slate-700'
+                                : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
+                        "
+                    >
                         <input
                             v-model="paymentType"
-                            id="card"
+                            id="cash"
                             name="payment"
                             type="radio"
                             class="radioBtn2"
-                            value="card"
+                            value="cash"
                         />
-                        <div class="p-2 bg-white dark:bg-slate-700 rounded-xl border border-slate-200 dark:border-slate-600 shrink-0">
-                            <img :src="'assets/icons/card.svg'" alt="" class="w-6 h-6" />
+                        <div
+                            class="p-2 bg-white dark:bg-slate-700 rounded-xl border border-slate-200 dark:border-slate-600 shrink-0"
+                        >
+                            <img
+                                :src="'assets/icons/money-2.svg'"
+                                alt=""
+                                class="w-6 h-6"
+                            />
                         </div>
-                        <div class="min-w-0 grow">
-                            <div class="text-slate-950 dark:text-white text-sm font-medium leading-normal">
-                                {{ $t("Credit or Debit Card") }}
+                        <div class="min-w-0">
+                            <div
+                                class="text-slate-950 dark:text-white text-sm font-medium leading-normal"
+                            >
+                                {{ $t("Cash on Delivery") }}
                             </div>
-                            <div class="text-slate-500 dark:text-slate-400 text-xs font-normal leading-normal">
-                                {{ $t("Pay securely using your card") }}
+                            <div
+                                class="text-slate-500 dark:text-slate-400 text-xs font-normal leading-normal"
+                            >
+                                {{ $t("Pay with cash upon delivery") }}
                             </div>
                         </div>
-                        <ChevronUpIcon
-                            v-if="paymentType === 'card'"
-                            class="w-5 h-5 text-primary shrink-0"
-                        />
-                        <ChevronDownIcon v-else class="w-5 h-5 text-slate-400 shrink-0" />
                     </label>
 
-                    <!-- Payment Gateways dropdown -->
-                    <Transition
-                        leave-active-class="transition ease-in duration-200"
-                        enter-active-class="transition ease-out duration-200"
-                        enter-from-class="transform opacity-0 -translate-y-1"
-                        enter-to-class="transform opacity-100 translate-y-0"
-                        leave-from-class="transform opacity-100 translate-y-0"
-                        leave-to-class="transform opacity-0 -translate-y-1"
+                    <div
+                        v-if="master.onlinePayment"
+                        class="rounded-xl border transition"
+                        :class="
+                            paymentType === 'card'
+                                ? 'border-primary bg-primary-50 dark:bg-slate-700'
+                                : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
+                        "
                     >
-                        <div v-if="paymentType === 'card'" class="px-3 pb-3">
-                            <div class="grid grid-cols-3 xs:grid-cols-4 gap-2 pt-3 border-t border-primary-100 dark:border-slate-600">
-                                <label
-                                    v-for="gateway in master.paymentGateways"
-                                    :key="gateway.id"
-                                    :for="gateway.name"
-                                    class="flex items-center justify-center border relative has-[:checked]:border-primary has-[:checked]:shadow-md dark:has-[:checked]:bg-slate-600 p-2 rounded-md bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600 cursor-pointer"
-                                >
-                                    <input
-                                        v-model="paymentGateway"
-                                        :id="gateway.name"
-                                        name="paymentGateway"
-                                        type="radio"
-                                        class="sr-only"
-                                        :value="gateway.name"
-                                    />
-                                    <img :src="gateway.logo" alt="" class="w-full h-7 object-contain" />
-                                </label>
+                        <label
+                            for="card"
+                            class="flex items-center gap-3 p-3 cursor-pointer"
+                        >
+                            <input
+                                v-model="paymentType"
+                                id="card"
+                                name="payment"
+                                type="radio"
+                                class="radioBtn2"
+                                value="card"
+                            />
+                            <div
+                                class="p-2 bg-white dark:bg-slate-700 rounded-xl border border-slate-200 dark:border-slate-600 shrink-0"
+                            >
+                                <img
+                                    :src="'assets/icons/card.svg'"
+                                    alt=""
+                                    class="w-6 h-6"
+                                />
                             </div>
-                        </div>
-                    </Transition>
+                            <div class="min-w-0 grow">
+                                <div
+                                    class="text-slate-950 dark:text-white text-sm font-medium leading-normal"
+                                >
+                                    {{ $t("Credit or Debit Card") }}
+                                </div>
+                                <div
+                                    class="text-slate-500 dark:text-slate-400 text-xs font-normal leading-normal"
+                                >
+                                    {{ $t("Pay securely using your card") }}
+                                </div>
+                            </div>
+                            <ChevronUpIcon
+                                v-if="paymentType === 'card'"
+                                class="w-5 h-5 text-primary shrink-0"
+                            />
+                            <ChevronDownIcon
+                                v-else
+                                class="w-5 h-5 text-slate-400 shrink-0"
+                            />
+                        </label>
+
+                        <!-- Payment Gateways dropdown -->
+                        <Transition
+                            leave-active-class="transition ease-in duration-200"
+                            enter-active-class="transition ease-out duration-200"
+                            enter-from-class="transform opacity-0 -translate-y-1"
+                            enter-to-class="transform opacity-100 translate-y-0"
+                            leave-from-class="transform opacity-100 translate-y-0"
+                            leave-to-class="transform opacity-0 -translate-y-1"
+                        >
+                            <div
+                                v-if="paymentType === 'card'"
+                                class="px-3 pb-3"
+                            >
+                                <div
+                                    class="grid grid-cols-3 xs:grid-cols-4 gap-2 pt-3 border-t border-primary-100 dark:border-slate-600"
+                                >
+                                    <label
+                                        v-for="gateway in master.paymentGateways"
+                                        :key="gateway.id"
+                                        :for="gateway.name"
+                                        class="flex items-center justify-center border relative has-[:checked]:border-primary has-[:checked]:shadow-md dark:has-[:checked]:bg-slate-600 p-2 rounded-md bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600 cursor-pointer"
+                                    >
+                                        <input
+                                            v-model="paymentGateway"
+                                            :id="gateway.name"
+                                            name="paymentGateway"
+                                            type="radio"
+                                            class="sr-only"
+                                            :value="gateway.name"
+                                        />
+                                        <img
+                                            :src="gateway.logo"
+                                            alt=""
+                                            class="w-full h-7 object-contain"
+                                        />
+                                    </label>
+                                </div>
+                            </div>
+                        </Transition>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
 
         <div
-            v-if="authStore.user &&
+            v-if="
+                authStore.user &&
                 !authStore.user?.account_verified &&
                 master.orderPlaceAccountVerify
             "
@@ -339,7 +391,12 @@
 </template>
 
 <script setup>
-import { ArrowRightIcon, TrashIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/vue/24/outline";
+import {
+    ArrowRightIcon,
+    TrashIcon,
+    ChevronDownIcon,
+    ChevronUpIcon,
+} from "@heroicons/vue/24/outline";
 import { CheckCircleIcon } from "@heroicons/vue/24/solid";
 import { onMounted, ref, watch } from "vue";
 import OrderConfirmModal from "../components/OrderConfirmModal.vue";
@@ -371,7 +428,10 @@ const { trackInitiateCheckout, trackPurchase } = useMetaPixel();
  */
 const locationPayload = () =>
     guestAddressStore.latitude && guestAddressStore.longitude
-        ? { latitude: guestAddressStore.latitude, longitude: guestAddressStore.longitude }
+        ? {
+              latitude: guestAddressStore.latitude,
+              longitude: guestAddressStore.longitude,
+          }
         : {};
 
 /** InitiateCheckout fires once per visit, not on every address/coupon refetch. */
@@ -405,7 +465,10 @@ const guestUserData = () =>
               email: guestAddressStore.email,
               phone: guestAddressStore.phone,
               first_name: (guestAddressStore.name ?? "").split(" ")[0],
-              last_name: (guestAddressStore.name ?? "").split(" ").slice(1).join(" "),
+              last_name: (guestAddressStore.name ?? "")
+                  .split(" ")
+                  .slice(1)
+                  .join(" "),
           };
 
 /** The single buy-now line item plus what the customer actually pays. */
@@ -428,7 +491,13 @@ const props = defineProps({
     isDigitalProduct: Boolean,
 });
 
-const paymentType = ref(props.isDigitalProduct == true ? "card" : (master.cashOnDelivery ? "cash" : "card"));
+const paymentType = ref(
+    props.isDigitalProduct == true
+        ? "card"
+        : master.cashOnDelivery
+          ? "cash"
+          : "card",
+);
 const paymentGateway = ref(null);
 const paymentMethod = ref(paymentType.value);
 
@@ -469,28 +538,32 @@ watch(
         if (!basketStore.isLoadingCart) {
             fetchBuyNowCartCheckout();
         }
-    }
+    },
 );
 
 watch(
     () => basketStore.address,
     () => {
-        fetchBuyNowCartCheckout()
-    }
+        fetchBuyNowCartCheckout();
+    },
 );
 
 // The quantity stepper on the buy-now line changes the totals.
 watch(
     () => basketStore.buyNowRefreshKey,
     () => {
-        fetchBuyNowCartCheckout()
-    }
+        fetchBuyNowCartCheckout();
+    },
 );
 
 const fetchBuyNowCartCheckout = () => {
-    const locationData = guestAddressStore.latitude && guestAddressStore.longitude
-        ? { latitude: guestAddressStore.latitude, longitude: guestAddressStore.longitude }
-        : {};
+    const locationData =
+        guestAddressStore.latitude && guestAddressStore.longitude
+            ? {
+                  latitude: guestAddressStore.latitude,
+                  longitude: guestAddressStore.longitude,
+              }
+            : {};
     axios
         .post(
             "/cart/checkout",
@@ -498,7 +571,7 @@ const fetchBuyNowCartCheckout = () => {
                 shop_ids: [basketStore.buyNowShopId],
                 is_buy_now: true,
                 coupon_code: coupon.value,
-                address_id: basketStore.address ? basketStore.address.id : null ,
+                address_id: basketStore.address ? basketStore.address.id : null,
                 ...locationData,
             },
             {
@@ -506,7 +579,7 @@ const fetchBuyNowCartCheckout = () => {
                     Authorization: authStore.token,
                     "X-Guest-Token": authStore.access_token,
                 },
-            }
+            },
         )
         .then((response) => {
             orderData.value = response.data.data.checkout;
@@ -615,7 +688,7 @@ const processOrderConfirm = async () => {
                         Authorization: authStore.token,
                         "X-Guest-Token": authStore.access_token,
                     },
-                }
+                },
             )
             .then((response) => {
                 isProcessing.value = false;
@@ -679,10 +752,17 @@ const processGuestOrderConfirm = async () => {
     await guestAddressStore.captureLocation();
 
     if (!guestAddressStore.latitude || !guestAddressStore.longitude) {
-        toast.error(t("Location access is required to place order. Please allow location permission."), {
-            position:
-                master.langDirection === "rtl" ? "bottom-right" : "bottom-left",
-        });
+        toast.error(
+            t(
+                "Location access is required to place order. Please allow location permission.",
+            ),
+            {
+                position:
+                    master.langDirection === "rtl"
+                        ? "bottom-right"
+                        : "bottom-left",
+            },
+        );
         return;
     }
 
@@ -712,7 +792,7 @@ const processGuestOrderConfirm = async () => {
                         Authorization: authStore.token,
                         "X-Guest-Token": authStore.access_token,
                     },
-                }
+                },
             )
             .then((response) => {
                 isProcessing.value = false;

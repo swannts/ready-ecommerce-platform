@@ -1,5 +1,7 @@
 <template>
-    <div class="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 mt-3">
+    <div
+        class="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 mt-3"
+    >
         <form @submit.prevent="addressFormSubmit()">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
@@ -46,7 +48,7 @@
                         @input="
                             formData.phone = formData.phone.replace(
                                 /[^\d]/g,
-                                ''
+                                '',
                             )
                         "
                     />
@@ -270,7 +272,9 @@
                         <DialogPanel
                             class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
                         >
-                            <div class="bg-white dark:bg-slate-800 p-5 sm:p-8 text-center">
+                            <div
+                                class="bg-white dark:bg-slate-800 p-5 sm:p-8 text-center"
+                            >
                                 <div
                                     class="bg-red-500 w-14 h-14 md:w-20 md:h-20 rounded-full mx-auto flex justify-center items-center"
                                 >
@@ -290,7 +294,7 @@
                                 >
                                     {{
                                         $t(
-                                            "Are you sure want to delete this address"
+                                            "Are you sure want to delete this address",
                                         )
                                     }}
                                 </div>
@@ -370,7 +374,7 @@ watch(
     () => props.address,
     () => {
         formData.value = props.address;
-    }
+    },
 );
 
 const errors = ref({});

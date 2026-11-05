@@ -7,6 +7,7 @@ use App\Http\Resources\FlashSaleResource;
 use App\Http\Resources\ProductResource;
 use App\Models\FlashSale;
 use App\Repositories\FlashSaleRepository;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class FlashSaleController extends Controller
@@ -14,7 +15,7 @@ class FlashSaleController extends Controller
     /**
      * Get the incoming flash sale.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function index()
     {
@@ -30,7 +31,7 @@ class FlashSaleController extends Controller
     /**
      * Get the flash sale.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function show(string $name, Request $request)
     {

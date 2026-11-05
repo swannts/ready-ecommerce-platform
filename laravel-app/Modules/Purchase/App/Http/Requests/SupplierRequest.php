@@ -20,8 +20,8 @@ class SupplierRequest extends FormRequest
 
         return [
             'name' => ['required', 'string', 'max:200'],
-            'phone' => ['required', 'numeric', 'unique:users,phone,' . $user?->id],
-            'email' => ['required', 'email', 'unique:users,email,' . $user?->id, new EmailRule],
+            'phone' => ['required', 'numeric', 'unique:users,phone,'.$user?->id],
+            'email' => ['required', 'email', 'unique:users,email,'.$user?->id, new EmailRule],
             'profile_photo' => ['nullable', 'image', 'max:2048', 'mimes:png,jpg,jpeg,gif,svg,webp'],
         ];
     }

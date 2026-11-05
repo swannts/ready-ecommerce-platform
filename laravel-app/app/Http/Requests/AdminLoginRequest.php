@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Models\GoogleReCaptcha;
 use App\Models\User;
 use App\Rules\CaptchaValidate;
-use App\Rules\EmailRule;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AdminLoginRequest extends FormRequest
@@ -21,7 +21,7 @@ class AdminLoginRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {

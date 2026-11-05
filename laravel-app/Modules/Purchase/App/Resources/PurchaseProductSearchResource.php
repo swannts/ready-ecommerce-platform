@@ -17,10 +17,11 @@ class PurchaseProductSearchResource extends JsonResource
         foreach ($this->purchaseProducts as $purchaseProduct) {
             array_push($productName, $separate, $purchaseProduct->product->name);
         }
+
         return [
             'id' => $this->id,
             'purchase_code' => $this->purchase_code,
-            'purchase_product' => $productName
+            'purchase_product' => $productName,
         ];
     }
 }

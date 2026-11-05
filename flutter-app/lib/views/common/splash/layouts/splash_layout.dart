@@ -40,7 +40,6 @@ class _SplashLayoutState extends ConsumerState<SplashLayout> {
   void initState() {
     super.initState();
 
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(locationProvider.future).catchError((e) {
         print('Location error: $e');
@@ -125,7 +124,6 @@ class _SplashLayoutState extends ConsumerState<SplashLayout> {
 
   @override
   Widget build(BuildContext context) {
-
     final locationAsync = ref.watch(locationProvider);
 
     return ConnectivityWidgetWrapper(
@@ -171,9 +169,9 @@ class _SplashLayoutState extends ConsumerState<SplashLayout> {
                                 imageUrl: splashLogo,
                                 height: 100.h,
                                 width: 200.w,
-                                errorWidget: (context, url, error) =>
-                                    Assets.png.splashLogo.image(
-                                        height: 100.h, width: 200.w),
+                                errorWidget: (context, url, error) => Assets
+                                    .png.splashLogo
+                                    .image(height: 100.h, width: 200.w),
                               );
                             }
                             return Assets.png.splashLogo

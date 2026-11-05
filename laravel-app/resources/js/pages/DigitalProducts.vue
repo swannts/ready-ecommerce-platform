@@ -1,19 +1,33 @@
 <template>
     <div>
         <div class="main-container py-4 bg-slate-100 dark:bg-slate-700">
-            <div v-if="!isLoading" class="w-full p-2 md:p-4 bg-white dark:bg-slate-800 rounded-lg sm:rounded-xl md:rounded-2xl flex gap-3 md:gap-6 items-center justify-between">
+            <div
+                v-if="!isLoading"
+                class="w-full p-2 md:p-4 bg-white dark:bg-slate-800 rounded-lg sm:rounded-xl md:rounded-2xl flex gap-3 md:gap-6 items-center justify-between"
+            >
                 <!-- Back -->
-                <router-link to="/" class="py-2 flex gap-1 sm:gap-2 items-center justify-center">
-                    <ArrowLeftIcon class="w-4 h-4 sm:w-6 sm:h-6 text-slate-600 dark:text-slate-400" />
-                    <div class="text-slate-600 dark:text-slate-400 text-sm sm:text-base font-normal leading-normal">
+                <router-link
+                    to="/"
+                    class="py-2 flex gap-1 sm:gap-2 items-center justify-center"
+                >
+                    <ArrowLeftIcon
+                        class="w-4 h-4 sm:w-6 sm:h-6 text-slate-600 dark:text-slate-400"
+                    />
+                    <div
+                        class="text-slate-600 dark:text-slate-400 text-sm sm:text-base font-normal leading-normal"
+                    >
                         {{ $t("Back") }}
                     </div>
                 </router-link>
 
                 <!-- Categories slider -->
                 <div class="grow overflow-x-auto whitespace-nowrap">
-                    <span class="text-primary">“{{ master.search || $t("all") }}”</span>
-                    <span class="text-slate-800 dark:text-slate-100 text-base font-normal pl-2">
+                    <span class="text-primary"
+                        >“{{ master.search || $t("all") }}”</span
+                    >
+                    <span
+                        class="text-slate-800 dark:text-slate-100 text-base font-normal pl-2"
+                    >
                         {{ totalProducts }} {{ $t("items found") }}
                     </span>
                 </div>
@@ -22,7 +36,8 @@
                 <div>
                     <button
                         class="p-2 sm:px-4 sm:py-3 bg-slate-200 rounded-md sm:rounded-[10px] justify-center items-center gap-2 inline-flex text-slate-600 dark:text-slate-400 text-sm sm:text-base font-normal leading-normal border-0 outline-none hover:text-primary transition duration-300"
-                        @click="showFilterCanvas = true">
+                        @click="showFilterCanvas = true"
+                    >
                         <FunnelIcon class="w-4 h-4 sm:w-6 sm:h-6" />
                         <div class="grow shrink basis-0">
                             {{ $t("Filter") }}
@@ -31,103 +46,221 @@
                 </div>
             </div>
             <!-- loading -->
-             <div v-else class="w-full p-2 md:p-4 bg-white dark:bg-slate-800 rounded-lg sm:rounded-xl md:rounded-2xl flex gap-3 md:gap-6 items-center justify-between">
-                 <SkeletonLoader v-for="i in 2" class="w-24 sm:w-32 md:w-72 lg:w-96 h-12 rounded" />
-             </div>
+            <div
+                v-else
+                class="w-full p-2 md:p-4 bg-white dark:bg-slate-800 rounded-lg sm:rounded-xl md:rounded-2xl flex gap-3 md:gap-6 items-center justify-between"
+            >
+                <SkeletonLoader
+                    v-for="i in 2"
+                    class="w-24 sm:w-32 md:w-72 lg:w-96 h-12 rounded"
+                />
+            </div>
         </div>
 
         <div class="main-container py-12">
             <div
-                class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 sm:gap-6 items-start">
-                <div v-if="!isLoading" v-for="product in products" :key="product.id" class="w-full">
+                class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 sm:gap-6 items-start"
+            >
+                <div
+                    v-if="!isLoading"
+                    v-for="product in products"
+                    :key="product.id"
+                    class="w-full"
+                >
                     <ProductCard :product="product" />
                 </div>
 
                 <!-- loading -->
                 <div v-else v-for="i in 12" :key="i">
-                    <SkeletonLoader class="w-full h-[220px] sm:h-[330px] rounded-lg" />
+                    <SkeletonLoader
+                        class="w-full h-[220px] sm:h-[330px] rounded-lg"
+                    />
                 </div>
             </div>
-            <div v-if="products.length == 0 && !isLoading" class="flex justify-center items-center w-full mt-8">
-                <div class="text-slate-800 dark:text-slate-100 text-base font-normal leading-normal">
+            <div
+                v-if="products.length == 0 && !isLoading"
+                class="flex justify-center items-center w-full mt-8"
+            >
+                <div
+                    class="text-slate-800 dark:text-slate-100 text-base font-normal leading-normal"
+                >
                     {{ $t("No products found") }}
                 </div>
             </div>
 
             <!-- Pagination -->
-            <div v-if="products.length > 0 && !isLoading" class="flex justify-between items-center w-full mt-8 gap-4 flex-wrap">
-                <div class="text-slate-800 dark:text-slate-100 text-base font-normal leading-normal">
+            <div
+                v-if="products.length > 0 && !isLoading"
+                class="flex justify-between items-center w-full mt-8 gap-4 flex-wrap"
+            >
+                <div
+                    class="text-slate-800 dark:text-slate-100 text-base font-normal leading-normal"
+                >
                     {{ $t("Showing") }} {{ perPage * (currentPage - 1) + 1 }}
                     {{ $t("to") }}
                     {{ perPage * (currentPage - 1) + products.length }}
                     {{ $t("of") }} {{ totalProducts }} {{ $t("results") }}
                 </div>
                 <div>
-                    <vue-awesome-paginate :total-items="totalProducts" :items-per-page="perPage" type="button"
-                        :max-pages-shown="5" v-model="currentPage" :hide-prev-next-when-ends="true"
-                        @click="onClickHandler" />
+                    <vue-awesome-paginate
+                        :total-items="totalProducts"
+                        :items-per-page="perPage"
+                        type="button"
+                        :max-pages-shown="5"
+                        v-model="currentPage"
+                        :hide-prev-next-when-ends="true"
+                        @click="onClickHandler"
+                    />
                 </div>
             </div>
         </div>
 
         <!-- Filter Canvas Drawer -->
         <TransitionRoot as="template" :show="showFilterCanvas">
-            <Dialog as="div" class="relative z-10" @close="showFilterCanvas = false">
-                <TransitionChild as="template" enter="ease-in-out duration-500" enter-from="opacity-0"
-                    enter-to="opacity-100" leave="ease-in-out duration-500" leave-from="opacity-100"
-                    leave-to="opacity-0">
-                    <div class="fixed inset-0 bg-gray-500 bg-opacity-30 transition-opacity" />
+            <Dialog
+                as="div"
+                class="relative z-10"
+                @close="showFilterCanvas = false"
+            >
+                <TransitionChild
+                    as="template"
+                    enter="ease-in-out duration-500"
+                    enter-from="opacity-0"
+                    enter-to="opacity-100"
+                    leave="ease-in-out duration-500"
+                    leave-from="opacity-100"
+                    leave-to="opacity-0"
+                >
+                    <div
+                        class="fixed inset-0 bg-gray-500 bg-opacity-30 transition-opacity"
+                    />
                 </TransitionChild>
 
                 <div class="fixed inset-0 overflow-hidden">
                     <div class="absolute inset-0 overflow-hidden">
-                        <div class="pointer-events-none fixed inset-y-0 flex max-w-full"
-                            :class="master.langDirection == 'rtl' ? 'left-0 sm:pr-10' : 'right-0 sm:pl-10'">
-                            <TransitionChild as="template"
+                        <div
+                            class="pointer-events-none fixed inset-y-0 flex max-w-full"
+                            :class="
+                                master.langDirection == 'rtl'
+                                    ? 'left-0 sm:pr-10'
+                                    : 'right-0 sm:pl-10'
+                            "
+                        >
+                            <TransitionChild
+                                as="template"
                                 enter="transform transition ease-in-out duration-500 sm:duration-700"
-                                :enter-from="master.langDirection == 'rtl' ? '-translate-x-full' : 'translate-x-full'"
+                                :enter-from="
+                                    master.langDirection == 'rtl'
+                                        ? '-translate-x-full'
+                                        : 'translate-x-full'
+                                "
                                 enter-to="translate-x-0"
                                 leave="transform transition ease-in-out duration-500 sm:duration-700"
                                 leave-from="translate-x-0"
-                                :leave-to="master.langDirection == 'rtl' ? '-translate-x-full' : 'translate-x-full'">
-                                <DialogPanel class="pointer-events-auto relative w-screen max-w-md">
-                                    <TransitionChild as="template" enter="ease-in-out duration-500"
-                                        enter-from="opacity-0" enter-to="opacity-100" leave="ease-in-out duration-500"
-                                        leave-from="opacity-100" leave-to="opacity-0">
-                                        <div class="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4"></div>
+                                :leave-to="
+                                    master.langDirection == 'rtl'
+                                        ? '-translate-x-full'
+                                        : 'translate-x-full'
+                                "
+                            >
+                                <DialogPanel
+                                    class="pointer-events-auto relative w-screen max-w-md"
+                                >
+                                    <TransitionChild
+                                        as="template"
+                                        enter="ease-in-out duration-500"
+                                        enter-from="opacity-0"
+                                        enter-to="opacity-100"
+                                        leave="ease-in-out duration-500"
+                                        leave-from="opacity-100"
+                                        leave-to="opacity-0"
+                                    >
+                                        <div
+                                            class="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4"
+                                        ></div>
                                     </TransitionChild>
                                     <div
-                                        class="flex h-full flex-col justify-between overflow-y-scroll bg-white dark:bg-slate-800 shadow-xl">
+                                        class="flex h-full flex-col justify-between overflow-y-scroll bg-white dark:bg-slate-800 shadow-xl"
+                                    >
                                         <div class="p-4 flex flex-col gap-7">
-                                            <div class="flex justify-between items-center" aria-hidden="true">
-                                                <div class="text-slate-950 dark:text-white text-xl font-bold leading-loose">
+                                            <div
+                                                class="flex justify-between items-center"
+                                                aria-hidden="true"
+                                            >
+                                                <div
+                                                    class="text-slate-950 dark:text-white text-xl font-bold leading-loose"
+                                                >
                                                     {{ $t("Filter") }}
                                                 </div>
                                                 <button
                                                     class="w-8 h-8 flex justify-center items-center bg-slate-100 dark:bg-slate-700 rounded-full"
-                                                    @click="showFilterCanvas = false">
-                                                    <XMarkIcon class="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                                                    @click="
+                                                        showFilterCanvas = false
+                                                    "
+                                                >
+                                                    <XMarkIcon
+                                                        class="w-5 h-5 text-slate-700 dark:text-slate-300"
+                                                    />
                                                 </button>
                                             </div>
 
                                             <!-- Customer Review -->
                                             <div>
-                                                <div class="text-slate-950 dark:text-white text-base font-medium leading-normal">
+                                                <div
+                                                    class="text-slate-950 dark:text-white text-base font-medium leading-normal"
+                                                >
                                                     {{ $t("Customer Review") }}
                                                 </div>
                                                 <!-- Rating -->
-                                                <div class="flex flex-col gap-2 mt-3">
-                                                    <div v-for="ratingNumber in ratings" :key="ratingNumber">
-                                                        <label :for="`rating${ratingNumber}`" class="cursor-pointer has-[:checked]:border-primary text-slate-800 dark:text-slate-100 flex items-center justify-between px-2 py-1.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700 gap-1.5">
-                                                            <div class="flex items-center gap-1">
-                                                                <div class="flex items-center">
-                                                                    <StarIcon v-for="i in 5" :key="i" class="w-5 h-5"  :class="i <= ratingNumber ? 'text-amber-500' : 'text-gray-200'" />
+                                                <div
+                                                    class="flex flex-col gap-2 mt-3"
+                                                >
+                                                    <div
+                                                        v-for="ratingNumber in ratings"
+                                                        :key="ratingNumber"
+                                                    >
+                                                        <label
+                                                            :for="`rating${ratingNumber}`"
+                                                            class="cursor-pointer has-[:checked]:border-primary text-slate-800 dark:text-slate-100 flex items-center justify-between px-2 py-1.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700 gap-1.5"
+                                                        >
+                                                            <div
+                                                                class="flex items-center gap-1"
+                                                            >
+                                                                <div
+                                                                    class="flex items-center"
+                                                                >
+                                                                    <StarIcon
+                                                                        v-for="i in 5"
+                                                                        :key="i"
+                                                                        class="w-5 h-5"
+                                                                        :class="
+                                                                            i <=
+                                                                            ratingNumber
+                                                                                ? 'text-amber-500'
+                                                                                : 'text-gray-200'
+                                                                        "
+                                                                    />
                                                                 </div>
-                                                                <div class="text-base font-medium leading-normal">
-                                                                    {{ ratingNumber }}.0
+                                                                <div
+                                                                    class="text-base font-medium leading-normal"
+                                                                >
+                                                                    {{
+                                                                        ratingNumber
+                                                                    }}.0
                                                                 </div>
                                                             </div>
-                                                            <input type="radio" v-model="filterFormData.rating" :id="`rating${ratingNumber}`" name="rating" class="w-5 h-5 appearance-none checked:bg-primary rounded-full border-2 border-slate-300 shrink-0 transition duration-300" :value="ratingNumber" />
+                                                            <input
+                                                                type="radio"
+                                                                v-model="
+                                                                    filterFormData.rating
+                                                                "
+                                                                :id="`rating${ratingNumber}`"
+                                                                name="rating"
+                                                                class="w-5 h-5 appearance-none checked:bg-primary rounded-full border-2 border-slate-300 shrink-0 transition duration-300"
+                                                                :value="
+                                                                    ratingNumber
+                                                                "
+                                                            />
                                                         </label>
                                                     </div>
                                                 </div>
@@ -135,60 +268,108 @@
 
                                             <!-- Sort by -->
                                             <div>
-                                                <div class="text-slate-950 dark:text-white text-base font-medium leading-normal">
-                                                    {{ $t('Sort by') }}
+                                                <div
+                                                    class="text-slate-950 dark:text-white text-base font-medium leading-normal"
+                                                >
+                                                    {{ $t("Sort by") }}
                                                 </div>
 
-                                                <select v-model="filterFormData.sort_type"
-                                                    class="w-full mt-1 p-3 rounded bg-transparent border border-gray-100 outline-none">
-                                                    <option v-for="shortBy in filterSortBy" :key="shortBy"
-                                                        :value="shortBy.value">
+                                                <select
+                                                    v-model="
+                                                        filterFormData.sort_type
+                                                    "
+                                                    class="w-full mt-1 p-3 rounded bg-transparent border border-gray-100 outline-none"
+                                                >
+                                                    <option
+                                                        v-for="shortBy in filterSortBy"
+                                                        :key="shortBy"
+                                                        :value="shortBy.value"
+                                                    >
                                                         {{ $t(shortBy.name) }}
                                                     </option>
                                                 </select>
                                             </div>
 
                                             <div>
-                                                <div class="flex justify-between items-center gap-2">
-                                                    <div class="text-slate-950 dark:text-white text-base font-medium leading-normal">
+                                                <div
+                                                    class="flex justify-between items-center gap-2"
+                                                >
+                                                    <div
+                                                        class="text-slate-950 dark:text-white text-base font-medium leading-normal"
+                                                    >
                                                         {{
                                                             $t("Product Price")
                                                         }}
                                                     </div>
-                                                    <div class="text-primary text-base font-normal leading-normal">
-                                                        {{ master.showCurrency(priceRange[0]) }}
+                                                    <div
+                                                        class="text-primary text-base font-normal leading-normal"
+                                                    >
+                                                        {{
+                                                            master.showCurrency(
+                                                                priceRange[0],
+                                                            )
+                                                        }}
                                                         -
-                                                        {{ master.showCurrency(priceRange[1]) }}
+                                                        {{
+                                                            master.showCurrency(
+                                                                priceRange[1],
+                                                            )
+                                                        }}
                                                     </div>
                                                 </div>
                                                 <div class="w-[98%]">
-                                                    <vue-slider v-model="priceRange" :min="filter.min_price"
-                                                        :max="filter.max_price"></vue-slider>
+                                                    <vue-slider
+                                                        v-model="priceRange"
+                                                        :min="filter.min_price"
+                                                        :max="filter.max_price"
+                                                    ></vue-slider>
                                                 </div>
                                                 <div
-                                                    class="text-slate-400 text-xs font-normal leading-none flex justify-between mt-2">
+                                                    class="text-slate-400 text-xs font-normal leading-none flex justify-between mt-2"
+                                                >
                                                     <span>
-                                                        {{ master.showCurrency(filter.min_price) }}
+                                                        {{
+                                                            master.showCurrency(
+                                                                filter.min_price,
+                                                            )
+                                                        }}
                                                     </span>
                                                     <span>
-                                                        {{ master.showCurrency(filter.max_price) }}
+                                                        {{
+                                                            master.showCurrency(
+                                                                filter.max_price,
+                                                            )
+                                                        }}
                                                     </span>
                                                 </div>
                                             </div>
 
                                             <!-- Brand -->
                                             <div>
-                                                <div class="text-slate-950 dark:text-white text-base font-medium leading-normal">
+                                                <div
+                                                    class="text-slate-950 dark:text-white text-base font-medium leading-normal"
+                                                >
                                                     {{ $t("Category") }}
                                                 </div>
 
-                                                <select v-model="filterFormData.category_id"
-                                                    class="w-full mt-1 p-3 rounded bg-transparent border border-gray-100 outline-none">
+                                                <select
+                                                    v-model="
+                                                        filterFormData.category_id
+                                                    "
+                                                    class="w-full mt-1 p-3 rounded bg-transparent border border-gray-100 outline-none"
+                                                >
                                                     <option value="" selected>
-                                                        {{ $t("Select Category") }}
+                                                        {{
+                                                            $t(
+                                                                "Select Category",
+                                                            )
+                                                        }}
                                                     </option>
-                                                    <option v-for="category in master.categories" :key="category.id"
-                                                        :value="category.id">
+                                                    <option
+                                                        v-for="category in master.categories"
+                                                        :key="category.id"
+                                                        :value="category.id"
+                                                    >
                                                         {{ category.name }}
                                                     </option>
                                                 </select>
@@ -196,17 +377,26 @@
 
                                             <!-- Brand -->
                                             <div>
-                                                <div class="text-slate-950 dark:text-white text-base font-medium leading-normal">
+                                                <div
+                                                    class="text-slate-950 dark:text-white text-base font-medium leading-normal"
+                                                >
                                                     {{ $t("Brand") }}
                                                 </div>
 
-                                                <select v-model="filterFormData.brand_id"
-                                                    class="w-full mt-1 p-3 rounded bg-transparent border border-gray-100 outline-none">
+                                                <select
+                                                    v-model="
+                                                        filterFormData.brand_id
+                                                    "
+                                                    class="w-full mt-1 p-3 rounded bg-transparent border border-gray-100 outline-none"
+                                                >
                                                     <option value="" selected>
                                                         {{ $t("Select Brand") }}
                                                     </option>
-                                                    <option v-for="brand in filter.brands" :key="brand.id"
-                                                        :value="brand.id">
+                                                    <option
+                                                        v-for="brand in filter.brands"
+                                                        :key="brand.id"
+                                                        :value="brand.id"
+                                                    >
                                                         {{ brand.name }}
                                                     </option>
                                                 </select>
@@ -214,55 +404,91 @@
 
                                             <!-- color -->
                                             <div>
-                                                <div class="text-slate-950 dark:text-white text-base font-medium leading-normal">
+                                                <div
+                                                    class="text-slate-950 dark:text-white text-base font-medium leading-normal"
+                                                >
                                                     {{ $t("Color") }}
                                                 </div>
 
                                                 <div
-                                                    class="flex flex-wrap gap-4 p-3 rounded-xl border border-slate-200 dark:border-slate-700 mt-1">
-                                                    <label v-for="color in filter.colors" :key="color.id"
-                                                        class="cursor-pointer has-[:checked]:text-primary text-slate-800 dark:text-slate-100 flex items-center p-2 bg-white dark:bg-slate-800 gap-2">
-                                                        <input type="radio" v-model="filterFormData.color_id
-                                                            " :value="color.id" :id="'color-' +
+                                                    class="flex flex-wrap gap-4 p-3 rounded-xl border border-slate-200 dark:border-slate-700 mt-1"
+                                                >
+                                                    <label
+                                                        v-for="color in filter.colors"
+                                                        :key="color.id"
+                                                        class="cursor-pointer has-[:checked]:text-primary text-slate-800 dark:text-slate-100 flex items-center p-2 bg-white dark:bg-slate-800 gap-2"
+                                                    >
+                                                        <input
+                                                            type="radio"
+                                                            v-model="
+                                                                filterFormData.color_id
+                                                            "
+                                                            :value="color.id"
+                                                            :id="
+                                                                'color-' +
                                                                 color.id
-                                                                " name="color"
-                                                            class="w-5 h-5 appearance-none checked:bg-primary rounded-full border-2 border-slate-300 shrink-0 transition duration-300" />
-                                                        <span>{{ color.name }}</span>
+                                                            "
+                                                            name="color"
+                                                            class="w-5 h-5 appearance-none checked:bg-primary rounded-full border-2 border-slate-300 shrink-0 transition duration-300"
+                                                        />
+                                                        <span>{{
+                                                            color.name
+                                                        }}</span>
                                                     </label>
                                                 </div>
                                             </div>
 
                                             <!-- size -->
                                             <div>
-                                                <div class="text-slate-950 dark:text-white text-base font-medium leading-normal">
+                                                <div
+                                                    class="text-slate-950 dark:text-white text-base font-medium leading-normal"
+                                                >
                                                     {{ $t("Size") }}
                                                 </div>
 
                                                 <div
-                                                    class="flex flex-wrap gap-4 p-3 rounded-xl border border-slate-200 dark:border-slate-700 mt-1">
-                                                    <label v-for="size in filter.sizes" :key="size.id"
-                                                        class="cursor-pointer has-[:checked]:text-primary text-slate-800 dark:text-slate-100 flex items-center p-2 bg-white dark:bg-slate-800 gap-2">
-                                                        <input type="radio" v-model="filterFormData.size_id
-                                                            " :value="size.id" :id="'size-' +
+                                                    class="flex flex-wrap gap-4 p-3 rounded-xl border border-slate-200 dark:border-slate-700 mt-1"
+                                                >
+                                                    <label
+                                                        v-for="size in filter.sizes"
+                                                        :key="size.id"
+                                                        class="cursor-pointer has-[:checked]:text-primary text-slate-800 dark:text-slate-100 flex items-center p-2 bg-white dark:bg-slate-800 gap-2"
+                                                    >
+                                                        <input
+                                                            type="radio"
+                                                            v-model="
+                                                                filterFormData.size_id
+                                                            "
+                                                            :value="size.id"
+                                                            :id="
+                                                                'size-' +
                                                                 size.id
-                                                                " name="size"
-                                                            class="w-5 h-5 appearance-none checked:bg-primary rounded-full border-2 border-slate-300 shrink-0 transition duration-300" />
-                                                        <span>{{ size.name }}</span>
+                                                            "
+                                                            name="size"
+                                                            class="w-5 h-5 appearance-none checked:bg-primary rounded-full border-2 border-slate-300 shrink-0 transition duration-300"
+                                                        />
+                                                        <span>{{
+                                                            size.name
+                                                        }}</span>
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <!-- button Clear and Apply -->
-                                        <div class="flex gap-6 p-6 border-t border-slate-200 dark:border-slate-700">
+                                        <div
+                                            class="flex gap-6 p-6 border-t border-slate-200 dark:border-slate-700"
+                                        >
                                             <button
                                                 class="grow px-4 py-3 rounded-[10px] border border-primary text-primary text-base font-medium leading-normal"
-                                                @click="clearFilter">
+                                                @click="clearFilter"
+                                            >
                                                 {{ $t("Clear") }}
                                             </button>
                                             <button
                                                 class="grow px-4 py-3 bg-primary rounded-[10px] border border-primary text-white text-base font-medium leading-normal"
-                                                @click="applyFilter">
+                                                @click="applyFilter"
+                                            >
                                                 {{ $t("Apply") }}
                                             </button>
                                         </div>
@@ -279,8 +505,18 @@
 
 <script setup>
 import { onMounted, onBeforeUnmount, ref, watch } from "vue";
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot, } from "@headlessui/vue";
-import { FunnelIcon, XMarkIcon, ArrowLeftIcon, } from "@heroicons/vue/24/outline";
+import {
+    Dialog,
+    DialogPanel,
+    DialogTitle,
+    TransitionChild,
+    TransitionRoot,
+} from "@headlessui/vue";
+import {
+    FunnelIcon,
+    XMarkIcon,
+    ArrowLeftIcon,
+} from "@heroicons/vue/24/outline";
 import { StarIcon } from "@heroicons/vue/24/solid";
 import ProductCard from "../components/ProductCard.vue";
 import { useMaster } from "../stores/MasterStore";
@@ -307,9 +543,12 @@ onBeforeUnmount(() => {
 
 const search = master.search;
 
-watch(() => master.search, () => {
-    fetchProducts();
-});
+watch(
+    () => master.search,
+    () => {
+        fetchProducts();
+    },
+);
 
 const currentPage = ref(1);
 const perPage = 12;
@@ -354,36 +593,38 @@ const fetchProducts = async () => {
         top: 0,
         behavior: "smooth",
     });
-    axios.get("/products", {
-        params: {
-            page: currentPage.value,
-            per_page: perPage,
-            search: master.search,
-            ...filterFormData.value,
-            is_digital: true,
-        },
-        headers: {
-            "Accept-Language": master.locale || "en",
-        },
-    }).then((response) => {
-        totalProducts.value = response.data.data.total;
-        products.value = response.data.data.products;
-        filter.value = response.data.data.filters;
+    axios
+        .get("/products", {
+            params: {
+                page: currentPage.value,
+                per_page: perPage,
+                search: master.search,
+                ...filterFormData.value,
+                is_digital: true,
+            },
+            headers: {
+                "Accept-Language": master.locale || "en",
+            },
+        })
+        .then((response) => {
+            totalProducts.value = response.data.data.total;
+            products.value = response.data.data.products;
+            filter.value = response.data.data.filters;
 
-        if (setRangeValue.value) {
-            priceRange.value = [
-                Math.floor(filter.value.min_price),
-                Math.floor(filter.value.max_price),
-            ];
-        }
+            if (setRangeValue.value) {
+                priceRange.value = [
+                    Math.floor(filter.value.min_price),
+                    Math.floor(filter.value.max_price),
+                ];
+            }
 
-        setTimeout(() => {
+            setTimeout(() => {
+                isLoading.value = false;
+            }, 200);
+        })
+        .catch((error) => {
             isLoading.value = false;
-        }, 200);
-
-    }).catch((error) => {
-        isLoading.value = false;
-    })
+        });
 };
 
 const clearFilter = () => {

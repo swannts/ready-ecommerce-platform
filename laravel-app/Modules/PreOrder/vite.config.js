@@ -1,22 +1,22 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
-import { readdirSync, statSync } from 'fs';
-import { join,relative,dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { defineConfig } from "vite";
+import laravel from "laravel-vite-plugin";
+import { readdirSync, statSync } from "fs";
+import { join, relative, dirname } from "path";
+import { fileURLToPath } from "url";
 
 export default defineConfig({
     build: {
-        outDir: '../../public/build-preorder',
+        outDir: "../../public/build-preorder",
         emptyOutDir: true,
         manifest: true,
     },
     plugins: [
         laravel({
-            publicDirectory: '../../public',
-            buildDirectory: 'build-preorder',
+            publicDirectory: "../../public",
+            buildDirectory: "build-preorder",
             input: [
-                __dirname + '/resources/assets/sass/app.scss',
-                __dirname + '/resources/assets/js/app.js'
+                __dirname + "/resources/assets/sass/app.scss",
+                __dirname + "/resources/assets/js/app.js",
             ],
             refresh: true,
         }),
@@ -49,7 +49,6 @@ export default defineConfig({
 
 //const assetsDir = join(__dirname, 'resources/assets');
 //export const paths = getFilePaths(assetsDir);
-
 
 //export const paths = [
 //    'Modules/$STUDLY_NAME$/resources/assets/sass/app.scss',

@@ -1,36 +1,36 @@
 <?php
 
+use App\Http\Controllers\API\AddressController;
+use App\Http\Controllers\API\Auth\AuthController;
+use App\Http\Controllers\API\Auth\ForgotPasswordController;
+use App\Http\Controllers\API\BannerController;
+use App\Http\Controllers\API\BlogController;
+use App\Http\Controllers\API\BrandController;
+use App\Http\Controllers\API\CartController;
+use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\ChatController;
+use App\Http\Controllers\API\CountryController;
+use App\Http\Controllers\API\CouponController;
+use App\Http\Controllers\API\FlashSaleController;
+use App\Http\Controllers\API\HomeController;
+use App\Http\Controllers\API\LegalPageController;
+use App\Http\Controllers\API\MasterController;
+use App\Http\Controllers\API\MetaPixelController;
+use App\Http\Controllers\API\OrderController;
+use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\ProductLicenseController;
+use App\Http\Controllers\API\ReturnOrderController;
+use App\Http\Controllers\API\ReviewController;
+use App\Http\Controllers\API\ShopController;
+use App\Http\Controllers\API\SocialAuthController;
+use App\Http\Controllers\API\SubCategoryController;
+use App\Http\Controllers\API\SupportController;
+use App\Http\Controllers\API\SupportTicketController;
+use App\Http\Controllers\API\SupportTicketMessageController;
+use App\Http\Controllers\API\TicketIssueTypeController;
+use App\Http\Controllers\API\UserController;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\BlogController;
-use App\Http\Controllers\API\CartController;
-use App\Http\Controllers\API\ChatController;
-use App\Http\Controllers\API\HomeController;
-use App\Http\Controllers\API\BrandController;
-use App\Http\Controllers\API\ShopController;
-use App\Http\Controllers\API\UserController;
-use App\Http\Controllers\API\OrderController;
-use App\Http\Controllers\API\BannerController;
-use App\Http\Controllers\API\CouponController;
-use App\Http\Controllers\API\MasterController;
-use App\Http\Controllers\API\ReviewController;
-use App\Http\Controllers\API\AddressController;
-use App\Http\Controllers\API\CountryController;
-use App\Http\Controllers\API\ProductController;
-use App\Http\Controllers\API\SupportController;
-use App\Http\Controllers\API\CategoryController;
-use App\Http\Controllers\API\Auth\AuthController;
-use App\Http\Controllers\API\FlashSaleController;
-use App\Http\Controllers\API\LegalPageController;
-use App\Http\Controllers\API\SocialAuthController;
-use App\Http\Controllers\API\ReturnOrderController;
-use App\Http\Controllers\API\SubCategoryController;
-use App\Http\Controllers\API\SupportTicketController;
-use App\Http\Controllers\API\TicketIssueTypeController;
-use App\Http\Controllers\API\Auth\ForgotPasswordController;
-use App\Http\Controllers\API\ProductLicenseController;
-use App\Http\Controllers\API\SupportTicketMessageController;
-use App\Http\Controllers\API\MetaPixelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -143,8 +143,6 @@ Route::controller(BlogController::class)->group(function () {
     Route::get('/blog/{blog}/details', 'show');
 });
 
-
-
 // cart route
 Route::controller(CartController::class)->group(function () {
     Route::get('/carts', 'index');
@@ -154,7 +152,6 @@ Route::controller(CartController::class)->group(function () {
     Route::post('/cart/delete', 'destroy');
     Route::post('/cart/checkout', 'checkout');
 });
-
 
 // order route
 Route::controller(OrderController::class)->group(function () {
@@ -215,8 +212,6 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
         Route::delete('/address/{address}/delete', 'destroy');
     });
 
-
-
     // support ticket
     Route::controller(SupportTicketController::class)->group(function () {
         Route::get('/support-tickets', 'index');
@@ -235,8 +230,6 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
         Route::get('ticket-issue-types', 'index');
     });
 
-
-
     // chating with shop and user
     Route::controller(ChatController::class)->group(function () {
         Route::get('/get-shops', 'getShops');
@@ -245,7 +238,7 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
         Route::post('/send-message', 'sendMessage');
     });
 
-    //return order
+    // return order
     Route::controller(ReturnOrderController::class)->group(function () {
         Route::get('/return-orders', 'index');
         Route::get('/return-order-details/{returnOrder}', 'show');
@@ -255,7 +248,7 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     // check user is online or not
 
     Route::post('/update-last-seen', function () {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return;
         }
 
@@ -265,7 +258,6 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
         return response()->noContent();
     });
 });
-
 
 // Meta Conversions API bridge — public so guests are tracked too, throttled so
 // it cannot be abused to flood the ad account.
@@ -281,7 +273,7 @@ Route::get('/lang/{locale}', function ($locale) {
     abort_unless(in_array($locale, ['en', 'bn'], true), 404);
     $path = base_path("lang/{$locale}.json");
     if (File::exists($path)) {
-        return File::get($path);
+        return response()->json(json_decode(File::get($path), true, flags: JSON_THROW_ON_ERROR));
     }
 
     return response()->json(['error' => 'Language file not found'], 404);

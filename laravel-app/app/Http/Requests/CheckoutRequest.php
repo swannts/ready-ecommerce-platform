@@ -17,7 +17,6 @@ class CheckoutRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
      */
     public function rules(): array
     {
@@ -58,6 +57,7 @@ class CheckoutRequest extends FormRequest
 
                 if (! $subscription) {
                     $validator->errors()->add('shop_ids', 'Some of the selected shops are not available.');
+
                     return;
                 }
             }

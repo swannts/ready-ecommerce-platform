@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Repositories\UserRepository;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -22,7 +23,7 @@ class ProfileController extends Controller
     /**
      * edit profile
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function edit(Request $request)
     {

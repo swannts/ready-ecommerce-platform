@@ -8,9 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 
 abstract class Repository
 {
-    /**
-     * @abstract
-     */
     abstract public static function model();
 
     /**
@@ -29,9 +26,6 @@ abstract class Repository
         return static::model()::latest()->get();
     }
 
-    /**
-     * @return int
-     */
     public static function countAll(): int
     {
         return static::model()::getAll()->count();
@@ -40,22 +34,24 @@ abstract class Repository
     /**
      * @return Model|object|null
      */
-    public static function first(): Model|null
+    public static function first(): ?Model
     {
         return static::query()->first();
     }
 
     /**
      * @requires int|id
+     *
      * @return Model|object|null|null
      */
-    public static function find($primaryKey): Model|null
+    public static function find($primaryKey): ?Model
     {
         return static::query()->find($primaryKey);
     }
 
     /**
      * @requires int|id
+     *
      * @return Model|object|404
      */
     public static function findOrFail($primaryKey)
@@ -65,7 +61,6 @@ abstract class Repository
 
     /**
      * @requires int|id
-     * @return bool
      */
     public static function delete($primaryKey): bool
     {
@@ -74,6 +69,7 @@ abstract class Repository
 
     /**
      * @requires Array
+     *
      * @return Model|mixed
      */
     public static function create(array $data): Model
@@ -83,7 +79,6 @@ abstract class Repository
 
     /**
      * @requires Model|Array
-     * @return bool
      */
     public static function update(Model $model, array $data): bool
     {

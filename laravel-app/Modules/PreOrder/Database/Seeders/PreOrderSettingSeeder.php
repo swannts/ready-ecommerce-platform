@@ -20,7 +20,7 @@ class PreOrderSettingSeeder extends Seeder
             'shop_commission' => 10,
             'commission_type' => 'percentage',
             'pre_order_policy' => 'Learn how pre-orders work, including payment terms, estimated delivery dates, cancellations, and order conditions',
-            'pre_order_refund_policy' => 'Understand pre-order refund eligibility, cancellation rules, refund methods, and processing timelines'
+            'pre_order_refund_policy' => 'Understand pre-order refund eligibility, cancellation rules, refund methods, and processing timelines',
         ]);
     }
 }

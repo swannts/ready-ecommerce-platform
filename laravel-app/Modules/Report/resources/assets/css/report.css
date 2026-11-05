@@ -7,8 +7,6 @@
     padding-bottom: -10px !important;
 }
 
-
-
 /* date picker */
 
 .date-separator {
@@ -105,17 +103,12 @@ input.datePickerfield {
     font-size: 15px;
 }
 
-
-
 /* Chart style */
 #sale-analytics-chart .apexcharts-bar-series path:hover {
-    fill: #51AF5B !important;
+    fill: #51af5b !important;
     fill-opacity: 0.5 !important;
     transition: 0.3s fill ease;
 }
-
-
-
 
 /* Targets the donut slices in ApexCharts */
 #cost-analytics-chart .apexcharts-series path {
@@ -129,9 +122,6 @@ input.datePickerfield {
     /* Removes inner shadow on hover for a "pop out" effect */
     stroke-width: 4px;
 }
-
-
-
 
 /* custom legends */
 .custom_legend_container {
@@ -155,7 +145,7 @@ input.datePickerfield {
     font-size: 14px;
     line-height: 157%;
     text-align: center;
-    color: #17181D;
+    color: #17181d;
     margin: 0px;
 }
 
@@ -167,26 +157,20 @@ input.datePickerfield {
 }
 
 .custom_legend_container .legend_1 {
-
     background: #84cd8c;
 }
 
-
 .custom_legend_container .legend_2 {
-
-    background: #EFC23D;
+    background: #efc23d;
 }
 
 .custom_legend_container .legend_3 {
-
-    background: #F35E54;
+    background: #f35e54;
 }
 
 .custom_legend_container .legend_4 {
-
-    background: #4086E1;
+    background: #4086e1;
 }
-
 
 /* common class css */
 /* ========================
@@ -463,10 +447,6 @@ input.datePickerfield {
     grid-column-end: 4;
 }
 
-
-
-
-
 /* custom inputs */
 .custom_date_input {
     appearance: none;
@@ -479,7 +459,7 @@ input.datePickerfield {
     position: relative;
 
     /* Add your custom icon here */
-    background: url('../assets/icons/home/calendar.svg') no-repeat;
+    background: url("../assets/icons/home/calendar.svg") no-repeat;
     background-position: right 10px center;
     background-size: 15px;
 }
@@ -497,12 +477,10 @@ input.datePickerfield {
     cursor: pointer;
 }
 
-
 /* outline */
 .outline-none {
     outline-style: none;
 }
-
 
 /* buttons */
 .btn-sm-one {
@@ -516,7 +494,7 @@ input.datePickerfield {
     padding: 12px 16px;
     display: flex;
     justify-content: center;
-    align-items: center
+    align-items: center;
 }
 
 .btn-sm-one:hover {
@@ -539,8 +517,6 @@ input.datePickerfield {
     color: var(--theme-color, #076988);
 }
 
-
-
 .seleted {
     background-color: var(--theme-hover-bg, #076988);
     border: 1px solid var(--theme-color, #076988);
@@ -550,9 +526,6 @@ input.datePickerfield {
 .seleted p {
     color: var(--theme-color, #076988);
 }
-
-
-
 
 /* title */
 .title_sm {
@@ -566,13 +539,11 @@ input.datePickerfield {
     font-size: 14px;
     line-height: 157%;
     text-align: center;
-    color: #51AF5B;
+    color: #51af5b;
     border-radius: 4px;
     padding: 0px 12px;
-    background-color: #F3FAF3;
+    background-color: #f3faf3;
 }
-
-
 
 /* category card */
 .category_card {
@@ -583,7 +554,7 @@ input.datePickerfield {
     gap: 12px;
     cursor: pointer;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
-    background: #F6F7F9;
+    background: #f6f7f9;
     border-radius: 8px;
 }
 
@@ -592,11 +563,11 @@ input.datePickerfield {
     display: flex;
     justify-content: start;
     align-items: center;
-    gap: 8px
+    gap: 8px;
 }
 
 .category_card img {
-    border: 1px solid #51AF5B;
+    border: 1px solid #51af5b;
     border-radius: 50%;
     width: 48px;
     height: 48px;
@@ -616,7 +587,7 @@ input.datePickerfield {
     text-wrap: nowrap;
     height: fit-content;
     background-color: white;
-    border: 1px solid #51AF5B;
+    border: 1px solid #51af5b;
     border-radius: 16px;
     padding: 0px 12px;
     font-weight: 500;
@@ -625,8 +596,6 @@ input.datePickerfield {
     text-align: center;
     color: #24262d;
 }
-
-
 
 /* category card */
 .selling_card {
@@ -637,7 +606,7 @@ input.datePickerfield {
     gap: 12px;
     cursor: pointer;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
-    background: #F6F7F9;
+    background: #f6f7f9;
     border-radius: 8px;
 }
 
@@ -646,11 +615,11 @@ input.datePickerfield {
     display: flex;
     justify-content: start;
     align-items: center;
-    gap: 8px
+    gap: 8px;
 }
 
 .selling_card img {
-    border: 1px solid #51AF5B;
+    border: 1px solid #51af5b;
     border-radius: 50%;
     width: 48px;
     height: 48px;
@@ -670,7 +639,7 @@ input.datePickerfield {
     text-wrap: nowrap;
     height: fit-content;
     background-color: white;
-    border: 1px solid #51AF5B;
+    border: 1px solid #51af5b;
     border-radius: 16px;
     padding: 0px 12px;
     font-weight: 500;
@@ -680,17 +649,11 @@ input.datePickerfield {
     color: #24262d;
 }
 
-
 .bg_col_primary {
     background-color: var(--theme-color) !important;
 }
 
-
-
 /* table styles */
-
-
-
 
 /* glass */
 .glassmorphism {
@@ -699,7 +662,6 @@ input.datePickerfield {
     backdrop-filter: blur(16px);
     background: rgba(255, 255, 255, 0.1);
 }
-
 
 /* box design */
 .glassmorphismIconBox {
@@ -714,7 +676,7 @@ input.datePickerfield {
 }
 
 .glassmorphism.box-1 {
-    background: #F2F9FF;
+    background: #f2f9ff;
 }
 
 .box-1 .price {
@@ -722,7 +684,7 @@ input.datePickerfield {
 }
 
 .glassmorphism.box-2 {
-    background: #F4FFF9;
+    background: #f4fff9;
 }
 
 .box-2 .price {
@@ -730,21 +692,21 @@ input.datePickerfield {
 }
 
 .glassmorphism.box-3 {
-    background: #FFF6F6;
+    background: #fff6f6;
 }
 
 .box-3 .price {
     color: #ec1e1e !important;
 }
 .glassmorphism.box-4 {
-    background: #FFFDF5;
+    background: #fffdf5;
 }
 
 .box-4 .price {
     color: #fde619 !important;
 }
 .glassmorphism.box-5 {
-    background: #F9F2FF;
+    background: #f9f2ff;
 }
 
 .box-5 .price {

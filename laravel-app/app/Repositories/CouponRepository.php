@@ -2,14 +2,14 @@
 
 namespace App\Repositories;
 
-use Carbon\Carbon;
-use App\Models\Shop;
-use App\Models\Coupon;
-use App\Models\Product;
-use App\Models\Customer;
 use App\Enums\DiscountType;
-use App\Models\AdminCoupon;
 use App\Http\Requests\CouponRequest;
+use App\Models\AdminCoupon;
+use App\Models\Coupon;
+use App\Models\Customer;
+use App\Models\Product;
+use App\Models\Shop;
+use Carbon\Carbon;
 
 class CouponRepository extends Repository
 {
@@ -28,8 +28,8 @@ class CouponRepository extends Repository
      */
     public static function storeByRequest(CouponRequest $request, $shopId): Coupon
     {
-        $startDateTime = Carbon::parse($request->start_date . ' ' . $request->start_time)->format('Y-m-d H:i:s');
-        $expiredDateTime = Carbon::parse($request->expired_date . ' ' . $request->expired_time)->format('Y-m-d H:i:s');
+        $startDateTime = Carbon::parse($request->start_date.' '.$request->start_time)->format('Y-m-d H:i:s');
+        $expiredDateTime = Carbon::parse($request->expired_date.' '.$request->expired_time)->format('Y-m-d H:i:s');
 
         return self::create([
             'code' => $request->code,
@@ -51,8 +51,8 @@ class CouponRepository extends Repository
      */
     public static function updateByRequest(CouponRequest $request, Coupon $coupon): Coupon
     {
-        $startDateTime = Carbon::parse($request->start_date . ' ' . $request->start_time)->format('Y-m-d H:i:s');
-        $expiredDateTime = Carbon::parse($request->expired_date . ' ' . $request->expired_time)->format('Y-m-d H:i:s');
+        $startDateTime = Carbon::parse($request->start_date.' '.$request->start_time)->format('Y-m-d H:i:s');
+        $expiredDateTime = Carbon::parse($request->expired_date.' '.$request->expired_time)->format('Y-m-d H:i:s');
 
         $coupon->update([
             'code' => $request->code,

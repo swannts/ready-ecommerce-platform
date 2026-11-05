@@ -15,10 +15,13 @@ class MasterController extends StateNotifier<bool> {
 
   Future<MasterModel?> getMasterData() async {
     try {
-      final response = await ref.read(masterServiceProvider).getMasterSettings();
+      final response =
+          await ref.read(masterServiceProvider).getMasterSettings();
       _masterModel = MasterModel.fromJson(response.data);
 
-      ref.read(currencyProvider.notifier).updateCurrency(_masterModel.data.currency);
+      ref
+          .read(currencyProvider.notifier)
+          .updateCurrency(_masterModel.data.currency);
       return _masterModel;
     } catch (error) {
       debugPrint(error.toString());

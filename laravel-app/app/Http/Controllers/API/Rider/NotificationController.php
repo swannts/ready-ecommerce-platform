@@ -15,7 +15,6 @@ class NotificationController extends Controller
 
         $totalUnRead = NotificationRepository::query()->unRead()->where('user_id', auth()->id())->count();
 
-
         return $this->json('Notification list', [
             'total_unread' => $totalUnRead,
             'notification' => NotificationResource::collection($notifications),

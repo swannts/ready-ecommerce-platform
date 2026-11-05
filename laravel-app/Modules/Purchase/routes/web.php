@@ -1,11 +1,10 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
 use Modules\Purchase\App\Http\Controllers\OrderController;
 use Modules\Purchase\App\Http\Controllers\PurchaseController;
-use Modules\Purchase\App\Http\Controllers\SupplierController;
 use Modules\Purchase\App\Http\Controllers\PurchaseReturnController;
+use Modules\Purchase\App\Http\Controllers\SupplierController;
 
 Route::middleware(['auth', 'checkPermission'])->name('shop.')->prefix('shop')->group(function () {
 

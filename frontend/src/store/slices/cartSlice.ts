@@ -48,7 +48,7 @@ export const applyCouponThunk = createAsyncThunk<
   }
 
   return rejectWithValue(
-    `Coupon code "${rawCode}" is invalid or has expired. Try RICEMART10.`
+    `Coupon code "${rawCode}" is invalid or has expired. Try RICEMART10.`,
   );
 });
 
@@ -71,7 +71,7 @@ export const checkoutThunk = createAsyncThunk<
 
     const subtotal = cart.items.reduce(
       (sum, item) => sum + item.unitPrice * item.quantity,
-      0
+      0,
     );
     const discount = (subtotal * cart.discountPercentage) / 100;
     const deliveryFee = subtotal > 100 ? 0 : 5.0;
@@ -79,7 +79,7 @@ export const checkoutThunk = createAsyncThunk<
 
     const order: PlacedOrder = {
       orderId: `RM-${Date.now().toString(36).toUpperCase()}-${Math.floor(
-        1000 + Math.random() * 9000
+        1000 + Math.random() * 9000,
       )}`,
       placedAt: new Date().toISOString(),
       customer,
@@ -121,7 +121,7 @@ export const cartSlice = createSlice({
     },
     updateQuantity: (
       state,
-      action: PayloadAction<{ id: string; quantity: number }>
+      action: PayloadAction<{ id: string; quantity: number }>,
     ) => {
       const { id, quantity } = action.payload;
       if (quantity <= 0) {
@@ -213,7 +213,7 @@ export const selectCartTotalQuantity = (state: RootState) =>
 export const selectCartSubtotal = (state: RootState) =>
   state.cart.items.reduce(
     (total, item) => total + item.unitPrice * item.quantity,
-    0
+    0,
   );
 export const selectCartDiscount = (state: RootState) => {
   const subtotal = selectCartSubtotal(state);
@@ -232,4 +232,3 @@ export const selectCartGrandTotal = (state: RootState) => {
 };
 
 export default cartSlice.reducer;
-

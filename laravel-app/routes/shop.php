@@ -1,31 +1,30 @@
 <?php
 
-use Twilio\Rest\Chat;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\ChatController;
-use App\Http\Controllers\Shop\POSController;
-use App\Http\Controllers\Shop\SizeController;
-use App\Http\Controllers\Shop\UnitController;
-use App\Http\Controllers\Shop\BrandController;
-use App\Http\Controllers\Shop\ColorController;
-use App\Http\Controllers\Shop\OrderController;
-use App\Http\Controllers\Shop\BannerController;
-use App\Http\Controllers\Shop\GalleryController;
-use App\Http\Controllers\Shop\ProductController;
-use App\Http\Controllers\Shop\ProfileController;
-use App\Http\Controllers\Shop\VoucherController;
-use App\Http\Controllers\Shop\CategoryController;
-use App\Http\Controllers\Shop\EmployeeController;
-use App\Http\Controllers\Shop\WithdrawController;
-use App\Http\Controllers\Shop\DashboardController;
-use App\Http\Controllers\Shop\FlashSaleController;
 use App\Http\Controllers\Shop\Auth\LoginController;
-use App\Http\Controllers\Shop\ReturnOrderController;
-use App\Http\Controllers\Shop\SubCategoryController;
-use App\Http\Controllers\Shop\NotificationController;
-use App\Http\Controllers\Shop\SubscriptionController;
+use App\Http\Controllers\Shop\BannerController;
+use App\Http\Controllers\Shop\BrandController;
 use App\Http\Controllers\Shop\BulkProductExportController;
 use App\Http\Controllers\Shop\BulkProductImportController;
+use App\Http\Controllers\Shop\CategoryController;
+use App\Http\Controllers\Shop\ColorController;
+use App\Http\Controllers\Shop\DashboardController;
+use App\Http\Controllers\Shop\EmployeeController;
+use App\Http\Controllers\Shop\FlashSaleController;
+use App\Http\Controllers\Shop\GalleryController;
+use App\Http\Controllers\Shop\NotificationController;
+use App\Http\Controllers\Shop\OrderController;
+use App\Http\Controllers\Shop\POSController;
+use App\Http\Controllers\Shop\ProductController;
+use App\Http\Controllers\Shop\ProfileController;
+use App\Http\Controllers\Shop\ReturnOrderController;
+use App\Http\Controllers\Shop\SizeController;
+use App\Http\Controllers\Shop\SubCategoryController;
+use App\Http\Controllers\Shop\SubscriptionController;
+use App\Http\Controllers\Shop\UnitController;
+use App\Http\Controllers\Shop\VoucherController;
+use App\Http\Controllers\Shop\WithdrawController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -268,7 +267,6 @@ Route::name('shop.')->group(function () {
             Route::get('/get-message', 'getMessageAdmin');
             Route::post('/send-message', 'sendMessageAdmin');
         });
-
 
         //  return order
         Route::controller(ReturnOrderController::class)->group(function () {

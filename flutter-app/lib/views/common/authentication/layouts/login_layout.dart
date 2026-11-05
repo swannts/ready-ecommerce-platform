@@ -40,8 +40,8 @@ class _LoginLayoutState extends State<LoginLayout> {
     // emailController.text = 'test34@yopmail.com ' ;
     // passwordController.text =  '12345678';
 
-     emailController.text = 'user@readyecommerce.com';
-     passwordController.text = 'secret';
+    emailController.text = 'user@readyecommerce.com';
+    passwordController.text = 'secret';
     super.initState();
   }
 

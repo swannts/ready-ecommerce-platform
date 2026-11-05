@@ -2,9 +2,11 @@
 
 namespace App\Handlers;
 
-class LfmConfigHandler extends \UniSharp\LaravelFilemanager\Handlers\ConfigHandler
+use UniSharp\LaravelFilemanager\Handlers\ConfigHandler;
+
+class LfmConfigHandler extends ConfigHandler
 {
-   public function userField()
+    public function userField()
     {
         $user = auth()->user();
 
@@ -16,7 +18,7 @@ class LfmConfigHandler extends \UniSharp\LaravelFilemanager\Handlers\ConfigHandl
             return session('current_shop_id');
         }
 
-        $shop=generaleSetting('shop')->id;
+        $shop = generaleSetting('shop')->id;
 
         if ($shop) {
             return $shop;
@@ -24,8 +26,6 @@ class LfmConfigHandler extends \UniSharp\LaravelFilemanager\Handlers\ConfigHandl
 
         return null;
     }
-
-
 
     public function baseDirectory()
     {

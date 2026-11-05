@@ -1,25 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  --color-forest: #183A20;
-  --color-forest-dark: #102C1B;
-  --color-forest-light: #25522F;
-  --color-harvest: #B88A35;
-  --color-harvest-light: #D4A74F;
-  --color-harvest-dark: #966E26;
-  --color-cream: #FAF6EF;
-  --color-ivory: #FFFDF8;
-  --color-charcoal: #19221B;
-  --color-muted-gray: #686C64;
-  --color-warm-border: #E7E1D7;
+  --color-forest: #183a20;
+  --color-forest-dark: #102c1b;
+  --color-forest-light: #25522f;
+  --color-harvest: #b88a35;
+  --color-harvest-light: #d4a74f;
+  --color-harvest-dark: #966e26;
+  --color-cream: #faf6ef;
+  --color-ivory: #fffdf8;
+  --color-charcoal: #19221b;
+  --color-muted-gray: #686c64;
+  --color-warm-border: #e7e1d7;
 
   --font-serif: var(--font-playfair), "Playfair Display", Georgia, serif;
-  --font-sans: var(--font-inter), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans:
+    var(--font-inter), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
 }
 
 :root {
-  --background: #FAF6EF;
-  --foreground: #19221B;
+  --background: #faf6ef;
+  --foreground: #19221b;
 }
 
 body {
@@ -29,14 +31,28 @@ body {
   overflow-x: hidden;
 }
 
+button:not(:disabled),
+a[href],
+[role="button"]:not([aria-disabled="true"]),
+[role="link"],
+input[type="button"]:not(:disabled),
+input[type="submit"]:not(:disabled),
+summary {
+  cursor: pointer;
+}
+
 /* Custom smooth transitions and typography helpers */
-h1, h2, h3, h4, .font-serif {
+h1,
+h2,
+h3,
+h4,
+.font-serif {
   font-family: var(--font-serif);
 }
 
 ::selection {
-  background-color: #B88A35;
-  color: #FFFDF8;
+  background-color: #b88a35;
+  color: #fffdf8;
 }
 
 /* Scrollbar styling */
@@ -44,12 +60,12 @@ h1, h2, h3, h4, .font-serif {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #FAF6EF;
+  background: #faf6ef;
 }
 ::-webkit-scrollbar-thumb {
-  background: #D7CEBE;
+  background: #d7cebe;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #B88A35;
+  background: #b88a35;
 }

@@ -13,13 +13,12 @@ class RiderLocationUpdated implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $driverID;
+
     public $location;
 
     /**
      * Create a new event instance.
      */
-
-
     public function __construct($driverID, $location)
     {
         $this->driverID = $driverID;
@@ -29,7 +28,7 @@ class RiderLocationUpdated implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
+     * @return array<int, Channel>
      */
     public function broadcastOn(): array
     {
@@ -39,13 +38,13 @@ class RiderLocationUpdated implements ShouldBroadcast
         ];
     }
 
-     public function broadcastWith()
+    public function broadcastWith()
     {
         return [
             'location' => [
                 'driver_id' => $this->driverID,
                 'latitude' => $this->location->latitude,
-                'longitude' => $this->location->longitude
+                'longitude' => $this->location->longitude,
             ],
         ];
     }

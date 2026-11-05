@@ -17,9 +17,11 @@ class ProductSearchLogRepository extends Repository
         $searchLog = self::query()->where('keyword', $search)->first();
         if ($searchLog) {
             $searchLog->increment('total_search');
+
             return true;
         }
         $searchLog = self::create(['keyword' => $search]);
+
         return true;
     }
 }

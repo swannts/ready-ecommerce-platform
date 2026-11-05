@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\EmailRule;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserRequest extends FormRequest
@@ -18,21 +19,21 @@ class UserRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         $userId = $this->user?->id ?? auth()->id();
         $required = $this->routeIs('admin.employee.store') ? 'required' : 'nullable';
-        $confirmed = $this->routeIs('admin.employee.store') ? 'confirmed' :'' ;
+        $confirmed = $this->routeIs('admin.employee.store') ? 'confirmed' : '';
 
         return [
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|unique:users,phone,' . $userId,
-            'email' => ['nullable', 'email:rfc,dns', 'max:255', new EmailRule, 'unique:users,email,' . $userId],
+            'phone' => 'required|string|unique:users,phone,'.$userId,
+            'email' => ['nullable', 'email:rfc,dns', 'max:255', new EmailRule, 'unique:users,email,'.$userId],
             'profile_photo' => 'nullable|image|max:2048|mimes:png,jpg,jpeg,gif',
-            'password' => [$required,'string','min:6', $confirmed],
-            'password_confirmation' => [$required,'min:6'],
+            'password' => [$required, 'string', 'min:6', $confirmed],
+            'password_confirmation' => [$required, 'min:6'],
         ];
     }
 

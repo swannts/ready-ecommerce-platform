@@ -19,6 +19,7 @@ use App\Repositories\CategoryRepository;
 use App\Repositories\FlashSaleRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\ShopRepository;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -116,7 +117,7 @@ class HomeController extends Controller
     /**
      * Get recently viewed products for the current user.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function recentlyViews()
     {
@@ -128,7 +129,7 @@ class HomeController extends Controller
         }
 
         /**
-         * @var \App\Models\User $user
+         * @var User $user
          */
         $user = auth()->user();
 

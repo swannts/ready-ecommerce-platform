@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\API\Seller;
 
-use Carbon\Carbon;
 use App\Enums\OrderStatus;
-use Illuminate\Http\Request;
-use App\Models\GeneraleSetting;
-use Illuminate\Http\JsonResponse;
+use App\Events\AdminProductRequestEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WithdrawRequest;
-use App\Events\AdminProductRequestEvent;
 use App\Http\Resources\WithdrawResource;
-use App\Repositories\WithdrawRepository;
+use App\Models\GeneraleSetting;
 use App\Repositories\NotificationRepository;
+use App\Repositories\WithdrawRepository;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class WalletController extends Controller
 {
@@ -71,7 +71,7 @@ class WalletController extends Controller
 
         $authBalance = auth()->user()->wallet->balance ?? 0;
 
-        $withdrawableAmount = $authBalance- $pendingWithdraws;
+        $withdrawableAmount = $authBalance - $pendingWithdraws;
 
         $totalOrders = $shop->orders()->where('order_status', OrderStatus::DELIVERED->value)->get();
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Shop;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\ShopProfileRequest;
+use App\Models\Shop;
 use App\Repositories\ShopRepository;
 use Illuminate\Support\Facades\Hash;
 
@@ -35,7 +36,7 @@ class ProfileController extends Controller
      */
     public function update(ShopProfileRequest $request)
     {
-        /** @var \App\Models\Shop $shop */
+        /** @var Shop $shop */
         $shop = generaleSetting('shop');
 
         ShopRepository::updateByRequest($shop, $request);

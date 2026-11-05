@@ -7,15 +7,15 @@ use App\Http\Controllers\Gateway\Bkash\ExecutePaymentController;
 use App\Http\Controllers\Gateway\JazzCash\ProcessController as JazzCashProcessController;
 use App\Http\Controllers\Gateway\Nagad\CallbackController as NagadCallbackController;
 use App\Http\Controllers\Gateway\PaymentGatewayController;
-use App\Http\Controllers\Gateway\Rocket\ProcessController as RocketProcessController;
-use App\Http\Controllers\Gateway\Sslcommerz\CallbackController as SslcommerzCallbackController;
 use App\Http\Controllers\Gateway\PayPal\ProcessController as PayPalProcessController;
 use App\Http\Controllers\Gateway\PayTabs\ProcessController;
 use App\Http\Controllers\Gateway\PayU\ProcessController as PayUProcessController;
+use App\Http\Controllers\Gateway\Rocket\ProcessController as RocketProcessController;
+use App\Http\Controllers\Gateway\Sslcommerz\CallbackController as SslcommerzCallbackController;
 use App\Http\Controllers\PassportStorageSupportController;
 use App\Http\Controllers\Shop\SubscriptionController;
+use App\Models\GeneraleSetting;
 use App\Models\Product;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
@@ -85,7 +85,7 @@ Route::controller(PaymentGatewayController::class)->group(function () {
     Route::any('/payment/{payment}/callback-cancel', 'cancel')->name('payment.cancel');
 });
 
-//Paypal Payment success
+// Paypal Payment success
 Route::get('/paypal/{paypalPayment}/success', [PayPalProcessController::class, 'success'])->name('paypal.payment.success');
 
 // Bkash Payment execute
@@ -96,14 +96,12 @@ Route::match(['get', 'post'], '/paytabs/{payment}/callback', [ProcessController:
 Route::match(['get', 'post'], '/subscription/payment/{payment}/success', [SubscriptionController::class, 'paymentSuccess'])->name('subscription.payment.success');
 Route::match(['get', 'post'], '/subscription/payment/{payment}/cancel', [SubscriptionController::class, 'paymentCancel'])->name('subscription.payment.cancel');
 
-
 // check user is online or not
 Route::post('/update/last/seen', [CheckOnlineUserController::class, 'checkOnlineStatus']);
 
-
 // firebase messaging service worker
 Route::get('/firebase-messaging-sw.js', function () {
-    $fcmConfig = \App\Models\GeneraleSetting::first()?->fcm_web_config;
+    $fcmConfig = GeneraleSetting::first()?->fcm_web_config;
     $fcmConfig = $fcmConfig ? json_decode($fcmConfig, true) : [];
 
     if (empty($fcmConfig) || empty($fcmConfig['apiKey'])) {

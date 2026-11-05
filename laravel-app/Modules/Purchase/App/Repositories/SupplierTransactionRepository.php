@@ -2,26 +2,24 @@
 
 namespace Modules\Purchase\App\Repositories;
 
+use App\Repositories\MediaRepository;
 use App\Repositories\Repository;
 use Carbon\Carbon;
-use App\Repositories\MediaRepository;
 use Modules\Purchase\App\Models\Supplier;
 use Modules\Purchase\App\Models\SupplierTransaction;
 
 class SupplierTransactionRepository extends Repository
 {
-
     public static function model()
     {
         return SupplierTransaction::class;
     }
 
-
     public static function storeByRequest(Supplier $supplier, string $type, float $amount, array $arrData, $request)
     {
         if (! array_key_exists('transaction_no', $arrData) || $arrData['transaction_no'] == '') {
             $tnxCount = SupplierTransaction::where('supplier_id', $supplier->id)->where('type', $type)->count();
-            $arrData['transaction_no'] = 'Tnx-' . str_pad($tnxCount + 1, 6, '0', STR_PAD_LEFT);
+            $arrData['transaction_no'] = 'Tnx-'.str_pad($tnxCount + 1, 6, '0', STR_PAD_LEFT);
         }
 
         $isPaid = false;
@@ -68,6 +66,7 @@ class SupplierTransactionRepository extends Repository
         $transaction->update([
             'is_paid' => $request->is_paid,
         ]);
+
         return $transaction;
     }
 }

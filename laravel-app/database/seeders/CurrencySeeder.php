@@ -33,7 +33,7 @@ class CurrencySeeder extends Seeder
 
         foreach ($currencies as $currency) {
             $exists = Currency::where('name', $currency['name'])->first();
-            if (!$exists) {
+            if (! $exists) {
                 Currency::create($currency);
             }
         }

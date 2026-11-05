@@ -36,7 +36,6 @@ class OrderMailListener
         }
     }
 
-
     private function sendOrderMail(string $email, $order): void
     {
         $delays = array_merge([0], self::RETRY_DELAYS_SECONDS);

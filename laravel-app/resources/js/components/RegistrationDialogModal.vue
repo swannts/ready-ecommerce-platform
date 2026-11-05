@@ -62,26 +62,48 @@
 
                                     <!-- icon badge -->
                                     <div class="flex justify-center">
-                                        <div class="relative w-20 h-20 flex items-center justify-center">
-                                            <span class="absolute -left-3 top-2 w-2 h-2 rounded-full bg-primary-200"></span>
-                                            <span class="absolute -right-2 bottom-3 w-3 h-3 rounded-full border-2 border-primary-200"></span>
-                                            <div class="relative w-20 h-20 rounded-full bg-primary-50 flex items-center justify-center">
-                                                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-primary-700 flex items-center justify-center shadow-lg">
-                                                    <UserIcon class="w-7 h-7 text-white" />
+                                        <div
+                                            class="relative w-20 h-20 flex items-center justify-center"
+                                        >
+                                            <span
+                                                class="absolute -left-3 top-2 w-2 h-2 rounded-full bg-primary-200"
+                                            ></span>
+                                            <span
+                                                class="absolute -right-2 bottom-3 w-3 h-3 rounded-full border-2 border-primary-200"
+                                            ></span>
+                                            <div
+                                                class="relative w-20 h-20 rounded-full bg-primary-50 flex items-center justify-center"
+                                            >
+                                                <div
+                                                    class="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-primary-700 flex items-center justify-center shadow-lg"
+                                                >
+                                                    <UserIcon
+                                                        class="w-7 h-7 text-white"
+                                                    />
                                                 </div>
-                                                <div class="absolute -bottom-0.5 right-0 w-6 h-6 rounded-full bg-white dark:bg-slate-700 flex items-center justify-center shadow">
-                                                    <PlusIcon class="w-3.5 h-3.5 text-primary" />
+                                                <div
+                                                    class="absolute -bottom-0.5 right-0 w-6 h-6 rounded-full bg-white dark:bg-slate-700 flex items-center justify-center shadow"
+                                                >
+                                                    <PlusIcon
+                                                        class="w-3.5 h-3.5 text-primary"
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="text-center mt-4">
-                                        <div class="text-slate-900 dark:text-white text-2xl font-bold">
+                                        <div
+                                            class="text-slate-900 dark:text-white text-2xl font-bold"
+                                        >
                                             {{ $t("Create your account") }}
                                         </div>
-                                        <div class="text-slate-500 dark:text-slate-400 text-sm mt-1">
-                                            {{ $t("Join us and start shopping") }}
+                                        <div
+                                            class="text-slate-500 dark:text-slate-400 text-sm mt-1"
+                                        >
+                                            {{
+                                                $t("Join us and start shopping")
+                                            }}
                                         </div>
                                     </div>
 
@@ -98,10 +120,14 @@
                                             </label>
 
                                             <div class="relative">
-                                                <UserIcon class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                                                <UserIcon
+                                                    class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"
+                                                />
                                                 <input
                                                     type="text"
-                                                    v-model="registerFormData.name"
+                                                    v-model="
+                                                        registerFormData.name
+                                                    "
                                                     :placeholder="
                                                         $t('Enter full name')
                                                     "
@@ -163,19 +189,32 @@
 
                                             <div
                                                 class="iti-wrapper"
-                                                :class="registerErrors?.phone ? 'border-red-500' : 'border-slate-200'"
+                                                :class="
+                                                    registerErrors?.phone
+                                                        ? 'border-red-500'
+                                                        : 'border-slate-200'
+                                                "
                                             >
                                                 <input
                                                     ref="phoneInputRef"
                                                     type="tel"
-                                                    :placeholder="$t('Enter phone number')"
+                                                    :placeholder="
+                                                        $t('Enter phone number')
+                                                    "
                                                     class="text-base font-normal w-full placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none focus:ring-0 dark:text-white dark:bg-transparent"
-                                                    :minlength="master.phoneMinLength"
-                                                    :maxlength="master.phoneMaxLength"
+                                                    :minlength="
+                                                        master.phoneMinLength
+                                                    "
+                                                    :maxlength="
+                                                        master.phoneMaxLength
+                                                    "
                                                 />
                                             </div>
                                             <span
-                                                v-if="registerErrors && registerErrors?.phone"
+                                                v-if="
+                                                    registerErrors &&
+                                                    registerErrors?.phone
+                                                "
                                                 class="text-red-500 text-sm"
                                             >
                                                 {{ registerErrors?.phone[0] }}
@@ -189,12 +228,18 @@
                                                 {{ $t("Email Address") }}
                                             </label>
                                             <div class="relative">
-                                                <EnvelopeIcon class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                                                <EnvelopeIcon
+                                                    class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"
+                                                />
                                                 <input
                                                     type="email"
-                                                    v-model="registerFormData.email"
+                                                    v-model="
+                                                        registerFormData.email
+                                                    "
                                                     :placeholder="
-                                                        $t('Enter email address')
+                                                        $t(
+                                                            'Enter email address',
+                                                        )
                                                     "
                                                     class="text-base font-normal w-full py-3 pl-11 pr-3 placeholder:text-slate-400 rounded-xl border focus:border-primary outline-none bg-white dark:bg-slate-700 dark:text-white dark:placeholder:text-slate-500"
                                                     :class="
@@ -223,7 +268,9 @@
                                                 {{ $t("Create Password") }}
                                             </label>
                                             <div class="relative">
-                                                <LockClosedIcon class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                                                <LockClosedIcon
+                                                    class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"
+                                                />
                                                 <input
                                                     :type="
                                                         showRegisterPassword
@@ -299,7 +346,7 @@
                                             <span>
                                                 {{
                                                     $t(
-                                                        "By clicking the ‘Sign up’ button, you agree to our"
+                                                        "By clicking the ‘Sign up’ button, you agree to our",
                                                     )
                                                 }}
                                                 <button
@@ -307,7 +354,9 @@
                                                     class="text-primary font-medium hover:underline"
                                                     @click="showTerms"
                                                 >
-                                                    {{ $t("Terms & Conditions") }}
+                                                    {{
+                                                        $t("Terms & Conditions")
+                                                    }}
                                                 </button>
                                                 {{ $t("and") }}
                                                 <button
@@ -323,7 +372,11 @@
                                             v-if="termsError"
                                             class="text-red-500 text-sm block mt-1"
                                         >
-                                            {{ $t("Please accept the Terms & Conditions and Privacy Policy") }}
+                                            {{
+                                                $t(
+                                                    "Please accept the Terms & Conditions and Privacy Policy",
+                                                )
+                                            }}
                                         </span>
 
                                         <!-- login button -->
@@ -351,7 +404,7 @@
                                             >
                                                 {{
                                                     $t(
-                                                        "Already have an account"
+                                                        "Already have an account",
                                                     )
                                                 }}?
                                             </div>
@@ -506,7 +559,7 @@
                                                 @click="
                                                     sendOTP(
                                                         sendOTPNumber,
-                                                        phoneCode
+                                                        phoneCode,
                                                     )
                                                 "
                                             >
@@ -654,7 +707,7 @@ watch(
             itiInstance.destroy();
             itiInstance = null;
         }
-    }
+    },
 );
 
 onUnmounted(() => {
@@ -676,7 +729,6 @@ const registerFormData = ref({
     country: null,
     phone_code: null,
 });
-
 
 const registerMessage = {
     component: ToastSuccessMessage,
@@ -702,7 +754,8 @@ const registerFormSubmit = () => {
     if (itiInstance) {
         const countryData = itiInstance.getSelectedCountry();
         registerFormData.value.phone_code = countryData?.dialCode || null;
-        registerFormData.value.phone = phoneInputRef.value?.value.replace(/[^\d]/g, "") || null;
+        registerFormData.value.phone =
+            phoneInputRef.value?.value.replace(/[^\d]/g, "") || null;
     }
 
     axios
@@ -751,7 +804,7 @@ const registerFormSubmit = () => {
                             master.langDirection === "rtl"
                                 ? "bottom-right"
                                 : "bottom-left",
-                    }
+                    },
                 );
             }
         })
@@ -910,7 +963,7 @@ const handleKeyDown = (index, event) => {
         if (previousIndex >= 0) {
             nextTick(() => {
                 const inputElement = document.getElementById(
-                    "input" + previousIndex
+                    "input" + previousIndex,
                 );
                 if (inputElement) {
                     inputElement.focus();
@@ -966,7 +1019,7 @@ const handleKeyDown = (index, event) => {
 }
 .iti-wrapper :deep(.iti__dropdown-content) {
     border-radius: 0.5rem;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
     border: 1px solid #e2e8f0;
     overflow: hidden;
 }

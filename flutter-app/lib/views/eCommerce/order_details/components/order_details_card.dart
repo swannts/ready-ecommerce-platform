@@ -249,65 +249,70 @@ class _OrderDetailsCardState extends ConsumerState<OrderDetailsCard> {
             isAmount: false,
           ),
           Gap(14.h),
-    //       if (widget.orderDetails.data.order.paymentStatus.toLowerCase() != 'pending' &&
-    // widget.orderDetails.data.order.products.any((p) => p.isDigital == true))
+          //       if (widget.orderDetails.data.order.paymentStatus.toLowerCase() != 'pending' &&
+          // widget.orderDetails.data.order.products.any((p) => p.isDigital == true))
 
-      if (widget.orderDetails.data.order.paymentStatus.toLowerCase() != 'pending')
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ref.watch(isDownloadPaymentReceiptloading)
-                  ? const CircularProgressIndicator()
-                  : GestureDetector(
-                      onTap: () => _downloadFile(isDownloadInvoice: false),
-                      child: Row(
-                        children: [
-                          Icon(
-                            ref.watch(isPaymentReceiptFileExists)
-                                ? Icons.open_in_new
-                                : Icons.cloud_download,
-                            color: EcommerceAppColor.gray,
-                            size: 18.sp,
-                          ),
-                          Gap(5.w),
-                          Text(
-                            ref.watch(isPaymentReceiptFileExists)
-                                ? 'Open Payment Slip'
-                                : S.of(context).downloadPaymentSlip,
-                            style: AppTextStyle(context).bodyTextSmall.copyWith(
-                                fontSize: 12.sp,
-                                color: colors(context).primaryColor),
-                          )
-                        ],
+          if (widget.orderDetails.data.order.paymentStatus.toLowerCase() !=
+              'pending')
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ref.watch(isDownloadPaymentReceiptloading)
+                    ? const CircularProgressIndicator()
+                    : GestureDetector(
+                        onTap: () => _downloadFile(isDownloadInvoice: false),
+                        child: Row(
+                          children: [
+                            Icon(
+                              ref.watch(isPaymentReceiptFileExists)
+                                  ? Icons.open_in_new
+                                  : Icons.cloud_download,
+                              color: EcommerceAppColor.gray,
+                              size: 18.sp,
+                            ),
+                            Gap(5.w),
+                            Text(
+                              ref.watch(isPaymentReceiptFileExists)
+                                  ? 'Open Payment Slip'
+                                  : S.of(context).downloadPaymentSlip,
+                              style: AppTextStyle(context)
+                                  .bodyTextSmall
+                                  .copyWith(
+                                      fontSize: 12.sp,
+                                      color: colors(context).primaryColor),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-              ref.watch(isloading)
-                  ? const CircularProgressIndicator()
-                  : GestureDetector(
-                      onTap: () => _downloadFile(isDownloadInvoice: true),
-                      child: Row(
-                        children: [
-                          Icon(
-                            ref.watch(isFileExists)
-                                ? Icons.open_in_new
-                                : Icons.cloud_download,
-                            color: EcommerceAppColor.gray,
-                            size: 18.sp,
-                          ),
-                          Gap(5.w),
-                          Text(
-                            ref.watch(isFileExists)
-                                ? 'Open Invoice '
-                                : S.of(context).downloadInvoice,
-                            style: AppTextStyle(context).bodyTextSmall.copyWith(
-                                fontSize: 12.sp,
-                                color: colors(context).primaryColor),
-                          )
-                        ],
+                ref.watch(isloading)
+                    ? const CircularProgressIndicator()
+                    : GestureDetector(
+                        onTap: () => _downloadFile(isDownloadInvoice: true),
+                        child: Row(
+                          children: [
+                            Icon(
+                              ref.watch(isFileExists)
+                                  ? Icons.open_in_new
+                                  : Icons.cloud_download,
+                              color: EcommerceAppColor.gray,
+                              size: 18.sp,
+                            ),
+                            Gap(5.w),
+                            Text(
+                              ref.watch(isFileExists)
+                                  ? 'Open Invoice '
+                                  : S.of(context).downloadInvoice,
+                              style: AppTextStyle(context)
+                                  .bodyTextSmall
+                                  .copyWith(
+                                      fontSize: 12.sp,
+                                      color: colors(context).primaryColor),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-            ],
-          )
+              ],
+            )
         ],
       ),
     );

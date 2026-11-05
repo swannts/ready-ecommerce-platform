@@ -1,11 +1,15 @@
 "use client";
 
-"use client";
-
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Building2, ArrowRight, ShieldCheck, FileCheck, Scale } from "lucide-react";
+import {
+  Building2,
+  ArrowRight,
+  ShieldCheck,
+  FileCheck,
+  Scale,
+} from "lucide-react";
 import { useLocale } from "@/lib/i18n";
 
 export const WholesaleBanner: React.FC = () => {
@@ -14,7 +18,6 @@ export const WholesaleBanner: React.FC = () => {
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
       {/* Container with rounded corners and split layout */}
       <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-[#183A20]/20 bg-[#102C1B] text-[#FFFDF8] grid grid-cols-1 lg:grid-cols-12 items-stretch">
-        
         {/* Left: Photographic Image of Modern Rice Mill & Storage Silos */}
         <div className="lg:col-span-5 relative min-h-[280px] sm:min-h-[340px] lg:min-h-full overflow-hidden">
           <Image
@@ -40,7 +43,6 @@ export const WholesaleBanner: React.FC = () => {
 
         {/* Right: Dark Forest Green Editorial Content */}
         <div className="lg:col-span-7 p-8 sm:p-10 lg:p-14 flex flex-col justify-center relative z-10 bg-gradient-to-br from-[#183A20] to-[#102C1B]">
-          
           {/* Top Label */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAF6EF]/10 text-[#B88A35] text-xs font-bold tracking-widest uppercase mb-4 w-fit border border-[#B88A35]/30">
             <Building2 className="w-3.5 h-3.5" />
@@ -54,7 +56,9 @@ export const WholesaleBanner: React.FC = () => {
 
           {/* Description */}
           <p className="text-base sm:text-lg text-[#E7E1D7] max-w-xl leading-relaxed mb-6 font-normal">
-            {t("Get wholesale pricing, custom quotes, and dedicated support for restaurants, hotels, supermarkets, and catering enterprises.")}
+            {t(
+              "Get wholesale pricing, custom quotes, and dedicated support for restaurants, hotels, supermarkets, and catering enterprises.",
+            )}
           </p>
 
           {/* Business Highlights List */}
@@ -95,4 +99,3 @@ export const WholesaleBanner: React.FC = () => {
     </section>
   );
 };
-

@@ -16,14 +16,12 @@ class RefundPolicyLayout extends ConsumerWidget {
       ),
       body: ref.watch(refundPolicyControllerProvider).when(
             data: (data) {
-
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-
-                      HtmlWidget( data.data.content.description),
+                      HtmlWidget(data.data.content.description),
                     ],
                   ),
                 ),
@@ -39,4 +37,3 @@ class RefundPolicyLayout extends ConsumerWidget {
     );
   }
 }
-

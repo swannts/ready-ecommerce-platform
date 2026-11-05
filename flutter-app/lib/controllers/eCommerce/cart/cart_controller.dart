@@ -36,8 +36,9 @@ class CartController extends StateNotifier<CartState> {
       if (_isSuccessStatus(response.statusCode)) {
         final dynamic cartItemsData = response.data['data']?['cart_items'];
         if (cartItemsData is List) {
-          _cartItems =
-              cartItemsData.map((cartItem) => CartItem.fromJson(cartItem)).toList();
+          _cartItems = cartItemsData
+              .map((cartItem) => CartItem.fromJson(cartItem))
+              .toList();
         } else {
           debugPrint(
             'CartController.addToCart: cart_items missing from response, refreshing cart state.',
@@ -261,7 +262,9 @@ class CartSummeryController extends StateNotifier<Map<String, dynamic>> {
   }
 }
 
- final cartSummeryController = StateNotifierProvider<CartSummeryController, Map<String, dynamic>>((ref) => CartSummeryController(ref));
+final cartSummeryController =
+    StateNotifierProvider<CartSummeryController, Map<String, dynamic>>(
+        (ref) => CartSummeryController(ref));
 
 class BuyNowSummeryController extends StateNotifier<Map<String, dynamic>> {
   final Ref ref;
@@ -311,7 +314,9 @@ class BuyNowSummeryController extends StateNotifier<Map<String, dynamic>> {
   }
 }
 
-final buyNowSummeryController = StateNotifierProvider<BuyNowSummeryController, Map<String, dynamic>>((ref) => BuyNowSummeryController(ref));
+final buyNowSummeryController =
+    StateNotifierProvider<BuyNowSummeryController, Map<String, dynamic>>(
+        (ref) => BuyNowSummeryController(ref));
 
 class CartState {
   final bool isLoading;

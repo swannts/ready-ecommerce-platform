@@ -1,6 +1,5 @@
 <template>
     <div class="main-container">
-
         <!-- Breadcrumbs -->
         <div class="flex items-center gap-2 overflow-hidden pt-4 mb-3">
             <router-link to="/" class="w-6 h-6">
@@ -8,36 +7,47 @@
             </router-link>
 
             <div class="grow w-full overflow-hidden">
-                <div class="space-x-1 text-slate-600 dark:text-slate-400 text-sm font-normal truncate">
-                    <span>{{ $t('Home') }}</span>
+                <div
+                    class="space-x-1 text-slate-600 dark:text-slate-400 text-sm font-normal truncate"
+                >
+                    <span>{{ $t("Home") }}</span>
                     <span>/</span>
-                    <span>{{ $t('Cart') }}</span>
+                    <span>{{ $t("Cart") }}</span>
                     <span>/</span>
-                    <span>{{ $t('Checkout') }}</span>
+                    <span>{{ $t("Checkout") }}</span>
                 </div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-3 my-3 gap-8">
-
             <div class="col-span-1 xl:col-span-2">
-
                 <!-- <div class="text-slate-950 dark:text-white text-lg sm:text-xl font-medium leading-10 pb-2">{{ $t('Checkout') }}</div> -->
 
-                <div class="p-4 sm:p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
+                <div
+                    class="p-4 sm:p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700"
+                >
                     <!-- Your Order -->
-                    <div class="flex gap-2 justify-between items-center cursor-pointer"
-                        @click="showProductItems = !showProductItems">
+                    <div
+                        class="flex gap-2 justify-between items-center cursor-pointer"
+                        @click="showProductItems = !showProductItems"
+                    >
                         <div class="flex items-center gap-2">
-                            <div class="text-slate-950 dark:text-white text-base sm:text-lg font-semibold leading-normal">
-                                {{ $t('Your Order') }}
+                            <div
+                                class="text-slate-950 dark:text-white text-base sm:text-lg font-semibold leading-normal"
+                            >
+                                {{ $t("Your Order") }}
                             </div>
-                            <div class="px-2 py-0.5 bg-primary-50 text-primary-600 rounded-full text-xs font-medium">
-                                {{ basketStore.buyNowProduct ? 1 : 0 }} {{ $t('Items') }}
+                            <div
+                                class="px-2 py-0.5 bg-primary-50 text-primary-600 rounded-full text-xs font-medium"
+                            >
+                                {{ basketStore.buyNowProduct ? 1 : 0 }}
+                                {{ $t("Items") }}
                             </div>
                         </div>
-                        <ChevronDownIcon class="w-5 h-5 text-primary-600 transition duration-300 shrink-0"
-                            :class="showProductItems ? 'rotate-180' : ''" />
+                        <ChevronDownIcon
+                            class="w-5 h-5 text-primary-600 transition duration-300 shrink-0"
+                            :class="showProductItems ? 'rotate-180' : ''"
+                        />
                     </div>
 
                     <!-- Product items -->
@@ -51,40 +61,51 @@
 
                 <div class="mt-6">
                     <div class="mb-1">
-                        <span class="text-slate-950 dark:text-white text-xl font-medium leading-7">{{ $t('Note') }}</span>
-                        <span class="text-slate-500 dark:text-slate-400 text-lg font-normal leading-7 tracking-tight">
-                            ({{ $t('Optional') }})
+                        <span
+                            class="text-slate-950 dark:text-white text-xl font-medium leading-7"
+                            >{{ $t("Note") }}</span
+                        >
+                        <span
+                            class="text-slate-500 dark:text-slate-400 text-lg font-normal leading-7 tracking-tight"
+                        >
+                            ({{ $t("Optional") }})
                         </span>
                     </div>
-                    <textarea v-model="note" rows="3" class="form-input"
-                        :placeholder="$t('Write your note here') + '...'"></textarea>
+                    <textarea
+                        v-model="note"
+                        rows="3"
+                        class="form-input"
+                        :placeholder="$t('Write your note here') + '...'"
+                    ></textarea>
                 </div>
-
             </div>
 
             <!-- Order Summary -->
-            <BuyNowCheckoutOrderSummary :note="note" :isDigitalProduct="basketStore.buyNowProduct?.products[0]?.is_digital" />
-
+            <BuyNowCheckoutOrderSummary
+                :note="note"
+                :isDigitalProduct="
+                    basketStore.buyNowProduct?.products[0]?.is_digital
+                "
+            />
         </div>
-
     </div>
 </template>
 
 <script setup>
-import { ChevronDownIcon, HomeIcon } from '@heroicons/vue/24/outline';
-import { onMounted, ref } from 'vue';
+import { ChevronDownIcon, HomeIcon } from "@heroicons/vue/24/outline";
+import { onMounted, ref } from "vue";
 
-import BuyNowCheckoutOrderSummary from '../components/BuyNowCheckoutOrderSummary.vue';
-import BuyNowCheckoutProduct from '../components/BuyNowCheckoutProduct.vue';
-import ShippingAddress from '../components/CheckoutShippingAddress.vue';
+import BuyNowCheckoutOrderSummary from "../components/BuyNowCheckoutOrderSummary.vue";
+import BuyNowCheckoutProduct from "../components/BuyNowCheckoutProduct.vue";
+import ShippingAddress from "../components/CheckoutShippingAddress.vue";
 
-import { useBasketStore } from '../stores/BasketStore';
-import { useMaster } from '../stores/MasterStore';
+import { useBasketStore } from "../stores/BasketStore";
+import { useMaster } from "../stores/MasterStore";
 
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 const router = new useRouter();
 
-import { useAuth } from '../stores/AuthStore';
+import { useAuth } from "../stores/AuthStore";
 const AuthStore = useAuth();
 
 const master = useMaster();
@@ -98,7 +119,7 @@ onMounted(() => {
     window.scrollTo(0, 0);
     basketStore.coupon_code = "";
     if (!AuthStore.user && !AuthStore.access_token) {
-        router.push({ name: 'home' });
+        router.push({ name: "home" });
     }
 });
 </script>

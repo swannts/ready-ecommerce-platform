@@ -20,8 +20,9 @@ import 'package:ready_ecommerce/views/eCommerce/checkout/components/address_card
 class AddressModalBottomSheet extends ConsumerStatefulWidget {
   final bool? isGift;
   final String? couponCode;
-  final  List<int>? shopIds;
-  const AddressModalBottomSheet({super.key, this.isGift, this.couponCode,  this.shopIds});
+  final List<int>? shopIds;
+  const AddressModalBottomSheet(
+      {super.key, this.isGift, this.couponCode, this.shopIds});
 
   @override
   ConsumerState<AddressModalBottomSheet> createState() =>
@@ -60,20 +61,18 @@ class _AddressModalBottomSheetState
     context.nav.pop();
 
     ref.read(cartSummeryController.notifier).calculateCartSummery(
-      couponCode: widget.couponCode,
-      shopIds: widget.shopIds ?? [],
-      addressId: address.addressId,
-      latitude: address.latitude,
-      longitude: address.longitude,
-      isBuyNow: true
-    );
-
-
+        couponCode: widget.couponCode,
+        shopIds: widget.shopIds ?? [],
+        addressId: address.addressId,
+        latitude: address.latitude,
+        longitude: address.longitude,
+        isBuyNow: true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final addressList = ref.watch(addressControllerProvider.notifier).addressList;
+    final addressList =
+        ref.watch(addressControllerProvider.notifier).addressList;
     final isLoading = ref.watch(addressControllerProvider);
 
     return Stack(

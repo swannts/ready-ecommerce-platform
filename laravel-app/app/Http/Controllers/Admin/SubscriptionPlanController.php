@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
-use App\Models\ShopSubscription;
-use App\Models\SubscriptionPlan;
 use App\Enums\SubscriptionStatus;
 use App\Http\Controllers\Controller;
-use App\Repositories\ShopRepository;
 use App\Http\Requests\SubscriptionPlanRequest;
+use App\Models\ShopSubscription;
+use App\Models\SubscriptionPlan;
+use App\Repositories\ShopRepository;
 use App\Repositories\ShopSubscriptionRepository;
 use App\Repositories\SubscriptionPlanRepository;
+use Illuminate\Http\Request;
 
 class SubscriptionPlanController extends Controller
 {
@@ -102,6 +102,7 @@ class SubscriptionPlanController extends Controller
                 'remaining_sales' => $remainingSales,
                 'status' => SubscriptionStatus::ACTIVE,
             ]);
+
             return back()->withSuccess(__('Status updated successfully'));
         } catch (\Exception $e) {
             return back()->withError($e->getMessage());

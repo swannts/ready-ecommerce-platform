@@ -3,28 +3,27 @@
 namespace App\Http\Controllers\API\Rider;
 
 use App\Enums\Roles;
-use App\Models\User;
-use App\Models\Driver;
-use App\Models\DeviceKey;
 use App\Events\SendOTPMail;
-use App\Models\VerifyManage;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RiderRequest;
-use App\Services\SmsGatewayService;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
-use App\Repositories\UserRepository;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Cache;
-use App\Repositories\DriverRepository;
-use App\Http\Requests\RiderLoginRequest;
-use App\Http\Resources\RiderUserResource;
-use App\Repositories\DeviceKeyRepository;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\CreatePasswordRequest;
+use App\Http\Requests\RiderLoginRequest;
+use App\Http\Requests\RiderRequest;
+use App\Http\Resources\RiderUserResource;
+use App\Http\Resources\UserResource;
+use App\Models\DeviceKey;
+use App\Models\Driver;
+use App\Models\User;
+use App\Models\VerifyManage;
+use App\Repositories\DeviceKeyRepository;
+use App\Repositories\DriverRepository;
+use App\Repositories\UserRepository;
 use App\Repositories\VerificationCodeRepository;
+use App\Services\SmsGatewayService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -79,7 +78,7 @@ class LoginController extends Controller
      * register new user.
      *
      * @param  RiderRequest  $request  The request object containing the user data.
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function register(RiderRequest $request)
     {
@@ -122,7 +121,7 @@ class LoginController extends Controller
      * change password.
      *
      * @param  ChangePasswordRequest  $request  The request object containing the user data.
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function changePassword(ChangePasswordRequest $request)
     {
@@ -150,7 +149,7 @@ class LoginController extends Controller
      * logout a user.
      *
      * @param  Request  $request  The request object containing the user data.
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function logout(Request $request)
     {
@@ -174,7 +173,7 @@ class LoginController extends Controller
      * send OTP
      *
      * @param  Request  $request  The request object containing the user data.
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function sendOTP(Request $request)
     {
@@ -312,20 +311,22 @@ class LoginController extends Controller
         ]);
     }
 
-    public function deleteAccountRider(){
+    public function deleteAccountRider()
+    {
 
-        $user=auth()->user();
+        $user = auth()->user();
 
         if (app()->environment() == 'local' && $user->email == 'rider@readygrocery.com') {
             return $this->json('You can not delete the driver in demo mode!');
         }
 
-        $driver=Driver::where('user_id',$user->id)->first();
+        $driver = Driver::where('user_id', $user->id)->first();
 
-        if($driver){
-           $driver->delete();
+        if ($driver) {
+            $driver->delete();
         }
         $user->delete();
+
         return $this->json('Delete Account Successfully!');
     }
 }

@@ -259,28 +259,28 @@
     background-color: var(--body-color);
 }
 .bg-light-blue {
-    background-color: #F0F8FE;
+    background-color: #f0f8fe;
 }
 .bg-dark-blue {
-    background-color: #067BFF;
+    background-color: #067bff;
 }
 .bg-light-purple {
-    background-color: #F7F0FE;
+    background-color: #f7f0fe;
 }
 .bg-dark-purple {
-    background-color: #BA53CA;
+    background-color: #ba53ca;
 }
 .bg-light-sky {
-    background-color: #F0FEFC;
+    background-color: #f0fefc;
 }
 .bg-dark-sky {
-    background-color: #2DCCF8;
+    background-color: #2dccf8;
 }
 .bg-light-yellow {
-    background-color: #FCFEF0;
+    background-color: #fcfef0;
 }
 .bg-dark-yellow {
-    background-color: #F8992D;
+    background-color: #f8992d;
 }
 /* chart btn */
 .chart-btn-sm {
@@ -294,7 +294,7 @@
     padding: 12px 16px;
     display: flex;
     justify-content: center;
-    align-items: center
+    align-items: center;
 }
 .chart-btn-sm:hover {
     background-color: var(--theme-hover-bg, #076988);
@@ -322,20 +322,20 @@
     color: var(--theme-color, #076988);
 }
 .select_box_input {
-    border: 1px solid #EDEEF1;
+    border: 1px solid #edeef1;
     border-radius: 4px;
     width: 160px;
     height: 40px;
     padding-right: 20px;
     padding-left: 10px;
-    background: url('/assets/common/chevron-both.svg') no-repeat;
+    background: url("/assets/common/chevron-both.svg") no-repeat;
     background-position: right 10px center;
     background-size: 10px;
     appearance: none;
     -webkit-appearance: none;
     font-weight: 400;
     font-size: 16px;
-    color: #565F73;
+    color: #565f73;
 }
 .select_box_input:focus {
     outline: var(--theme-color) auto 1px;
@@ -369,19 +369,19 @@
     justify-content: center;
 }
 .glassmorphism.box-1 {
-    background: #F2F9FF;
+    background: #f2f9ff;
 }
 .box-1 .price {
     color: #046fcd !important;
 }
 .glassmorphism.box-2 {
-    background: #F4FFF9;
+    background: #f4fff9;
 }
 .box-2 .price {
     color: #02b55f !important;
 }
 .glassmorphism.box-3 {
-    background: #FFF6F6;
+    background: #fff6f6;
 }
 .box-3 .price {
     color: #ec1e1e !important;

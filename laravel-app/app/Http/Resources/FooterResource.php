@@ -21,6 +21,7 @@ class FooterResource extends JsonResource
             $query->where('shop_type', '!=', 'multi');
         })->where('is_active', 1)->orderBy('order')->get();
         $lang = request()->header('accept-language') ?? 'en';
+
         return [
             'id' => $this->id,
             'position' => $this->order,

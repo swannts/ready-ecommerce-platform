@@ -104,7 +104,7 @@ class RolePermissionController extends Controller
             }
         }
 
-        if (!module_exists('purchase')) {
+        if (! module_exists('purchase')) {
             unset(
                 $allPermissionArray['shop']['supplier'],
                 $allPermissionArray['shop']['purchase'],
@@ -113,7 +113,7 @@ class RolePermissionController extends Controller
         }
         if (module_exists('Report')) {
             $reportShopPermissions = config('Modules.Report.acl.permissions.shop', []);
-            if (!empty($reportShopPermissions)) {
+            if (! empty($reportShopPermissions)) {
                 $allPermissionArray['shop'] = array_merge(
                     $allPermissionArray['shop'] ?? [],
                     $reportShopPermissions
@@ -122,7 +122,7 @@ class RolePermissionController extends Controller
         }
         if (module_exists('PreOrder')) {
             $reportShopPermissions = config('Modules.PreOrder.acl.permissions.shop', []);
-            if (!empty($reportShopPermissions)) {
+            if (! empty($reportShopPermissions)) {
                 $allPermissionArray['shop'] = array_merge(
                     $allPermissionArray['shop'] ?? [],
                     $reportShopPermissions

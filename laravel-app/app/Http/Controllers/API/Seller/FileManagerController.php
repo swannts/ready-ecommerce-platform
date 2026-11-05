@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\API\Seller;
 
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Handlers\LfmConfigHandler;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Str;
 
 class FileManagerController extends Controller
 {
@@ -17,9 +16,8 @@ class FileManagerController extends Controller
         if (! $user) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
-        $configHandler = new LfmConfigHandler();
+        $configHandler = new LfmConfigHandler;
         $shopId = $configHandler->userField();
-
 
         if (! $shopId) {
             return response()->json(['message' => 'No shop ID found for current session'], 404);
@@ -36,19 +34,19 @@ class FileManagerController extends Controller
         $files = Storage::disk('public')->allFiles("files/{$shopId}");
 
         $images = collect($files)
-            ->filter(fn($file) => Str::endsWith($file, ['.jpg', '.jpeg', '.png', '.gif', '.webp']))
-            ->map(fn($file) => [
+            ->filter(fn ($file) => Str::endsWith($file, ['.jpg', '.jpeg', '.png', '.gif', '.webp']))
+            ->map(fn ($file) => [
                 'name' => basename($file),
                 'store_path' => $file,
-                'url'  => asset("storage/{$file}"),
+                'url' => asset("storage/{$file}"),
                 'size_kb' => round(Storage::disk('public')->size($file) / 1024, 2),
                 'last_modified' => date('Y-m-d H:i:s', Storage::disk('public')->lastModified($file)),
             ])
             ->values();
 
         return $this->json(__('Image Fetch successfully'), [
-            'count'   => $images->count(),
-            'images'  => $images,
+            'count' => $images->count(),
+            'images' => $images,
         ]);
     }
 
@@ -63,7 +61,7 @@ class FileManagerController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        $configHandler = new LfmConfigHandler();
+        $configHandler = new LfmConfigHandler;
         $shopId = $configHandler->userField();
 
         if (! $shopId) {
@@ -72,7 +70,7 @@ class FileManagerController extends Controller
 
         $file = $request->file('file');
 
-        $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+        $filename = time().'_'.Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)).'.'.$file->getClientOriginalExtension();
 
         $path = $file->storeAs(
             "files/{$shopId}",
@@ -83,10 +81,10 @@ class FileManagerController extends Controller
         $url = asset("storage/{$path}");
 
         return $this->json(__('Image Upload successfully'), [
-            'name'      => $filename,
-            'path'      => $path,
-            'url'       => $url,
-            'size_kb'   => round(Storage::disk('public')->size($path) / 1024, 2),
+            'name' => $filename,
+            'path' => $path,
+            'url' => $url,
+            'size_kb' => round(Storage::disk('public')->size($path) / 1024, 2),
             'extension' => $file->getClientOriginalExtension(),
         ]);
     }
@@ -99,7 +97,7 @@ class FileManagerController extends Controller
 
         $file = $request->storage_path;
 
-        if (!Storage::disk('public')->exists($file)) {
+        if (! Storage::disk('public')->exists($file)) {
             return $this->json(__('Image not found'));
         }
 

@@ -54,9 +54,9 @@ class GalleryRepository extends Repository
 
             if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jpg', 'png', 'jpeg', 'gif'])) {
 
-                $filePath = 'gallery/shop' . $shop->id . '/' . $folderName;
+                $filePath = 'gallery/shop'.$shop->id.'/'.$folderName;
 
-                Storage::disk('public')->put($filePath . '/' . $originalName, File::get($file));
+                Storage::disk('public')->put($filePath.'/'.$originalName, File::get($file));
 
                 $total = $total + 1;
             } else {

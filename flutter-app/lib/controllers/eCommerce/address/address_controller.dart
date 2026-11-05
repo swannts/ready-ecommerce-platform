@@ -5,7 +5,9 @@ import 'package:ready_ecommerce/models/eCommerce/common/common_response.dart';
 import 'package:ready_ecommerce/services/common/hive_service_provider.dart';
 import 'package:ready_ecommerce/services/eCommerce/address_service/address_service.dart';
 
-final addressControllerProvider = StateNotifierProvider<AddressController, bool>((ref) => AddressController(ref));
+final addressControllerProvider =
+    StateNotifierProvider<AddressController, bool>(
+        (ref) => AddressController(ref));
 
 class AddressController extends StateNotifier<bool> {
   final Ref ref;
@@ -17,7 +19,9 @@ class AddressController extends StateNotifier<bool> {
   Future<CommonResponse> addAddress({required AddAddress addAddress}) async {
     try {
       state = true;
-      final response = await ref.read(addressServiceProvider).addAddress(addAddress: addAddress);
+      final response = await ref
+          .read(addressServiceProvider)
+          .addAddress(addAddress: addAddress);
       state = false;
       return CommonResponse(isSuccess: true, message: response.data['message']);
     } catch (error) {

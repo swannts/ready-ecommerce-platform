@@ -6,13 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DeliveryChargeRequest;
 use App\Models\DeliveryCharge;
 use App\Repositories\DeliveryChargeRepository;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class DeliveryChargeController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -25,19 +27,20 @@ class DeliveryChargeController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
         abort(404);
+
         return view('admin.delivery-charge.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return Response
      */
     public function store(DeliveryChargeRequest $request)
     {
@@ -49,7 +52,7 @@ class DeliveryChargeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(DeliveryCharge $deliveryCharge)
     {
@@ -59,8 +62,8 @@ class DeliveryChargeController extends Controller
     /**
      * Update the specified resource in database.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return Response
      */
     public function update(DeliveryChargeRequest $request, DeliveryCharge $deliveryCharge)
     {
@@ -72,7 +75,7 @@ class DeliveryChargeController extends Controller
     /**
      * Remove the specified item from database.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(DeliveryCharge $deliveryCharge)
     {

@@ -43,7 +43,7 @@ class _AddUpdateAddressLayoutState
 
   final TextEditingController phoneNumController = TextEditingController();
 
- // final TextEditingController areaController = TextEditingController();
+  // final TextEditingController areaController = TextEditingController();
 
 //  final TextEditingController flatNumController = TextEditingController();
 
@@ -51,7 +51,7 @@ class _AddUpdateAddressLayoutState
 
   final TextEditingController addressLine1Controller = TextEditingController();
 
- // final TextEditingController addressLine2Controller = TextEditingController();
+  // final TextEditingController addressLine2Controller = TextEditingController();
 
   int activeIndex = 0;
 
@@ -68,9 +68,6 @@ class _AddUpdateAddressLayoutState
     FocusNode()
   ];
   bool isDefaultAddress = false;
-
-
-
 
   // @override
   // void initState() {
@@ -95,10 +92,6 @@ class _AddUpdateAddressLayoutState
   //     addressTag = addressTags.first;
   //   }
   // }
-
-
-
-
 
   @override
   void initState() {
@@ -136,7 +129,7 @@ class _AddUpdateAddressLayoutState
 
         try {
           final match = areasList.firstWhere(
-                (area) {
+            (area) {
               log("--comparing area.id: ${area.id} with ${widget.address!.areaId}");
               return area.id == widget.address!.areaId;
             },
@@ -172,18 +165,18 @@ class _AddUpdateAddressLayoutState
     );
   }
 
-
   @override
   void dispose() {
     nameControler.dispose();
     phoneNumController.dispose();
     //areaController.dispose();
     //flatNumController.dispose();
-   // postalCodeController.dispose();
+    // postalCodeController.dispose();
     addressLine1Controller.dispose();
-   // addressLine2Controller.dispose();
+    // addressLine2Controller.dispose();
     super.dispose();
   }
+
   String? selectedArea;
 
   @override
@@ -269,15 +262,16 @@ class _AddUpdateAddressLayoutState
                           hintText: S.of(context).addressOne,
                         ),
                       ),
-
                       Gap(14.h),
                       CustomButton(
-                          buttonText: widget.address != null ? "Update Delivery Location" : "Pin Delivery Location",
-                          onPressed: (){
-
+                          buttonText: widget.address != null
+                              ? "Update Delivery Location"
+                              : "Pin Delivery Location",
+                          onPressed: () {
                             debugPrint('Address: ${widget.address}');
                             debugPrint('Latitude: ${widget.address?.latitude}');
-                            debugPrint('Longitude: ${widget.address?.longitude}');
+                            debugPrint(
+                                'Longitude: ${widget.address?.longitude}');
 
                             context.nav.pushNamed(
                               Routes.getTrackOrderRouteName(
@@ -289,10 +283,8 @@ class _AddUpdateAddressLayoutState
                                 widget.address?.longitude,
                               ],
                             );
-                          }
-                      ),
+                          }),
                       Gap(14.h),
-
                       PopupMenuButton<String>(
                         offset: Offset(0, 52),
                         onSelected: (value) {
@@ -308,7 +300,8 @@ class _AddUpdateAddressLayoutState
                                   value: area.name,
                                   child: Text(
                                     area.name ?? '',
-                                    style: TextStyle(color: colors(context).primaryColor),
+                                    style: TextStyle(
+                                        color: colors(context).primaryColor),
                                   ),
                                 );
                               }).toList();
@@ -318,7 +311,8 @@ class _AddUpdateAddressLayoutState
                                 value: '',
                                 child: Text(
                                   'Loading...',
-                                  style: TextStyle(color: colors(context).primaryColor),
+                                  style: TextStyle(
+                                      color: colors(context).primaryColor),
                                 ),
                               )
                             ],
@@ -334,9 +328,11 @@ class _AddUpdateAddressLayoutState
                           );
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12.w, vertical: 10.h),
                           decoration: BoxDecoration(
-                            border: Border.all(color: colors(context).primaryColor!),
+                            border: Border.all(
+                                color: colors(context).primaryColor!),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -358,9 +354,6 @@ class _AddUpdateAddressLayoutState
                           ),
                         ),
                       ),
-
-
-
                       Gap(14.h),
                       buildAddressTag(),
                       Gap(14.h),
@@ -432,12 +425,15 @@ class _AddUpdateAddressLayoutState
                     buttonText: S.of(context).save,
                     onPressed: () {
                       if (_formkey.currentState!.validate()) {
-                        final latitude = ref.read(hiveServiceProvider).getLatitude();
-                        final longitude = ref.read(hiveServiceProvider).getLongitude();
+                        final latitude =
+                            ref.read(hiveServiceProvider).getLatitude();
+                        final longitude =
+                            ref.read(hiveServiceProvider).getLongitude();
 
-                        if (latitude == null || longitude == null ) {
+                        if (latitude == null || longitude == null) {
                           GlobalFunction.showCustomSnackbar(
-                            message: "Please pin your delivery location on the map",
+                            message:
+                                "Please pin your delivery location on the map",
                             isSuccess: false,
                           );
                           return;
@@ -453,8 +449,7 @@ class _AddUpdateAddressLayoutState
                         areaState.when(
                           data: (areasList) {
                             final match = areasList.firstWhere(
-                                  (area) => area.name == selectedArea,
-
+                              (area) => area.name == selectedArea,
                             );
                             selectedAreaId = match.id;
                           },
@@ -470,11 +465,11 @@ class _AddUpdateAddressLayoutState
                           addressId: widget.address?.addressId,
                           name: nameControler.text,
                           phone: phoneNumController.text,
-                         // area: areaController.text,
-                         // flatNo: flatNumController.text,
+                          // area: areaController.text,
+                          // flatNo: flatNumController.text,
                           //postCode: postalCodeController.text,
                           addressLine: addressLine1Controller.text,
-                         // addressLine2: addressLine2Controller.text,
+                          // addressLine2: addressLine2Controller.text,
                           latitude: latitude,
                           longitude: longitude,
                           areaId: selectedAreaId,

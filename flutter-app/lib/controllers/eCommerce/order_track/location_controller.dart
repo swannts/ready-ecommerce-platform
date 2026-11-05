@@ -17,8 +17,3 @@ final locationProvider = FutureProvider<Position>((ref) async {
       );
   return position;
 });
-
-
-
-
-

@@ -11,13 +11,12 @@
 </template>
 
 <script setup>
-import { CheckCircleIcon } from '@heroicons/vue/24/solid';
+import { CheckCircleIcon } from "@heroicons/vue/24/solid";
 
 const props = defineProps({
     title: String,
     message: String,
 });
-
 </script>
 
 <style>

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n";
+
 import React from "react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
@@ -24,12 +26,13 @@ import { formatCurrency } from "@/lib/currency";
 import { RiceProduct } from "@/types/product";
 
 export default function WishlistPage() {
+  const { t } = useLocale();
   const dispatch = useAppDispatch();
   const wishlistIds = useAppSelector(selectWishlistIds);
   const products = useAppSelector((state) => state.products.items);
 
   const savedProducts = products.filter((product) =>
-    wishlistIds.includes(product.id)
+    wishlistIds.includes(product.id),
   );
 
   const handleMoveToCart = (product: RiceProduct) => {
@@ -51,7 +54,7 @@ export default function WishlistPage() {
         unitPrice: pkg.price,
         quantity: 1,
         supplierName: product.supplierName,
-      })
+      }),
     );
   };
 
@@ -66,7 +69,7 @@ export default function WishlistPage() {
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#183A20] hover:text-[#B88A35] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Continue Shopping</span>
+            <span>{t("Continue Shopping")}</span>
           </Link>
 
           {savedProducts.length > 0 && (
@@ -75,20 +78,26 @@ export default function WishlistPage() {
               onClick={() => dispatch(clearWishlist())}
               className="text-xs font-semibold text-[#686C64] hover:text-red-600 transition-colors self-start sm:self-auto"
             >
-              Clear All Saved Items
+              {" "}
+              {t("Clear All Saved Items")}{" "}
             </button>
           )}
         </div>
 
         <div className="mb-8">
           <span className="text-xs font-bold uppercase tracking-widest text-[#B88A35]">
-            Saved Collections
+            {" "}
+            {t("Saved Collections")}{" "}
           </span>
           <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#19221B] mt-1">
-            Your Saved Rice Varieties
+            {" "}
+            {t("Your Saved Rice Varieties")}{" "}
           </h1>
           <p className="text-sm text-[#686C64] mt-1">
-            Keep track of favorite harvests and mill specials for quick reordering.
+            {" "}
+            {t(
+              "Keep track of favorite harvests and mill specials for quick reordering.",
+            )}{" "}
           </p>
         </div>
 
@@ -98,16 +107,20 @@ export default function WishlistPage() {
               <Heart className="w-9 h-9" />
             </div>
             <h2 className="font-serif text-2xl font-bold text-[#19221B] mb-2">
-              No Saved Items Yet
+              {" "}
+              {t("No Saved Items Yet")}{" "}
             </h2>
             <p className="text-sm text-[#686C64] max-w-sm mx-auto mb-6">
-              Tap the heart icon on any rice product card to save it here for later.
+              {" "}
+              {t(
+                "Tap the heart icon on any rice product card to save it here for later.",
+              )}{" "}
             </p>
             <Link
               href="/shop"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#183A20] hover:bg-[#102C1B] text-[#FFFDF8] font-bold text-sm transition-colors shadow-xs"
             >
-              <span>Explore Rice Catalog</span>
+              <span>{t("Explore Rice Catalog")}</span>
               <ArrowRight className="w-4 h-4 text-[#B88A35]" />
             </Link>
           </div>
@@ -140,7 +153,7 @@ export default function WishlistPage() {
                         type="button"
                         onClick={() => dispatch(removeFromWishlist(product.id))}
                         className="p-2 text-[#686C64] hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                        aria-label="Remove from wishlist"
+                        aria-label={t("Remove from wishlist")}
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -148,17 +161,22 @@ export default function WishlistPage() {
 
                     <div className="bg-[#FAF6EF] rounded-xl p-3 border border-[#E7E1D7] my-3 flex justify-between items-center text-xs">
                       <div>
-                        <span className="text-[#686C64] block">Retail Price</span>
+                        <span className="text-[#686C64] block">
+                          {" "}
+                          {t("Retail Price")}{" "}
+                        </span>
                         <span className="font-bold text-sm text-[#183A20]">
                           {formatCurrency(product.retailPricePerKg)} / kg
                         </span>
                       </div>
                       <div className="text-right">
                         <span className="text-[#B88A35] font-semibold flex items-center justify-end gap-1">
-                          <Building2 className="w-3 h-3" /> B2B Wholesale
+                          <Building2 className="w-3 h-3" />{" "}
+                          {t("B2B Wholesale")}{" "}
                         </span>
                         <span className="font-bold text-[#19221B]">
-                          from {formatCurrency(lowestWholesale.unitPricePerKg)}/kg
+                          from {formatCurrency(lowestWholesale.unitPricePerKg)}
+                          /kg
                         </span>
                       </div>
                     </div>
@@ -171,13 +189,14 @@ export default function WishlistPage() {
                       className="grow flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#183A20] hover:bg-[#102C1B] text-[#FFFDF8] text-xs font-bold transition-colors"
                     >
                       <ShoppingCart className="w-3.5 h-3.5 text-[#B88A35]" />
-                      <span>Add to Cart</span>
+                      <span>{t("Add to Cart")}</span>
                     </button>
                     <Link
                       href={`/shop/${product.slug}`}
                       className="px-3.5 py-2.5 rounded-xl border border-[#E7E1D7] hover:bg-[#FAF6EF] text-xs font-semibold text-[#19221B] transition-colors"
                     >
-                      Details
+                      {" "}
+                      {t("Details")}{" "}
                     </Link>
                   </div>
                 </div>

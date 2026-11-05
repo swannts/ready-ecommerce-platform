@@ -8,13 +8,13 @@ use App\Models\Scopes\PreOderProduct;
 use App\Rules\EmailRule;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
-use Modules\Purchase\App\Repositories\SupplierRepository;
 use Modules\Purchase\App\Http\Requests\PurchaseAttachProductRequest;
 use Modules\Purchase\App\Http\Requests\PurchaseRequest;
 use Modules\Purchase\App\Models\Purchase;
 use Modules\Purchase\App\Models\PurchaseProduct;
 use Modules\Purchase\App\Models\Supplier;
 use Modules\Purchase\App\Repositories\PurchaseRepository;
+use Modules\Purchase\App\Repositories\SupplierRepository;
 use Modules\Purchase\App\Repositories\SupplierTransactionRepository;
 use Modules\Purchase\App\Resources\ProductSearchResource;
 use Modules\Purchase\App\Resources\PurchaseDetailsResource;
@@ -104,8 +104,8 @@ class SellerPurchaseController extends Controller
 
         $request->validate([
             'name' => ['required', 'string', 'max:200'],
-            'phone' => ['required', 'numeric', 'unique:users,phone,' . $userId],
-            'email' => ['required', 'email', 'unique:users,email,' . $userId, new EmailRule],
+            'phone' => ['required', 'numeric', 'unique:users,phone,'.$userId],
+            'email' => ['required', 'email', 'unique:users,email,'.$userId, new EmailRule],
             'address' => ['nullable', 'string', 'max:255'],
             'profile_photo' => ['nullable', 'image', 'max:2048', 'mimes:png,jpg,jpeg,gif,svg,webp'],
         ]);

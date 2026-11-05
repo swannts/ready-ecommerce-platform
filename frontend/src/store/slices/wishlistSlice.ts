@@ -80,4 +80,3 @@ export const selectIsWishlisted = (productId: string) => (state: RootState) =>
   state.wishlist.itemIds.includes(productId);
 
 export default wishlistSlice.reducer;
-

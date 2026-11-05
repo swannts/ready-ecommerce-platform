@@ -2,13 +2,13 @@
 
 namespace Modules\Report\App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\Favorite;
-use App\Models\OrderProduct;
-use Illuminate\Http\Request;
 use App\Exports\TemplateExport;
 use App\Http\Controllers\Controller;
+use App\Models\Favorite;
+use App\Models\OrderProduct;
 use App\Repositories\CartRepository;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Report\App\Repositories\ProductSearchLogRepository;
 
@@ -26,7 +26,7 @@ class ReportExportController extends Controller
             [$startDate, $endDate] = explode(' - ', $dateRange, 2);
             try {
                 $startDate = Carbon::createFromFormat('Y-m-d', trim($startDate))->startOfDay();
-                $endDate   = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
+                $endDate = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
             } catch (\Exception $e) {
                 $startDate = $endDate = null;
             }
@@ -84,27 +84,28 @@ class ReportExportController extends Controller
                 $item->total_quantity,
                 round((float) $item->total_sale_amount, 2),
                 round((float) $item->total_buying_amount, 2),
-                round((float) $item->profit, 2)
+                round((float) $item->profit, 2),
             ]);
         }
         $timeStamp = date('Y-m-d_H-i-s');
-        return Excel::download(new TemplateExport($exportData), 'saleProduct_report_' . $timeStamp . '.xlsx');
+
+        return Excel::download(new TemplateExport($exportData), 'saleProduct_report_'.$timeStamp.'.xlsx');
     }
 
     public function wishListExport(Request $request)
     {
         $shop = generaleSetting('shop');
         $startDate = null;
-        $endDate   = null;
+        $endDate = null;
         $dateRange = $request->date_range;
         $categoryId = $request->category_id;
         $search = $request->search;
         if ($dateRange && str_contains($dateRange, ' - ')) {
             [$startDate, $endDate] = explode(' - ', $dateRange, 2);
             try {
-                $dateRange = explode(" - ", $dateRange);
+                $dateRange = explode(' - ', $dateRange);
                 $startDate = Carbon::createFromFormat('Y-m-d', trim($startDate))->startOfDay();
-                $endDate   = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
+                $endDate = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
             } catch (\Exception $e) {
                 $startDate = $endDate = null;
             }
@@ -141,7 +142,7 @@ class ReportExportController extends Controller
                     'SL',
                     'Product Name',
                     'Current Stock',
-                    'WishList'
+                    'WishList',
                 ],
             ]
         );
@@ -151,26 +152,28 @@ class ReportExportController extends Controller
                 $serialNo++,
                 $item->product_name,
                 $item->total_stock,
-                $item->total_quantity
+                $item->total_quantity,
             ]);
         }
         $timeStamp = date('Y-m-d_H-i-s');
-        return Excel::download(new TemplateExport($exportData), 'wishList_report_' . $timeStamp . '.xlsx');
+
+        return Excel::download(new TemplateExport($exportData), 'wishList_report_'.$timeStamp.'.xlsx');
     }
+
     public function addToCartExport(Request $request)
     {
         $shop = generaleSetting('shop');
         $startDate = null;
-        $endDate   = null;
+        $endDate = null;
         $dateRange = $request->date_range;
         $categoryId = $request->category_id;
         $search = $request->search;
         if ($dateRange && str_contains($dateRange, ' - ')) {
             [$startDate, $endDate] = explode(' - ', $dateRange, 2);
             try {
-                $dateRange = explode(" - ", $dateRange);
+                $dateRange = explode(' - ', $dateRange);
                 $startDate = Carbon::createFromFormat('Y-m-d', trim($startDate))->startOfDay();
-                $endDate   = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
+                $endDate = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
             } catch (\Exception $e) {
                 $startDate = $endDate = null;
             }
@@ -207,7 +210,7 @@ class ReportExportController extends Controller
                     'SL',
                     'Product Name',
                     'Current Stock',
-                    'Cart Quantity'
+                    'Cart Quantity',
                 ],
             ]
         );
@@ -217,24 +220,26 @@ class ReportExportController extends Controller
                 $serialNo++,
                 $item->product_name,
                 $item->total_stock,
-                $item->total_quantity
+                $item->total_quantity,
             ]);
         }
         $timeStamp = date('Y-m-d_H-i-s');
-        return Excel::download(new TemplateExport($exportData), 'addToCart_report_' . $timeStamp . '.xlsx');
+
+        return Excel::download(new TemplateExport($exportData), 'addToCart_report_'.$timeStamp.'.xlsx');
     }
+
     public function productSearchExport(Request $request)
     {
         $startDate = null;
-        $endDate   = null;
+        $endDate = null;
         $dateRange = $request->date_range;
         $search = $request->search;
         if ($dateRange && str_contains($dateRange, ' - ')) {
             [$startDate, $endDate] = explode(' - ', $dateRange, 2);
             try {
-                $dateRange = explode(" - ", $dateRange);
+                $dateRange = explode(' - ', $dateRange);
                 $startDate = Carbon::createFromFormat('Y-m-d', trim($startDate))->startOfDay();
-                $endDate   = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
+                $endDate = Carbon::createFromFormat('Y-m-d', trim($endDate))->endOfDay();
             } catch (\Exception $e) {
                 $startDate = $endDate = null;
             }
@@ -258,7 +263,7 @@ class ReportExportController extends Controller
                 [
                     'SL',
                     'Search Keyword',
-                    'Total Search'
+                    'Total Search',
                 ],
             ]
         );
@@ -267,10 +272,11 @@ class ReportExportController extends Controller
             $exportData->push([
                 $serialNo++,
                 $item->keyword,
-                $item->total_quantity
+                $item->total_quantity,
             ]);
         }
         $timeStamp = date('Y-m-d_H-i-s');
-        return Excel::download(new TemplateExport($exportData), 'productSearch_report_' . $timeStamp . '.xlsx');
+
+        return Excel::download(new TemplateExport($exportData), 'productSearch_report_'.$timeStamp.'.xlsx');
     }
 }

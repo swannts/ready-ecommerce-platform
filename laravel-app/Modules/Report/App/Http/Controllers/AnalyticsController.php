@@ -2,20 +2,19 @@
 
 namespace Modules\Report\App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Brand;
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\Withdraw;
+use App\Repositories\OrderRepository;
+use App\Repositories\ShopSubscriptionRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
-use App\Repositories\OrderRepository;
 use Illuminate\Support\Facades\Schema;
-use App\Repositories\ShopSubscriptionRepository;
 
 class AnalyticsController extends Controller
 {
-
     public function index()
     {
         $shop = generaleSetting('shop');
@@ -27,9 +26,9 @@ class AnalyticsController extends Controller
             ->value('total_amount');
         $data['totalRefundAmount'] = Schema::hasTable('return_order_details')
             ? DB::table('return_order_details')
-            ->join('products', 'products.id', '=', 'return_order_details.product_id')
-            ->where('products.shop_id', $shop->id)
-            ->sum(DB::raw('return_order_details.quantity * return_order_details.price'))
+                ->join('products', 'products.id', '=', 'return_order_details.product_id')
+                ->where('products.shop_id', $shop->id)
+                ->sum(DB::raw('return_order_details.quantity * return_order_details.price'))
             : 0;
         $data['totalCategories'] = Category::query()->active()->count();
         $data['totalBrand'] = Brand::query()->isActive()->count();
@@ -43,7 +42,7 @@ class AnalyticsController extends Controller
                 'products as sell_count' => function ($q) use ($shop) {
                     $q->where('shop_id', $shop->id)
                         ->join('order_products', 'products.id', '=', 'order_products.product_id');
-                }
+                },
             ])
             ->orderByDesc('sell_count')
             ->limit(5)
@@ -57,7 +56,7 @@ class AnalyticsController extends Controller
                 'products as sell_count' => function ($q) use ($shop) {
                     $q->where('shop_id', $shop->id)
                         ->join('order_products', 'products.id', '=', 'order_products.product_id');
-                }
+                },
             ])
             ->orderByDesc('sell_count')
             ->limit(5)
@@ -99,7 +98,7 @@ class AnalyticsController extends Controller
         $shopId = generaleSetting('shop')?->id;
         $currentYear = now()->year;
         $startOfWeek = now()->startOfWeek();
-        $endOfWeek   = now()->endOfWeek();
+        $endOfWeek = now()->endOfWeek();
         $query = OrderRepository::query()
             ->withoutGlobalScopes()
             ->completed()
@@ -107,37 +106,37 @@ class AnalyticsController extends Controller
         switch ($type) {
             case 'daily':
                 $labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-                $keyMapper = fn($row) => $labels[$row->day_number - 1];
-                $selectRaw = "
+                $keyMapper = fn ($row) => $labels[$row->day_number - 1];
+                $selectRaw = '
                 WEEKDAY(created_at) + 1 as day_number,
                 SUM(CASE WHEN pos_order = 0 THEN total_amount ELSE 0 END) as website_total,
                 SUM(CASE WHEN pos_order = 1 THEN total_amount ELSE 0 END) as pos_total
-            ";
+            ';
                 $groupBy = ['day_number'];
                 $query->whereBetween('created_at', [$startOfWeek, $endOfWeek]);
                 break;
             case 'monthly':
                 $labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                $keyMapper = fn($row) => $labels[$row->month_number - 1];
-                $selectRaw = "
+                $keyMapper = fn ($row) => $labels[$row->month_number - 1];
+                $selectRaw = '
                 MONTH(created_at) as month_number,
                 SUM(CASE WHEN pos_order = 0 THEN total_amount ELSE 0 END) as website_total,
                 SUM(CASE WHEN pos_order = 1 THEN total_amount ELSE 0 END) as pos_total
-            ";
+            ';
                 $groupBy = ['month_number'];
                 $query->whereYear('created_at', $currentYear);
                 break;
             default: // yearly
                 $labels = [];
                 for ($y = $currentYear; $y >= $currentYear - 6; $y--) {
-                    $labels[] = (string)$y;
+                    $labels[] = (string) $y;
                 }
-                $keyMapper = fn($row) => (string)$row->year;
-                $selectRaw = "
+                $keyMapper = fn ($row) => (string) $row->year;
+                $selectRaw = '
                 YEAR(created_at) as year,
                 SUM(CASE WHEN pos_order = 0 THEN total_amount ELSE 0 END) as website_total,
                 SUM(CASE WHEN pos_order = 1 THEN total_amount ELSE 0 END) as pos_total
-            ";
+            ';
                 $groupBy = ['year'];
                 $query->whereYear('created_at', '>=', $currentYear - 6);
         }
@@ -148,18 +147,19 @@ class AnalyticsController extends Controller
         $pos = array_fill_keys($labels, 0);
         foreach ($data as $row) {
             $key = $keyMapper($row);
-            if (!isset($website[$key])) continue;
-            $website[$key] = round((float)$row->website_total, 2);
-            $pos[$key] = round((float)$row->pos_total, 2);
+            if (! isset($website[$key])) {
+                continue;
+            }
+            $website[$key] = round((float) $row->website_total, 2);
+            $pos[$key] = round((float) $row->pos_total, 2);
         }
+
         return response()->json([
             'labels' => $labels,
             'website' => $website,
             'pos' => $pos,
         ]);
     }
-
-
 
     public function costAnalytics()
     {
@@ -184,58 +184,61 @@ class AnalyticsController extends Controller
             ? DB::table('purchases')->where('shop_id', $shopId)->sum('total_amount')
             : 0;
         $grantTotal = $payOuts + $rider + $refund + $purchase;
+
         return response()->json([
             'Payouts' => $payOuts,
             'Rider' => $rider,
             'Refund' => $refund,
             'Purchase' => $purchase,
-            'grantTotal' => $grantTotal
+            'grantTotal' => $grantTotal,
         ]);
     }
 
     public function earningAnalytics(Request $request)
     {
-        $type   = $request->type ?? 'daily';
+        $type = $request->type ?? 'daily';
         $shopId = generaleSetting('shop')?->id;
         $currentYear = now()->year;
         $startOfWeek = now()->startOfWeek();
-        $endOfWeek   = now()->endOfWeek();
+        $endOfWeek = now()->endOfWeek();
         // Initialize variables
         $labels = [];
-        $mapFunc = fn($grp) => $grp - 1; // default for daily
+        $mapFunc = fn ($grp) => $grp - 1; // default for daily
         $orderDate = $purchaseDate = $payoutDate = null;
 
         switch ($type) {
             case 'daily':
                 $labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-                $orderDate    = "WEEKDAY(orders.created_at)+1";
-                $purchaseDate = "WEEKDAY(purchases.created_at)+1";
-                $payoutDate   = "WEEKDAY(withdraws.created_at)+1";
-                $orderFilter    = fn($q) => $q->whereBetween('orders.created_at', [$startOfWeek, $endOfWeek]);
-                $purchaseFilter = fn($q) => $q->whereBetween('purchases.created_at', [$startOfWeek, $endOfWeek]);
-                $payoutFilter   = fn($q) => $q->whereBetween('withdraws.created_at', [$startOfWeek, $endOfWeek]);
+                $orderDate = 'WEEKDAY(orders.created_at)+1';
+                $purchaseDate = 'WEEKDAY(purchases.created_at)+1';
+                $payoutDate = 'WEEKDAY(withdraws.created_at)+1';
+                $orderFilter = fn ($q) => $q->whereBetween('orders.created_at', [$startOfWeek, $endOfWeek]);
+                $purchaseFilter = fn ($q) => $q->whereBetween('purchases.created_at', [$startOfWeek, $endOfWeek]);
+                $payoutFilter = fn ($q) => $q->whereBetween('withdraws.created_at', [$startOfWeek, $endOfWeek]);
                 break;
 
             case 'monthly':
                 $labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                $orderDate    = "MONTH(orders.created_at)";
-                $purchaseDate = "MONTH(purchases.created_at)";
-                $payoutDate   = "MONTH(withdraws.created_at)";
-                $orderFilter    = fn($q) => $q->whereYear('orders.created_at', $currentYear);
-                $purchaseFilter = fn($q) => $q->whereYear('purchases.created_at', $currentYear);
-                $payoutFilter   = fn($q) => $q->whereYear('withdraws.created_at', $currentYear);
+                $orderDate = 'MONTH(orders.created_at)';
+                $purchaseDate = 'MONTH(purchases.created_at)';
+                $payoutDate = 'MONTH(withdraws.created_at)';
+                $orderFilter = fn ($q) => $q->whereYear('orders.created_at', $currentYear);
+                $purchaseFilter = fn ($q) => $q->whereYear('purchases.created_at', $currentYear);
+                $payoutFilter = fn ($q) => $q->whereYear('withdraws.created_at', $currentYear);
                 break;
 
             case 'yearly':
             default:
-                for ($y = $currentYear; $y >= $currentYear - 6; $y--) $labels[] = (string)$y;
-                $orderDate    = "YEAR(orders.created_at)";
-                $purchaseDate = "YEAR(purchases.created_at)";
-                $payoutDate   = "YEAR(withdraws.created_at)";
-                $mapFunc = fn($grp) => array_search((string)$grp, $labels);
-                $orderFilter    = fn($q) => $q->whereYear('orders.created_at', '>=', $currentYear - 6);
-                $purchaseFilter = fn($q) => $q->whereYear('purchases.created_at', '>=', $currentYear - 6);
-                $payoutFilter   = fn($q) => $q->whereYear('withdraws.created_at', '>=', $currentYear - 6);
+                for ($y = $currentYear; $y >= $currentYear - 6; $y--) {
+                    $labels[] = (string) $y;
+                }
+                $orderDate = 'YEAR(orders.created_at)';
+                $purchaseDate = 'YEAR(purchases.created_at)';
+                $payoutDate = 'YEAR(withdraws.created_at)';
+                $mapFunc = fn ($grp) => array_search((string) $grp, $labels);
+                $orderFilter = fn ($q) => $q->whereYear('orders.created_at', '>=', $currentYear - 6);
+                $purchaseFilter = fn ($q) => $q->whereYear('purchases.created_at', '>=', $currentYear - 6);
+                $payoutFilter = fn ($q) => $q->whereYear('withdraws.created_at', '>=', $currentYear - 6);
                 break;
         }
 
@@ -257,11 +260,11 @@ class AnalyticsController extends Controller
         /* -------- purchase -------- */
         $purchases = module_exists('Purchase')
             ? DB::table('purchases')
-            ->where('shop_id', $shopId)
-            ->tap($purchaseFilter)
-            ->selectRaw("$purchaseDate as grp, SUM(total_amount) as total_purchase")
-            ->groupBy('grp')
-            ->get()
+                ->where('shop_id', $shopId)
+                ->tap($purchaseFilter)
+                ->selectRaw("$purchaseDate as grp, SUM(total_amount) as total_purchase")
+                ->groupBy('grp')
+                ->get()
             : collect();
 
         /* -------- payout (Withdraw + Refund) -------- */
@@ -274,23 +277,23 @@ class AnalyticsController extends Controller
             ->get();
         $refunds = Schema::hasTable('return_order_details')
             ? DB::table('return_order_details')
-            ->join('products', 'products.id', '=', 'return_order_details.product_id')
-            ->where('products.shop_id', $shopId)
-            ->tap($payoutFilter)
-            ->selectRaw("$payoutDate as grp, SUM(return_order_details.quantity * return_order_details.price) as total_refund")
-            ->groupBy('grp')
-            ->get()
+                ->join('products', 'products.id', '=', 'return_order_details.product_id')
+                ->where('products.shop_id', $shopId)
+                ->tap($payoutFilter)
+                ->selectRaw("$payoutDate as grp, SUM(return_order_details.quantity * return_order_details.price) as total_refund")
+                ->groupBy('grp')
+                ->get()
             : collect();
 
         // Merge withdraws + refunds for payouts
         $payoutData = [];
         foreach ($withdraws as $w) {
             $grp = $w->grp;
-            $payoutData[$grp] = ($payoutData[$grp] ?? 0) + (float)$w->total_withdraw;
+            $payoutData[$grp] = ($payoutData[$grp] ?? 0) + (float) $w->total_withdraw;
         }
         foreach ($refunds as $r) {
             $grp = $r->grp;
-            $payoutData[$grp] = ($payoutData[$grp] ?? 0) + (float)$r->total_refund;
+            $payoutData[$grp] = ($payoutData[$grp] ?? 0) + (float) $r->total_refund;
         }
         /* -------- map data to chart -------- */
         $mapToChart = function ($data, $labels, $valueKey = null) use ($mapFunc) {
@@ -298,21 +301,23 @@ class AnalyticsController extends Controller
             foreach ($data as $item) {
                 $i = $mapFunc($item->grp);
                 if ($i !== false && $i !== null) {
-                    $arr[$i] = round($valueKey ? (float)$item->$valueKey : (float)$item, 2);
+                    $arr[$i] = round($valueKey ? (float) $item->$valueKey : (float) $item, 2);
                 }
             }
+
             return $arr;
         };
-        $salesArr    = $mapToChart($orders, $labels, 'total_sales');
-        $ordersArr   = $mapToChart($orders, $labels, 'total_orders');
+        $salesArr = $mapToChart($orders, $labels, 'total_sales');
+        $ordersArr = $mapToChart($orders, $labels, 'total_orders');
         $purchaseArr = $mapToChart($purchases, $labels, 'total_purchase');
-        $payoutArr   = $mapToChart(collect($payoutData)->map(fn($v, $k) => (object)['grp' => $k, 'value' => $v]), $labels, 'value');
+        $payoutArr = $mapToChart(collect($payoutData)->map(fn ($v, $k) => (object) ['grp' => $k, 'value' => $v]), $labels, 'value');
+
         return response()->json([
-            'labels'   => $labels,
-            'sales'    => array_values($salesArr),
-            'orders'   => array_values($ordersArr),
+            'labels' => $labels,
+            'sales' => array_values($salesArr),
+            'orders' => array_values($ordersArr),
             'purchase' => array_values($purchaseArr),
-            'payouts'  => array_values($payoutArr),
+            'payouts' => array_values($payoutArr),
         ]);
     }
 }

@@ -1,17 +1,13 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WholesaleBanner } from "@/components/home/WholesaleBanner";
-import {
-  ArrowLeft,
-  Building2,
-  Send,
-  Loader2,
-  Check,
-} from "lucide-react";
+import { ArrowLeft, Building2, Send, Loader2, Check } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   submitB2BQuoteThunk,
@@ -22,11 +18,11 @@ import {
 import { B2BQuoteRequest } from "@/types/cart";
 
 export default function WholesalePage() {
+  const { t } = useLocale();
   const dispatch = useAppDispatch();
   const quoteStatus = useAppSelector(selectB2BQuoteStatus);
   const lastQuote = useAppSelector(selectLastSubmittedQuote);
   const quoteError = useAppSelector((state) => state.b2bQuote.error);
-
   const [formData, setFormData] = useState<B2BQuoteRequest>({
     companyName: "Bengal Rice Distributors Ltd.",
     contactPerson: "Rafiqul Islam",
@@ -38,7 +34,8 @@ export default function WholesalePage() {
     deliveryDestination: "Tejgaon Industrial Area, Dhaka",
     deliveryTimeframe: "Within 10 Days",
     packagingRequirement: "50kg Sacks",
-    notes: "Requires moisture certificate (< 12%) and SGS grain length inspection.",
+    notes:
+      "Requires moisture certificate (< 12%) and SGS grain length inspection.",
   });
 
   const handleSubmitQuote = (e: React.FormEvent) => {
@@ -56,18 +53,22 @@ export default function WholesalePage() {
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#183A20] hover:text-[#B88A35] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Marketplace</span>
+            <span>{t("Back to Marketplace")}</span>
           </Link>
           <div className="mt-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#183A20]/10 text-[#183A20] text-xs font-bold uppercase tracking-wider mb-2">
               <Building2 className="w-3.5 h-3.5 text-[#B88A35]" />
-              <span>B2B Institutional Procurement</span>
+              <span>{t("B2B Institutional Procurement")}</span>
             </div>
             <h1 className="font-serif text-3xl sm:text-5xl font-bold text-[#19221B]">
-              Wholesale & Bulk Rice Sourcing
+              {" "}
+              {t("Wholesale & Bulk Rice Sourcing")}{" "}
             </h1>
             <p className="text-[#686C64] text-base max-w-2xl mt-2">
-              Contract directly with accredited rice mills and farmer cooperatives. Multi-tier volume discounts, palletized delivery, and certified batch testing.
+              {" "}
+              {t(
+                "Contract directly with accredited rice mills and farmer cooperatives. Multi-tier volume discounts, palletized delivery, and certified batch testing.",
+              )}{" "}
             </p>
           </div>
         </div>
@@ -77,36 +78,74 @@ export default function WholesalePage() {
         {/* Wholesale Tiers Overview Grid */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <h2 className="font-serif text-2xl font-bold text-[#19221B] mb-6">
-            B2B Purchasing Volume Tiers
+            {" "}
+            {t("B2B Purchasing Volume Tiers")}{" "}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <div className="bg-[#FFFDF8] p-6 rounded-2xl border border-[#E7E1D7] shadow-xs">
-              <span className="text-xs font-bold text-[#B88A35] uppercase tracking-wider">Tier 1</span>
-              <h3 className="font-serif text-xl font-bold text-[#183A20] mt-1">Retailers & Cafes</h3>
-              <div className="text-2xl font-bold text-[#19221B] mt-2">10 – 49 kg</div>
+              <span className="text-xs font-bold text-[#B88A35] uppercase tracking-wider">
+                {" "}
+                {t("Tier 1")}{" "}
+              </span>
+              <h3 className="font-serif text-xl font-bold text-[#183A20] mt-1">
+                {" "}
+                {t("Retailers & Cafes")}{" "}
+              </h3>
+              <div className="text-2xl font-bold text-[#19221B] mt-2">
+                {" "}
+                {t("10 – 49 kg")}{" "}
+              </div>
               <p className="text-xs text-[#686C64] mt-2">
-                Save 8–12% off standard retail pricing. Next-day dispatch in commercial protective sacks.
+                {" "}
+                {t(
+                  "Save 8–12% off standard retail pricing. Next-day dispatch in commercial protective sacks.",
+                )}{" "}
               </p>
             </div>
 
             <div className="bg-[#FFFDF8] p-6 rounded-2xl border-2 border-[#183A20] shadow-md relative">
               <span className="absolute top-4 right-4 bg-[#183A20] text-[#FFFDF8] text-[10px] font-bold px-2 py-0.5 rounded uppercase">
-                Most Popular
+                {" "}
+                {t("Most Popular")}{" "}
               </span>
-              <span className="text-xs font-bold text-[#B88A35] uppercase tracking-wider">Tier 2</span>
-              <h3 className="font-serif text-xl font-bold text-[#183A20] mt-1">Hotels & Restaurants</h3>
-              <div className="text-2xl font-bold text-[#19221B] mt-2">50 – 499 kg</div>
+              <span className="text-xs font-bold text-[#B88A35] uppercase tracking-wider">
+                {" "}
+                {t("Tier 2")}{" "}
+              </span>
+              <h3 className="font-serif text-xl font-bold text-[#183A20] mt-1">
+                {" "}
+                {t("Hotels & Restaurants")}{" "}
+              </h3>
+              <div className="text-2xl font-bold text-[#19221B] mt-2">
+                {" "}
+                {t("50 – 499 kg")}{" "}
+              </div>
               <p className="text-xs text-[#686C64] mt-2">
-                Save 18–22% off standard prices. Dedicated account manager with palletized delivery.
+                {" "}
+                {t(
+                  "Save 18–22% off standard prices. Dedicated account manager with palletized delivery.",
+                )}{" "}
               </p>
             </div>
 
             <div className="bg-[#FFFDF8] p-6 rounded-2xl border border-[#E7E1D7] shadow-xs">
-              <span className="text-xs font-bold text-[#B88A35] uppercase tracking-wider">Tier 3</span>
-              <h3 className="font-serif text-xl font-bold text-[#183A20] mt-1">Industrial & Export</h3>
-              <div className="text-2xl font-bold text-[#19221B] mt-2">500+ kg (Metric Tons)</div>
+              <span className="text-xs font-bold text-[#B88A35] uppercase tracking-wider">
+                {" "}
+                {t("Tier 3")}{" "}
+              </span>
+              <h3 className="font-serif text-xl font-bold text-[#183A20] mt-1">
+                {" "}
+                {t("Industrial & Export")}{" "}
+              </h3>
+              <div className="text-2xl font-bold text-[#19221B] mt-2">
+                {" "}
+                {t("500+ kg (Metric Tons)")}{" "}
+              </div>
               <p className="text-xs text-[#686C64] mt-2">
-                Save up to 30%. Custom mill contract quotes with tailored packaging & lab reports.
+                {" "}
+                {t(
+                  "Save up to 30%. Custom mill contract quotes with tailored packaging & lab reports.",
+                )}{" "}
               </p>
             </div>
           </div>
@@ -115,13 +154,18 @@ export default function WholesalePage() {
           <div className="bg-[#FFFDF8] rounded-3xl border border-[#E7E1D7] p-6 sm:p-10 shadow-sm">
             <div className="max-w-3xl">
               <span className="text-xs font-bold text-[#B88A35] uppercase tracking-widest">
-                Redux Thunk RFQ Pipeline
+                {" "}
+                {t("Redux Thunk RFQ Pipeline")}{" "}
               </span>
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#19221B] mt-1 mb-2">
-                Request a Custom Mill Contract Quote
+                {" "}
+                {t("Request a Custom Mill Contract Quote")}{" "}
               </h2>
               <p className="text-xs sm:text-sm text-[#686C64] mb-8">
-                Submit your procurement specs. Our mill network will review your inquiry and respond with a formal quotation within 4 business hours.
+                {" "}
+                {t(
+                  "Submit your procurement specs. Our mill network will review your inquiry and respond with a formal quotation within 4 business hours.",
+                )}{" "}
               </p>
 
               {quoteStatus === "succeeded" && lastQuote ? (
@@ -132,22 +176,31 @@ export default function WholesalePage() {
                     </div>
                     <div>
                       <h3 className="font-serif font-bold text-lg">
-                        RFQ Submitted Successfully!
+                        {" "}
+                        {t("RFQ Submitted Successfully!")}{" "}
                       </h3>
                       <p className="text-xs text-[#FAF6EF]/80">
-                        Reference Number: <span className="font-mono font-bold text-[#B88A35]">{lastQuote.id}</span>
+                        Reference Number:{" "}
+                        <span className="font-mono font-bold text-[#B88A35]">
+                          {lastQuote.id}
+                        </span>
                       </p>
                     </div>
                   </div>
                   <p className="text-xs text-[#FAF6EF]/90 mb-4">
-                    Thank you, <span className="font-bold">{lastQuote.contactPerson}</span>. A formal quote for {lastQuote.quantityKg.toLocaleString()} kg of {lastQuote.riceVariety} has been forwarded to verified mills servicing {lastQuote.deliveryDestination}.
+                    Thank you,{" "}
+                    <span className="font-bold">{lastQuote.contactPerson}</span>
+                    . A formal quote for {lastQuote.quantityKg.toLocaleString()}{" "}
+                    kg of {lastQuote.riceVariety} has been forwarded to verified
+                    mills servicing {lastQuote.deliveryDestination}.
                   </p>
                   <button
                     type="button"
                     onClick={() => dispatch(resetQuoteSubmission())}
                     className="px-4 py-2 rounded-xl bg-[#FAF6EF] text-[#183A20] text-xs font-bold hover:bg-[#EFE7D8]"
                   >
-                    Submit Another Inquiry
+                    {" "}
+                    {t("Submit Another Inquiry")}{" "}
                   </button>
                 </div>
               ) : (
@@ -161,28 +214,36 @@ export default function WholesalePage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-bold text-[#19221B] mb-1">
-                        Company Name
+                        {" "}
+                        {t("Company Name")}{" "}
                       </label>
                       <input
                         type="text"
                         required
                         value={formData.companyName}
                         onChange={(e) =>
-                          setFormData({ ...formData, companyName: e.target.value })
+                          setFormData({
+                            ...formData,
+                            companyName: e.target.value,
+                          })
                         }
                         className="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm bg-[#FAF6EF] border border-[#E7E1D7] focus:outline-none focus:border-[#183A20]"
                       />
                     </div>
                     <div>
                       <label className="block text-xs font-bold text-[#19221B] mb-1">
-                        Procurement Officer / Contact
+                        {" "}
+                        {t("Procurement Officer / Contact")}{" "}
                       </label>
                       <input
                         type="text"
                         required
                         value={formData.contactPerson}
                         onChange={(e) =>
-                          setFormData({ ...formData, contactPerson: e.target.value })
+                          setFormData({
+                            ...formData,
+                            contactPerson: e.target.value,
+                          })
                         }
                         className="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm bg-[#FAF6EF] border border-[#E7E1D7] focus:outline-none focus:border-[#183A20]"
                       />
@@ -192,7 +253,8 @@ export default function WholesalePage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-bold text-[#19221B] mb-1">
-                        Corporate Email
+                        {" "}
+                        {t("Corporate Email")}{" "}
                       </label>
                       <input
                         type="email"
@@ -206,7 +268,8 @@ export default function WholesalePage() {
                     </div>
                     <div>
                       <label className="block text-xs font-bold text-[#19221B] mb-1">
-                        Direct Phone / WhatsApp
+                        {" "}
+                        {t("Direct Phone / WhatsApp")}{" "}
                       </label>
                       <input
                         type="tel"
@@ -223,27 +286,44 @@ export default function WholesalePage() {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-xs font-bold text-[#19221B] mb-1">
-                        Rice Variety
+                        {" "}
+                        {t("Rice Variety")}{" "}
                       </label>
                       <select
                         value={formData.riceVariety}
                         onChange={(e) =>
-                          setFormData({ ...formData, riceVariety: e.target.value })
+                          setFormData({
+                            ...formData,
+                            riceVariety: e.target.value,
+                          })
                         }
                         className="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm bg-[#FAF6EF] border border-[#E7E1D7] focus:outline-none focus:border-[#183A20]"
                       >
-                        <option value="Basmati">Basmati (Super Kernel)</option>
-                        <option value="Miniket">Miniket (Silky White)</option>
-                        <option value="Nazirshail">Nazirshail (Old Crop)</option>
-                        <option value="Chinigura">Chinigura (Aromatic)</option>
-                        <option value="Kataribhog">Kataribhog</option>
-                        <option value="Parboiled">Parboiled Coarse / Fine</option>
+                        <option value="Basmati">
+                          {t("Basmati (Super Kernel)")}
+                        </option>
+                        <option value="Miniket">
+                          {t("Miniket (Silky White)")}
+                        </option>
+                        <option value="Nazirshail">
+                          {" "}
+                          {t("Nazirshail (Old Crop)")}{" "}
+                        </option>
+                        <option value="Chinigura">
+                          {t("Chinigura (Aromatic)")}
+                        </option>
+                        <option value="Kataribhog">{t("Kataribhog")}</option>
+                        <option value="Parboiled">
+                          {" "}
+                          {t("Parboiled Coarse / Fine")}{" "}
+                        </option>
                       </select>
                     </div>
 
                     <div>
                       <label className="block text-xs font-bold text-[#19221B] mb-1">
-                        Target Volume (kg)
+                        {" "}
+                        {t("Target Volume (kg)")}{" "}
                       </label>
                       <input
                         type="number"
@@ -262,30 +342,40 @@ export default function WholesalePage() {
 
                     <div>
                       <label className="block text-xs font-bold text-[#19221B] mb-1">
-                        Packaging Size
+                        {" "}
+                        {t("Packaging Size")}{" "}
                       </label>
                       <select
                         value={formData.packagingRequirement}
                         onChange={(e) =>
                           setFormData({
                             ...formData,
-                            packagingRequirement:
-                              e.target.value as B2BQuoteRequest["packagingRequirement"],
+                            packagingRequirement: e.target
+                              .value as B2BQuoteRequest["packagingRequirement"],
                           })
                         }
                         className="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm bg-[#FAF6EF] border border-[#E7E1D7] focus:outline-none focus:border-[#183A20]"
                       >
-                        <option value="50kg Sacks">50kg Sacks (Jute / Poly)</option>
-                        <option value="25kg Sacks">25kg Sacks</option>
-                        <option value="1 Ton Bulk Bags">1 Ton Jumbo Bags</option>
-                        <option value="Custom">Custom Brand Packaging</option>
+                        <option value="50kg Sacks">
+                          {" "}
+                          {t("50kg Sacks (Jute / Poly)")}{" "}
+                        </option>
+                        <option value="25kg Sacks">{t("25kg Sacks")}</option>
+                        <option value="1 Ton Bulk Bags">
+                          {" "}
+                          {t("1 Ton Jumbo Bags")}{" "}
+                        </option>
+                        <option value="Custom">
+                          {t("Custom Brand Packaging")}
+                        </option>
                       </select>
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-xs font-bold text-[#19221B] mb-1">
-                      Delivery Destination
+                      {" "}
+                      {t("Delivery Destination")}{" "}
                     </label>
                     <input
                       type="text"
@@ -309,12 +399,12 @@ export default function WholesalePage() {
                     {quoteStatus === "submitting" ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin text-[#B88A35]" />
-                        <span>Submitting RFQ via Redux Thunk...</span>
+                        <span>{t("Submitting RFQ via Redux Thunk...")}</span>
                       </>
                     ) : (
                       <>
                         <Send className="w-4 h-4 text-[#B88A35]" />
-                        <span>Submit Wholesale RFQ</span>
+                        <span>{t("Submit Wholesale RFQ")}</span>
                       </>
                     )}
                   </button>

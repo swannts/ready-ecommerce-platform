@@ -13,6 +13,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Withdraw;
 use App\Repositories\FlashSaleRepository;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -81,7 +82,7 @@ class DashboardController extends Controller
             ->latest('id')
             ->get();
 
-        return view('admin.dashboard', compact('totalShop', 'totalOrder', 'totalCustomer', 'totalProduct', 'orderStatuses', 'topCustomers', 'topSellingProducts', 'topReviewProducts', 'topShops', 'latestOrders', 'topFavorites', 'pendingWithdraw', 'alreadyWithdraw', 'deniedWithdraw', 'totalCommission', 'totalCategories', 'flashSale', 'totalRider','generaleSetting', 'lowStockProducts'));
+        return view('admin.dashboard', compact('totalShop', 'totalOrder', 'totalCustomer', 'totalProduct', 'orderStatuses', 'topCustomers', 'topSellingProducts', 'topReviewProducts', 'topShops', 'latestOrders', 'topFavorites', 'pendingWithdraw', 'alreadyWithdraw', 'deniedWithdraw', 'totalCommission', 'totalCategories', 'flashSale', 'totalRider', 'generaleSetting', 'lowStockProducts'));
     }
 
     public function orderStatistics()
@@ -99,7 +100,7 @@ class DashboardController extends Controller
                 return $query->where('shop_id', $shop?->id);
             })->whereDate('created_at', $date)->count();
 
-            $labels = [\Carbon\Carbon::parse($date)->format('l')]; // e.g., "Monday"
+            $labels = [Carbon::parse($date)->format('l')]; // e.g., "Monday"
             $values = [$count];
 
             return $this->json('single day order statistics', [

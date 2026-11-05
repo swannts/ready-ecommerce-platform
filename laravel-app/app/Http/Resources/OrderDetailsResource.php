@@ -40,11 +40,10 @@ class OrderDetailsResource extends JsonResource
 
         $blockedStatuses = ['Delivered', 'Cancelled'];
 
-
-        $canShowRiderLocation = $this->driverOrder?->driver_id && !in_array($this->order_status->value, $blockedStatuses);
+        $canShowRiderLocation = $this->driverOrder?->driver_id && ! in_array($this->order_status->value, $blockedStatuses);
         $riderLocation = [];
         if ($canShowRiderLocation) {
-            $riderLocation =$this->driverOrder ? OrderRiderResource::make($this->driverOrder) : [];
+            $riderLocation = $this->driverOrder ? OrderRiderResource::make($this->driverOrder) : [];
         }
 
         return [
@@ -74,7 +73,7 @@ class OrderDetailsResource extends JsonResource
                 ? $this->created_at->copy()->addDays($generaleSetting?->return_order_within_days ?? 3)->format('d M, Y h:i A')
                 : null,
             'is_returnable' => $is_returned,
-            'rider' =>$riderLocation ,
+            'rider' => $riderLocation,
         ];
     }
 }

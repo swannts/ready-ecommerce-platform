@@ -145,7 +145,6 @@
 //       DefaultAddressModel.fromMap(json.decode(source) as Map<String, dynamic>);
 // }
 
-
 import 'dart:convert';
 
 bool _parseIsDefault(dynamic value) {
@@ -224,7 +223,6 @@ class AddAddress {
       longitude: map['longitude'] != null
           ? double.tryParse(map['longitude'].toString())
           : null,
-
       areaId: map['area_id'] as int?,
       isDefault: _parseIsDefault(map['is_default']),
     );

@@ -12,7 +12,9 @@
             <SkeletonLoader v-else class="w-full h-full" />
         </div>
 
-        <div class="main-container relative bg-primary-50 dark:bg-slate-900 py-10 pt-24">
+        <div
+            class="main-container relative bg-primary-50 dark:bg-slate-900 py-10 pt-24"
+        >
             <!-- Shop Details -->
             <div
                 class="-top-32 sm:-top-28 lg:-top-[108px] absolute left-0 right-0 main-container"
@@ -396,7 +398,11 @@ import ReviewRatings from "../components/ReviewRatings.vue";
 import Review from "../components/Review.vue";
 import SkeletonLoader from "../components/SkeletonLoader.vue";
 import RightChatSidebar from "../components/RightChatSidebar.vue";
-import { slugify, getCachedShopId, cacheShopSlug } from "../composables/useSlugify";
+import {
+    slugify,
+    getCachedShopId,
+    cacheShopSlug,
+} from "../composables/useSlugify";
 import { useSeo } from "../composables/useSeo";
 
 import { useMaster } from "../stores/MasterStore";
@@ -414,8 +420,12 @@ const shopId = ref(getCachedShopId(route.params.id) || null);
 const resolveShopId = async () => {
     if (shopId.value) return;
     try {
-        const response = await axios.get("/shops", { params: { per_page: 1000, page: 1 } });
-        const match = response.data.data.shops.find((s) => slugify(s.name) === route.params.id);
+        const response = await axios.get("/shops", {
+            params: { per_page: 1000, page: 1 },
+        });
+        const match = response.data.data.shops.find(
+            (s) => slugify(s.name) === route.params.id,
+        );
         if (match) {
             shopId.value = match.id;
             cacheShopSlug(match);
@@ -506,7 +516,7 @@ const fetchDetails = async () => {
                 title: shop.value.name,
                 description: shop.value.description || shop.value.name,
                 image: shop.value.logo || shop.value.banner,
-                type: 'website',
+                type: "website",
             });
             setTimeout(() => {
                 isLoading.value = false;
@@ -603,7 +613,7 @@ const showChat = async () => {
             headers: {
                 Authorization: authStore.token,
             },
-        }
+        },
     );
 
     showSidebar.value = true;

@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 class CheckOnlineUserController extends Controller
 {
     public function checkOnlineStatus()
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return;
         }
 

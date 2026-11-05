@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ProductThumbnail extends Model
 {
     use HasFactory;
+
     public $timestamps = false;
+
     protected $fillable = [
         'product_id',
         'thumbnail',

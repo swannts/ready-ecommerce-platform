@@ -4,7 +4,9 @@
             class="bg-white dark:bg-slate-800 rounded-lg md:rounded-2xl border border-slate-100 dark:border-slate-700 p-3 md:p-4 xl:p-6"
         >
             <div class="flex justify-between items-center">
-                <div class="text-slate-950 dark:text-white text-lg md:text-xl font-medium my-2">
+                <div
+                    class="text-slate-950 dark:text-white text-lg md:text-xl font-medium my-2"
+                >
                     {{ $t("Order Id") }}
                 </div>
 
@@ -13,26 +15,36 @@
 
             <div class="w-full h-[0px] border border-slate-400"></div>
 
-            <div class="text-slate-950 dark:text-white text-lg md:text-xl font-medium my-2">
+            <div
+                class="text-slate-950 dark:text-white text-lg md:text-xl font-medium my-2"
+            >
                 {{ $t("Order Summary") }}
             </div>
 
             <!-- Subtotal -->
             <div class="my-3 flex justify-between gap-4">
-                <div class="text-slate-950 dark:text-white text-sm sm:text-base font-normal">
+                <div
+                    class="text-slate-950 dark:text-white text-sm sm:text-base font-normal"
+                >
                     {{ $t("Items") }}
                 </div>
-                <div class="text-slate-950 dark:text-white text-sm sm:text-base font-normal">
+                <div
+                    class="text-slate-950 dark:text-white text-sm sm:text-base font-normal"
+                >
                     {{ order.quantity }}
                 </div>
             </div>
 
             <!-- Subtotal -->
             <div class="my-3 flex justify-between gap-4">
-                <div class="text-slate-950 dark:text-white text-sm sm:text-base font-normal">
+                <div
+                    class="text-slate-950 dark:text-white text-sm sm:text-base font-normal"
+                >
                     {{ $t("Subtotal") }}
                 </div>
-                <div class="text-slate-950 dark:text-white text-sm sm:text-base font-normal">
+                <div
+                    class="text-slate-950 dark:text-white text-sm sm:text-base font-normal"
+                >
                     {{ master.showCurrency(order?.total_amount) }}
                 </div>
             </div>
@@ -42,17 +54,23 @@
                 <div class="text-red-500 text-sm sm:text-base font-normal">
                     {{ $t("Discount") }}
                 </div>
-                <div class="text-slate-950 dark:text-white text-sm sm:text-base font-normal">
+                <div
+                    class="text-slate-950 dark:text-white text-sm sm:text-base font-normal"
+                >
                     -{{ master.showCurrency(order?.coupon_discount) }}
                 </div>
             </div>
 
             <!-- Shipping Charge -->
             <div class="my-3 flex justify-between gap-4">
-                <div class="text-slate-950 dark:text-white text-sm sm:text-base font-normal">
+                <div
+                    class="text-slate-950 dark:text-white text-sm sm:text-base font-normal"
+                >
                     {{ $t("Shipping Charge") }}
                 </div>
-                <div class="text-slate-950 dark:text-white text-sm sm:text-base font-normal">
+                <div
+                    class="text-slate-950 dark:text-white text-sm sm:text-base font-normal"
+                >
                     {{ master.showCurrency(order?.delivery_charge) }}
                 </div>
             </div>
@@ -81,7 +99,9 @@
                     </div>
                 </div>
 
-                <div class="mt-2 p-3 flex justify-between bg-slate-200 rounded-lg">
+                <div
+                    class="mt-2 p-3 flex justify-between bg-slate-200 rounded-lg"
+                >
                     <h3 class="text-sm sm:text-base font-medium">
                         {{ $t("Total Tax Amount") }}:
                     </h3>
@@ -95,10 +115,14 @@
 
             <!-- Total Payable -->
             <div class="my-3 flex justify-between gap-4">
-                <div class="text-slate-950 dark:text-white text-sm sm:text-base font-normal">
+                <div
+                    class="text-slate-950 dark:text-white text-sm sm:text-base font-normal"
+                >
                     {{ $t("Total Amount") }}
                 </div>
-                <div class="text-slate-950 dark:text-white text-base sm:text-lg tracking-tight">
+                <div
+                    class="text-slate-950 dark:text-white text-base sm:text-lg tracking-tight"
+                >
                     {{ master.showCurrency(order?.payable_amount) }}
                 </div>
             </div>
@@ -229,7 +253,9 @@
                             <DialogPanel
                                 class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
                             >
-                                <div class="bg-white dark:bg-slate-800 p-5 sm:p-8 text-center">
+                                <div
+                                    class="bg-white dark:bg-slate-800 p-5 sm:p-8 text-center"
+                                >
                                     <div
                                         class="bg-red-500 w-14 h-14 md:w-20 md:h-20 rounded-full mx-auto flex justify-center items-center"
                                     >
@@ -249,7 +275,7 @@
                                     >
                                         {{
                                             $t(
-                                                "Are you sure want to cancel this order"
+                                                "Are you sure want to cancel this order",
                                             )
                                         }}?
                                     </div>
@@ -342,7 +368,7 @@ const cancelOrder = () => {
                 headers: {
                     Authorization: authStore.token,
                 },
-            }
+            },
         )
         .then((response) => {
             toast.success(response.data.message, {

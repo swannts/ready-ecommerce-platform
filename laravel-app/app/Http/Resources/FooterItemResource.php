@@ -15,6 +15,7 @@ class FooterItemResource extends JsonResource
     public function toArray(Request $request): array
     {
         $lang = request()->header('accept-language') ?? 'en';
+
         return [
             'id' => $this->id,
             'type' => $this->type,

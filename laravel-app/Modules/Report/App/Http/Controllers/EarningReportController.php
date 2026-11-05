@@ -2,14 +2,14 @@
 
 namespace Modules\Report\App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\Withdraw;
 use App\Enums\OrderStatus;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Withdraw;
 use App\Repositories\OrderRepository;
-use Illuminate\Support\Facades\Schema;
 use App\Repositories\ShopSubscriptionRepository;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class EarningReportController extends Controller
 {
@@ -41,25 +41,25 @@ class EarningReportController extends Controller
         $data['totalPurchase'] = module_exists('Purchase') ? DB::table('purchases')->where('shop_id', $shop->id)->whereBetween('created_at', [$from, $to])->sum('total_amount') : 0;
         $data['totalRefundAmount'] = Schema::hasTable('return_order_details')
             ? DB::table('return_order_details')
-            ->join('products', 'products.id', '=', 'return_order_details.product_id')
-            ->where('products.shop_id', $shop->id)
-            ->whereBetween('return_order_details.created_at', [$from, $to])
-            ->sum(DB::raw('return_order_details.quantity * return_order_details.price'))
+                ->join('products', 'products.id', '=', 'return_order_details.product_id')
+                ->where('products.shop_id', $shop->id)
+                ->whereBetween('return_order_details.created_at', [$from, $to])
+                ->sum(DB::raw('return_order_details.quantity * return_order_details.price'))
             : 0;
         $data['totalEarningProfit'] = $data['totalSale'] - ($data['deliveryFee'] + $data['adminCommission'] + $data['maintenanceFee'] + $data['totalPurchase'] + $data['totalRefundAmount']);
+
         return view('report::earningReport.earningSummary', $data);
     }
-
 
     public function commissionList()
     {
         $data['title'] = 'Commission List';
         $data['reportType'] = 'commissionList';
         $data['from'] = request('from') ?? now()->subDays(30)->format('m/d/Y');
-        $data['to']   = request('to') ?? now()->format('m/d/Y');
-        $shop   = generaleSetting('shop');
-        $from   = Carbon::parse($data['from'])->startOfDay();
-        $to     = Carbon::parse($data['to'])->endOfDay();
+        $data['to'] = request('to') ?? now()->format('m/d/Y');
+        $shop = generaleSetting('shop');
+        $from = Carbon::parse($data['from'])->startOfDay();
+        $to = Carbon::parse($data['to'])->endOfDay();
         $search = request('search');
         $baseQuery = OrderRepository::query()
             ->withoutGlobalScopes()
@@ -68,7 +68,7 @@ class EarningReportController extends Controller
             ->join('order_products', 'orders.id', '=', 'order_products.order_id');
         $data['orders'] = (clone $baseQuery)
             ->whereBetween('orders.created_at', [$from, $to])
-            ->when($search, fn($q) => $q->filter(['search' => $search]))
+            ->when($search, fn ($q) => $q->filter(['search' => $search]))
             ->groupBy(
                 'orders.id',
                 'orders.admin_commission',
@@ -109,16 +109,15 @@ class EarningReportController extends Controller
         return view('report::earningReport.commissionList', $data);
     }
 
-
     public function payOut()
     {
         $data['title'] = 'PayOut';
         $data['reportType'] = 'payOut';
         $data['from'] = request('from') ?? now()->subDays(30)->format('m/d/Y');
-        $data['to']   = request('to') ?? now()->format('m/d/Y');
+        $data['to'] = request('to') ?? now()->format('m/d/Y');
         $shop = generaleSetting('shop');
         $from = Carbon::parse($data['from'])->startOfDay();
-        $to   = Carbon::parse($data['to'])->endOfDay();
+        $to = Carbon::parse($data['to'])->endOfDay();
         $orderBaseQuery = OrderRepository::query()
             ->withoutGlobalScopes()
             ->completed()
@@ -132,7 +131,7 @@ class EarningReportController extends Controller
         ')
             ->first();
         $data['totalAdminCommission'] = (clone $orderBaseQuery)->sum('admin_commission');
-        $data['totalRiderCost']       = (clone $orderBaseQuery)->sum('delivery_charge');
+        $data['totalRiderCost'] = (clone $orderBaseQuery)->sum('delivery_charge');
         // Refunds
         $data['refundAmount'] = 0;
         $data['totalRefundAmount'] = 0;
@@ -164,6 +163,7 @@ class EarningReportController extends Controller
             ->whereBetween('created_at', [$from, $to])
             ->sum('amount');
         $data['totalWithdrawal'] = (clone $withdrawQuery)->sum('amount');
+
         return view('report::earningReport.payOut', $data);
     }
 }

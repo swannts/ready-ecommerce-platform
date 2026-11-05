@@ -2,12 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Enums\SubscriptionStatus;
 use App\Http\Requests\SubscriptionPurchaseRequest;
 use App\Models\Payment;
 use App\Models\ShopSubscription;
 use App\Models\SubscriptionPlan;
-use Mpdf\Tag\Sub;
 
 class ShopSubscriptionRepository extends Repository
 {
@@ -37,7 +35,7 @@ class ShopSubscriptionRepository extends Repository
 
         return [
             'subscription' => $subscription,
-            'payment' => $payment
+            'payment' => $payment,
         ];
     }
 }

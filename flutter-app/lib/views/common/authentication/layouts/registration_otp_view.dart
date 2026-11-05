@@ -23,9 +23,9 @@ import 'package:ready_ecommerce/views/common/authentication/components/pin_put.d
 
 import '../../../../controllers/common/master_controller.dart';
 
-class  RegistrationOtpView extends ConsumerStatefulWidget {
+class RegistrationOtpView extends ConsumerStatefulWidget {
   final RegConfirmOTPScreenArguments arguments;
-  const RegistrationOtpView ({
+  const RegistrationOtpView({
     super.key,
     required this.arguments,
   });
@@ -44,13 +44,9 @@ class _ConfirmOTPLayoutState extends ConsumerState<RegistrationOtpView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-
       initOTP();
-
     });
     startTimer();
-
-
 
     pinCodeController.addListener(pinCodeListener);
     super.initState();
@@ -58,12 +54,14 @@ class _ConfirmOTPLayoutState extends ConsumerState<RegistrationOtpView> {
 
   Future initOTP() async {
     ref
-        .read(authControllerProvider.notifier).sendOTP(phone: widget.arguments.phoneNumber, isForgot: widget.arguments.isPasswordRecover).then((response) {
-
+        .read(authControllerProvider.notifier)
+        .sendOTP(
+            phone: widget.arguments.phoneNumber,
+            isForgot: widget.arguments.isPasswordRecover)
+        .then((response) {
       // log("message---> ${response.data}");
       if (response.isSuccess) {
-
-        if(response.data != null){
+        if (response.data != null) {
           pinCodeController.text = response.data.toString();
         }
       }
@@ -102,7 +100,7 @@ class _ConfirmOTPLayoutState extends ConsumerState<RegistrationOtpView> {
     timer!.cancel();
     pinCodeController.removeListener(pinCodeListener);
 
-     pinCodeController.dispose();
+    pinCodeController.dispose();
 
     super.dispose();
   }
@@ -133,10 +131,10 @@ class _ConfirmOTPLayoutState extends ConsumerState<RegistrationOtpView> {
                   Column(
                     children: [
                       if (ref
-                          .read(masterControllerProvider.notifier)
-                          .materModel
-                          .data
-                          .registerOtpType ==
+                              .read(masterControllerProvider.notifier)
+                              .materModel
+                              .data
+                              .registerOtpType ==
                           'email') ...[
                         Text(S.of(context).weSentOtpEmail)
                       ] else ...[
@@ -149,9 +147,9 @@ class _ConfirmOTPLayoutState extends ConsumerState<RegistrationOtpView> {
                           Text(
                             widget.arguments.phoneNumber,
                             style: AppTextStyle(context).bodyText.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: colors(context).primaryColor,
-                            ),
+                                  fontWeight: FontWeight.w500,
+                                  color: colors(context).primaryColor,
+                                ),
                           ),
                           Gap(5.w),
                           GestureDetector(
@@ -176,65 +174,68 @@ class _ConfirmOTPLayoutState extends ConsumerState<RegistrationOtpView> {
                     absorbing: !isComplete,
                     child: ref.watch(authControllerProvider)
                         ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
+                            child: CircularProgressIndicator(),
+                          )
                         : CustomButton(
-                      buttonText: S.of(context).confirmOtp,
-                      buttonColor: isComplete
-                          ? colors(context).primaryColor
-                          : ColorTween(
-                        begin: colors(context).primaryColor,
-                        end: colors(context).light,
-                      ).lerp(0.5),
-                      onPressed: () {
-                        ref.read(authControllerProvider.notifier).verifyOTP(
-                          phone: widget.arguments.phoneNumber,
-                          otp: pinCodeController.text).then((response) {
-                          if (response.isSuccess) {
-                            if(widget.arguments.isFromCheckoutScreen == true){
-                              Navigator.pop(context);
-                            }
+                            buttonText: S.of(context).confirmOtp,
+                            buttonColor: isComplete
+                                ? colors(context).primaryColor
+                                : ColorTween(
+                                    begin: colors(context).primaryColor,
+                                    end: colors(context).light,
+                                  ).lerp(0.5),
+                            onPressed: () {
+                              ref
+                                  .read(authControllerProvider.notifier)
+                                  .verifyOTP(
+                                      phone: widget.arguments.phoneNumber,
+                                      otp: pinCodeController.text)
+                                  .then((response) {
+                                if (response.isSuccess) {
+                                  if (widget.arguments.isFromCheckoutScreen ==
+                                      true) {
+                                    Navigator.pop(context);
+                                  }
 
-                            context.nav.pushNamed(Routes.login);
+                                  context.nav.pushNamed(Routes.login);
 
-                            // if (widget.arguments.isPasswordRecover) {
-                            //   context.nav.pushNamed(
-                            //     Routes.createPassword,
-                            //     arguments: response.data.toString(),
-                            //   );
-                            // } else if (widget.arguments.isFromCheckoutScreen == true) {
-                            //   ref.read(isProfileVefifySuccess.notifier).state = true;
-                            //   ref.refresh(profileInfoControllerProvider);
-                            //
-                            //   Future.delayed(Duration(milliseconds: 200),
-                            //           () {
-                            //         // pinCodeController.dispose();
-                            //
-                            //         context.nav.pop();
-                            //       });
-                            // } else {
-                            //   context.nav.pushNamed(
-                            //     Routes.getCoreRouteName(
-                            //         AppConstants.appServiceName),
-                            //   );
-                            // }
+                                  // if (widget.arguments.isPasswordRecover) {
+                                  //   context.nav.pushNamed(
+                                  //     Routes.createPassword,
+                                  //     arguments: response.data.toString(),
+                                  //   );
+                                  // } else if (widget.arguments.isFromCheckoutScreen == true) {
+                                  //   ref.read(isProfileVefifySuccess.notifier).state = true;
+                                  //   ref.refresh(profileInfoControllerProvider);
+                                  //
+                                  //   Future.delayed(Duration(milliseconds: 200),
+                                  //           () {
+                                  //         // pinCodeController.dispose();
+                                  //
+                                  //         context.nav.pop();
+                                  //       });
+                                  // } else {
+                                  //   context.nav.pushNamed(
+                                  //     Routes.getCoreRouteName(
+                                  //         AppConstants.appServiceName),
+                                  //   );
+                                  // }
 
-                            GlobalFunction.showCustomSnackbar(
-                              message: "Account creation success",
-                              isSuccess: response.isSuccess,
-                            );
-                          }
-                        });
-
-                      },
-                    ),
+                                  GlobalFunction.showCustomSnackbar(
+                                    message: "Account creation success",
+                                    isSuccess: response.isSuccess,
+                                  );
+                                }
+                              });
+                            },
+                          ),
                   ),
                   Gap(30.h),
                   Text(
                     "${S.of(context).resendCode} 00:$start sec",
                     style: AppTextStyle(context).bodyText.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                   if (start == 0)
                     GestureDetector(

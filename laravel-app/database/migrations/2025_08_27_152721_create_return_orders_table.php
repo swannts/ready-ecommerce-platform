@@ -1,11 +1,11 @@
 <?php
 
-use App\Models\Shop;
-use App\Models\Order;
 use App\Models\Customer;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\Order;
+use App\Models\Shop;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {

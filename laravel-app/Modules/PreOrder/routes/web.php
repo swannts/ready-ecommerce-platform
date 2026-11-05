@@ -7,9 +7,6 @@ use Modules\PreOrder\App\Http\Controllers\PreOrderController;
 use Modules\PreOrder\App\Http\Controllers\PreOrderProductController;
 use Modules\PreOrder\App\Http\Controllers\PreOrderSettingController;
 
-
-
-
 Route::controller(EarningReportController::class)->name('shop.')->prefix('shop')->group(function () {
     Route::get('/commission-list-download', 'commissionListExport')->name('preOrder.commissionListExport');
     Route::get('/profit-report-download', 'profitReportExport')->name('preOrder.profitReportExport');
@@ -56,5 +53,3 @@ Route::middleware(['auth', 'checkPermission'])->name('shop.')->prefix('shop')->g
         Route::get('/profit-report', 'profitReport')->name('preOrder.profitReport');
     });
 });
-
-

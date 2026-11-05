@@ -34,11 +34,11 @@ class LegalPageController extends Controller
         $contact = ContactUs::first();
 
         return $this->json('Contact Us', [
-            'phone'     => $contact?->phone,
-            'email'     => $contact?->email,
-            'whatsapp'  => $contact?->whatsapp,
+            'phone' => $contact?->phone,
+            'email' => $contact?->email,
+            'whatsapp' => $contact?->whatsapp,
             'messenger' => $contact?->messenger,
-            'address'   => $contact?->address,
+            'address' => $contact?->address,
         ]);
     }
 }

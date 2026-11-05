@@ -25,7 +25,8 @@ class GlobalFunction {
     );
   }
 
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 
   static void showCustomSnackbar({
     required String message,

@@ -804,7 +804,7 @@ class EcommerceCheckoutLayout extends ConsumerStatefulWidget {
   final bool? isBuyNow;
   final double payableAmount;
   final String? couponCode;
-  final  List<int> shopIds;
+  final List<int> shopIds;
 
   const EcommerceCheckoutLayout({
     super.key,
@@ -816,20 +816,20 @@ class EcommerceCheckoutLayout extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<EcommerceCheckoutLayout> createState() => _EcommerceCheckoutLayoutState();
+  ConsumerState<EcommerceCheckoutLayout> createState() =>
+      _EcommerceCheckoutLayoutState();
 }
 
 class _EcommerceCheckoutLayoutState
     extends ConsumerState<EcommerceCheckoutLayout> {
-  final TextEditingController additionalTextEditingController = TextEditingController();
+  final TextEditingController additionalTextEditingController =
+      TextEditingController();
   PaymentType selectedPaymentType = PaymentType.none;
   // String selectedPayment = '';
 
   @override
   void initState() {
-
-
-    log("---shopIds----->> ${ widget.shopIds}");
+    log("---shopIds----->> ${widget.shopIds}");
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       init();
@@ -841,43 +841,39 @@ class _EcommerceCheckoutLayoutState
       //   addressId: 1
       // );
 
-      WidgetsBinding.instance.addPostFrameCallback((_){
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.watch(selectedDeliveryAddress);
       });
-
-
     });
     super.initState();
   }
 
-  void init() async{
+  void init() async {
     ref.watch(hiveServiceProvider).getDefaultAddress().then((address) {
       ref.read(selectedDeliveryAddress.notifier).state = address;
     });
 
     // Load default address from Hive
-    final defaultAddress = await ref.read(hiveServiceProvider).getDefaultAddress();
+    final defaultAddress =
+        await ref.read(hiveServiceProvider).getDefaultAddress();
 
     // Set the selected address
     ref.read(selectedDeliveryAddress.notifier).state = defaultAddress;
 
     // Initial calculation - use the addressId if available, otherwise fallback
-    final initialAddressId = defaultAddress?.addressId ?? 1; // or null if API allows
+    final initialAddressId =
+        defaultAddress?.addressId ?? 1; // or null if API allows
 
     ref.read(cartSummeryController.notifier).calculateCartSummery(
-      couponCode: widget.couponCode,
-      shopIds: widget.shopIds,
-      addressId: initialAddressId,
-      latitude: defaultAddress?.latitude,
-      longitude: defaultAddress?.longitude,
-        isBuyNow: true
-    );
+        couponCode: widget.couponCode,
+        shopIds: widget.shopIds,
+        addressId: initialAddressId,
+        latitude: defaultAddress?.latitude,
+        longitude: defaultAddress?.longitude,
+        isBuyNow: true);
 
-   log("--------------->> message");
+    log("--------------->> message");
   }
-
-
-
 
   String safePrice(dynamic value) {
     if (value == null) return '0';
@@ -885,33 +881,34 @@ class _EcommerceCheckoutLayoutState
     if (value is num) return value.toString();
 
     if (value is List) {
-      return value.fold<double>(
-        0.0,
+      return value
+          .fold<double>(
+            0.0,
             (sum, item) => sum + (item['amount'] ?? 0),
-      ).toString();
+          )
+          .toString();
     }
 
     return double.tryParse(value.toString())?.toString() ?? '0';
   }
 
-
-
   @override
-  Widget build(BuildContext context,) {
+  Widget build(
+    BuildContext context,
+  ) {
     debugPrint('couponCode: ${widget.couponCode}');
     final masterData = ref.watch(masterControllerProvider.notifier).materModel;
-   // final checkout = ref.watch(cartSummeryController);
+    // final checkout = ref.watch(cartSummeryController);
 
     final allVatTaxes = ref.watch(cartSummeryController)['allVatTaxes'] as List;
     return Scaffold(
-
       backgroundColor: colors(context).accentColor,
       appBar: AppBar(
         surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(S.of(context).checkout),
       ),
       bottomNavigationBar:
-      ref.watch(profileInfoControllerProvider).whenOrNull(data: (user) {
+          ref.watch(profileInfoControllerProvider).whenOrNull(data: (user) {
         return _buildBottomNavigationBar(isProfileVerify: user.accountVerified);
       }),
       body: Container(
@@ -926,17 +923,11 @@ class _EcommerceCheckoutLayoutState
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildAddressWidget(couponCode: widget.couponCode, shopIds: widget.shopIds
-
-              ),
+              _buildAddressWidget(
+                  couponCode: widget.couponCode, shopIds: widget.shopIds),
               Gap(20.h),
               _buildAdditionalInfoTextField(),
               Gap(20.h),
-
-
-
-
-
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
                 decoration: ShapeDecoration(
@@ -973,19 +964,19 @@ class _EcommerceCheckoutLayoutState
                           .orderSummary
                           .replaceAll("Order", S.of(context).vatTax),
                       style: AppTextStyle(context).bodyText.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                            fontWeight: FontWeight.w700,
+                          ),
                     ),
                     Gap(6.h),
                     Column(
                         children: List.generate(allVatTaxes.length, (index) {
-                          final tax = allVatTaxes[index];
-                          return _buildSummaryRow(
-                            context: context,
-                            title: "${tax['name'] ?? ''} (${tax['percentage']}%)",
-                            value: double.parse(tax['amount'].toString()),
-                          );
-                        })),
+                      final tax = allVatTaxes[index];
+                      return _buildSummaryRow(
+                        context: context,
+                        title: "${tax['name'] ?? ''} (${tax['percentage']}%)",
+                        value: double.parse(tax['amount'].toString()),
+                      );
+                    })),
                     Gap(10.h),
                     _buildSummaryRow(
                       isPayable: true,
@@ -1019,6 +1010,7 @@ class _EcommerceCheckoutLayoutState
       ),
     );
   }
+
   Widget _buildSummaryRow({
     required String title,
     required double value,
@@ -1046,7 +1038,9 @@ class _EcommerceCheckoutLayoutState
       ],
     );
   }
-  Widget _buildAddressWidget({required String? couponCode,required List<int> shopIds}) {
+
+  Widget _buildAddressWidget(
+      {required String? couponCode, required List<int> shopIds}) {
     return Consumer(builder: (context, ref, _) {
       return Column(
         children: [
@@ -1059,40 +1053,39 @@ class _EcommerceCheckoutLayoutState
               ),
               ref.watch(selectedDeliveryAddress) != null
                   ? GestureDetector(
-                onTap: () {
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(12.r),
-                        topRight: Radius.circular(12.r),
+                      onTap: () {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(12.r),
+                              topRight: Radius.circular(12.r),
+                            ),
+                          ),
+                          context: context,
+                          builder: (context) {
+                            return AddressModalBottomSheet(
+                              couponCode: couponCode,
+                              shopIds: shopIds,
+                            );
+                          },
+                        );
+                      },
+                      child: Text(
+                        S.of(context).change,
+                        style: AppTextStyle(context).bodyTextSmall.copyWith(
+                              color: colors(context).primaryColor,
+                            ),
                       ),
-                    ),
-                    context: context,
-                    builder: (context) {
-                      return  AddressModalBottomSheet(
-                        couponCode: couponCode,
-                        shopIds: shopIds,
-                      );
-                    },
-                  );
-                },
-                child: Text(
-                  S.of(context).change,
-                  style: AppTextStyle(context).bodyTextSmall.copyWith(
-                    color: colors(context).primaryColor,
-                  ),
-                ),
-              )
+                    )
                   : const SizedBox()
             ],
           ),
           Gap(10.h),
           ref.watch(selectedDeliveryAddress) != null
               ? AddressCard(
-            address: ref.watch(selectedDeliveryAddress.notifier).state,
-
-          )
+                  address: ref.watch(selectedDeliveryAddress.notifier).state,
+                )
               : _buildAddAddressCardWidget(couponCode: couponCode),
         ],
       );
@@ -1131,9 +1124,10 @@ class _EcommerceCheckoutLayoutState
                   ),
                   context: context,
                   builder: (context) {
-                    return  AddressModalBottomSheet(
+                    return AddressModalBottomSheet(
                       couponCode: couponCode,
-                      shopIds: widget.shopIds,);
+                      shopIds: widget.shopIds,
+                    );
                   },
                 );
               },
@@ -1150,8 +1144,8 @@ class _EcommerceCheckoutLayoutState
       name: 'additionalInfo',
       controller: additionalTextEditingController,
       style: AppTextStyle(context).bodyText.copyWith(
-        fontWeight: FontWeight.w600,
-      ),
+            fontWeight: FontWeight.w600,
+          ),
       cursorColor: colors(context).primaryColor,
       maxLines: 5,
       minLines: 3,
@@ -1160,19 +1154,19 @@ class _EcommerceCheckoutLayoutState
         alignLabelWithHint: true,
         hintText: 'Write here any additional info',
         hintStyle: AppTextStyle(context).bodyText.copyWith(
-          fontWeight: FontWeight.w500,
-          color: colors(context).hintTextColor,
-        ),
+              fontWeight: FontWeight.w500,
+              color: colors(context).hintTextColor,
+            ),
         floatingLabelStyle: AppTextStyle(context).bodyText.copyWith(
-          fontWeight: FontWeight.w400,
-          color: colors(context).primaryColor,
-        ),
+              fontWeight: FontWeight.w400,
+              color: colors(context).primaryColor,
+            ),
         filled: true,
         fillColor: colors(context).accentColor,
         errorStyle: AppTextStyle(context).bodyTextSmall.copyWith(
-          fontWeight: FontWeight.w400,
-          color: colors(context).errorColor,
-        ),
+              fontWeight: FontWeight.w400,
+              color: colors(context).errorColor,
+            ),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.r),
             borderSide: BorderSide.none),
@@ -1209,7 +1203,7 @@ class _EcommerceCheckoutLayoutState
               GlobalFunction.price(
                 ref: ref,
                 price:
-                ref.read(cartSummeryController)['payableAmount'].toString(),
+                    ref.read(cartSummeryController)['payableAmount'].toString(),
               ),
               style: AppTextStyle(context).subTitle,
             )
@@ -1223,7 +1217,7 @@ class _EcommerceCheckoutLayoutState
                 flex: 1,
                 child: PayCard(
                   isActive:
-                  selectedPaymentType == PaymentType.cash ? true : false,
+                      selectedPaymentType == PaymentType.cash ? true : false,
                   type: S.of(context).cashOnDelivery,
                   image: Assets.png.cash.image(),
                   onTap: () {
@@ -1241,7 +1235,7 @@ class _EcommerceCheckoutLayoutState
                 flex: 1,
                 child: PayCard(
                   isActive:
-                  selectedPaymentType == PaymentType.online ? true : false,
+                      selectedPaymentType == PaymentType.online ? true : false,
                   type: S.of(context).creditOrDebitCard,
                   image: Assets.png.card.image(),
                   onTap: () {
@@ -1275,164 +1269,164 @@ class _EcommerceCheckoutLayoutState
         children: [
           orderPlaceAccountVerify == true && isProfileVerify == false
               ? Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 10.w,
-              vertical: 4.h,
-            ),
-            decoration: ShapeDecoration(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-                side: BorderSide(
-                  width: 1.5,
-                  color: colors(context).accentColor!,
-                ),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Shimmer(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.deepPurple,
-                      Colors.yellow,
-                      Colors.red,
-                    ],
-                    stops: [0.2, 0.5, 0.8],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 4.h,
                   ),
-                  child: Text(
-                    S.of(context).pleaseVerifyYourAccount,
-                    style: AppTextStyle(context).title.copyWith(
-                        fontSize: 14.sp, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    ref
-                        .read(hiveServiceProvider)
-                        .getUserInfo()
-                        .then((userInfo) {
-                      if (userInfo != null) {
-                        if (registerOtpType == 'email') {
-                          if (userInfo.email == null) {
-                            GlobalFunction.showCustomSnackbar(
-                                message:
-                                "Please update your profile with email to verify your account",
-                                isSuccess: false);
-                          } else {
-                            context.nav.pushNamed(
-                              Routes.confirmOTP,
-                              arguments: ConfirmOTPScreenArguments(
-                                  phoneNumber: userInfo.email!,
-                                  isPasswordRecover: false,
-                                  isFromCheckoutScreen: true),
-                            );
-                          }
-                        } else if (registerOtpType == 'phone') {
-                          if (userInfo.email == null) {
-                            GlobalFunction.showCustomSnackbar(
-                                message:
-                                "Please update your profile with phone number to verify your account",
-                                isSuccess: false);
-                          } else {
-                            context.nav.pushNamed(
-                              Routes.confirmOTP,
-                              arguments: ConfirmOTPScreenArguments(
-                                  phoneNumber: userInfo.phone!,
-                                  isPasswordRecover: false,
-                                  isFromCheckoutScreen: true),
-                            );
-                          }
-                        }
-                      }
-                    });
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 6.w,
-                      vertical: 2.h,
+                  decoration: ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                      side: BorderSide(
+                        width: 1.5,
+                        color: colors(context).accentColor!,
+                      ),
                     ),
-                    decoration: ShapeDecoration(
-                      color:
-                      colors(context).primaryColor!.withOpacity(0.1),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          width: 1,
-                          color: colors(context).primaryColor!,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Shimmer(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.deepPurple,
+                            Colors.yellow,
+                            Colors.red,
+                          ],
+                          stops: [0.2, 0.5, 0.8],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
                         ),
-                        borderRadius: BorderRadius.circular(4.r),
+                        child: Text(
+                          S.of(context).pleaseVerifyYourAccount,
+                          style: AppTextStyle(context).title.copyWith(
+                              fontSize: 14.sp, fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      S.of(context).verifyNow,
-                      style: AppTextStyle(context).bodyTextSmall.copyWith(
-                        color: colors(context).primaryColor,
+                      GestureDetector(
+                        onTap: () {
+                          ref
+                              .read(hiveServiceProvider)
+                              .getUserInfo()
+                              .then((userInfo) {
+                            if (userInfo != null) {
+                              if (registerOtpType == 'email') {
+                                if (userInfo.email == null) {
+                                  GlobalFunction.showCustomSnackbar(
+                                      message:
+                                          "Please update your profile with email to verify your account",
+                                      isSuccess: false);
+                                } else {
+                                  context.nav.pushNamed(
+                                    Routes.confirmOTP,
+                                    arguments: ConfirmOTPScreenArguments(
+                                        phoneNumber: userInfo.email!,
+                                        isPasswordRecover: false,
+                                        isFromCheckoutScreen: true),
+                                  );
+                                }
+                              } else if (registerOtpType == 'phone') {
+                                if (userInfo.email == null) {
+                                  GlobalFunction.showCustomSnackbar(
+                                      message:
+                                          "Please update your profile with phone number to verify your account",
+                                      isSuccess: false);
+                                } else {
+                                  context.nav.pushNamed(
+                                    Routes.confirmOTP,
+                                    arguments: ConfirmOTPScreenArguments(
+                                        phoneNumber: userInfo.phone!,
+                                        isPasswordRecover: false,
+                                        isFromCheckoutScreen: true),
+                                  );
+                                }
+                              }
+                            }
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 6.w,
+                            vertical: 2.h,
+                          ),
+                          decoration: ShapeDecoration(
+                            color:
+                                colors(context).primaryColor!.withOpacity(0.1),
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                width: 1,
+                                color: colors(context).primaryColor!,
+                              ),
+                              borderRadius: BorderRadius.circular(4.r),
+                            ),
+                          ),
+                          child: Text(
+                            S.of(context).verifyNow,
+                            style: AppTextStyle(context).bodyTextSmall.copyWith(
+                                  color: colors(context).primaryColor,
+                                ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          )
+                )
               : SizedBox.shrink(),
           Gap(8.h),
           ref.watch(orderControllerProvider)
               ? const Center(child: CircularProgressIndicator())
               : AbsorbPointer(
-            absorbing: selectedPaymentType == PaymentType.none,
-            child: CustomButton(
-              buttonColor: selectedPaymentType == PaymentType.none
-                  ? ColorTween(
-                begin: colors(context).primaryColor,
-                end: colors(context).light,
-              ).lerp(0.5)
-                  : colors(context).primaryColor,
-              buttonText: S.of(context).placeOrder,
-              onPressed: () {
-                if (isProfileVerify == false &&
-                    orderPlaceAccountVerify == true) {
-                  GlobalFunction.showCustomSnackbar(
-                    message: 'Please verify your account first!',
-                    isSuccess: false,
-                  );
-                } else if (ref.watch(selectedDeliveryAddress) == null) {
-                  GlobalFunction.showCustomSnackbar(
-                    message: 'Please add your delivery address!',
-                    isSuccess: false,
-                  );
-                } else if (selectedPaymentType == PaymentType.online &&
-                    ref.read(selectedPayment) == '') {
-                  GlobalFunction.showCustomSnackbar(
-                    message: 'Please select your payment method!',
-                    isSuccess: false,
-                  );
-                } else {
-                  if (selectedPaymentType == PaymentType.cash) {
-                    showDialog(
-                        context: context,
-                        barrierColor:
-                        colors(context).accentColor!.withOpacity(0.8),
-                        builder: (context) => ConfirmationDialog(
-                          title: S.of(context).pyment,
-                          des: S.of(context).cashPaymentDes,
-                          confirmButtonText: S.of(context).yes,
-                          cancelButtonText: S.of(context).no,
-                          confirmationButtonColor:
-                          colors(context).primaryColor,
-                          onPressed: () {
-                            context.nav.pop();
-                            _placeOrder();
-                          },
-                        ));
-                  } else {
-                    _placeOrder();
-                  }
-                }
-              },
-            ),
-          ),
+                  absorbing: selectedPaymentType == PaymentType.none,
+                  child: CustomButton(
+                    buttonColor: selectedPaymentType == PaymentType.none
+                        ? ColorTween(
+                            begin: colors(context).primaryColor,
+                            end: colors(context).light,
+                          ).lerp(0.5)
+                        : colors(context).primaryColor,
+                    buttonText: S.of(context).placeOrder,
+                    onPressed: () {
+                      if (isProfileVerify == false &&
+                          orderPlaceAccountVerify == true) {
+                        GlobalFunction.showCustomSnackbar(
+                          message: 'Please verify your account first!',
+                          isSuccess: false,
+                        );
+                      } else if (ref.watch(selectedDeliveryAddress) == null) {
+                        GlobalFunction.showCustomSnackbar(
+                          message: 'Please add your delivery address!',
+                          isSuccess: false,
+                        );
+                      } else if (selectedPaymentType == PaymentType.online &&
+                          ref.read(selectedPayment) == '') {
+                        GlobalFunction.showCustomSnackbar(
+                          message: 'Please select your payment method!',
+                          isSuccess: false,
+                        );
+                      } else {
+                        if (selectedPaymentType == PaymentType.cash) {
+                          showDialog(
+                              context: context,
+                              barrierColor:
+                                  colors(context).accentColor!.withOpacity(0.8),
+                              builder: (context) => ConfirmationDialog(
+                                    title: S.of(context).pyment,
+                                    des: S.of(context).cashPaymentDes,
+                                    confirmButtonText: S.of(context).yes,
+                                    cancelButtonText: S.of(context).no,
+                                    confirmationButtonColor:
+                                        colors(context).primaryColor,
+                                    onPressed: () {
+                                      context.nav.pop();
+                                      _placeOrder();
+                                    },
+                                  ));
+                        } else {
+                          _placeOrder();
+                        }
+                      }
+                    },
+                  ),
+                ),
         ],
       ),
     );
@@ -1497,7 +1491,7 @@ class _EcommerceCheckoutLayoutState
           if (mounted) {
             context.nav.pushNamedAndRemoveUntil(
               Routes.webPaymentScreen,
-                  (route) => false,
+              (route) => false,
               arguments: WebPaymentScreenArg(
                 paymentUrl: response.data,
                 orderId: null,

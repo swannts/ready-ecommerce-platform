@@ -1,13 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Report\App\Http\Controllers\ReportController;
 use Modules\Report\App\Http\Controllers\AnalyticsController;
-use Modules\Report\App\Http\Controllers\ReportExportController;
 use Modules\Report\App\Http\Controllers\EarningExportController;
 use Modules\Report\App\Http\Controllers\EarningReportController;
-
-
+use Modules\Report\App\Http\Controllers\ReportController;
+use Modules\Report\App\Http\Controllers\ReportExportController;
 
 Route::controller(ReportExportController::class)->name('shop.')->prefix('reports')->group(function () {
     Route::get('/sale-product-download', 'productReportExport')->name('report.saleProductExport');
@@ -39,4 +37,3 @@ Route::middleware(['auth', 'checkPermission'])->name('shop.')->prefix('shop')->g
         Route::get('/pay-out', 'payOut')->name('report.payOut');
     });
 });
-

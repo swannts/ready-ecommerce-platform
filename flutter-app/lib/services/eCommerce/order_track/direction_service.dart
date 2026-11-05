@@ -12,8 +12,7 @@ class DirectionsService {
     required String apiKey,
   }) async {
     try {
-      final url =
-          'https://maps.googleapis.com/maps/api/directions/json'
+      final url = 'https://maps.googleapis.com/maps/api/directions/json'
           '?origin=${start.latitude},${start.longitude}'
           '&destination=${end.latitude},${end.longitude}'
           '&mode=driving'

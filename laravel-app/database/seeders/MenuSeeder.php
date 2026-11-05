@@ -28,7 +28,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'name' => 'Products',
-                'ar_name'=> 'المنتجات',
+                'ar_name' => 'المنتجات',
                 'url' => '/products',
                 'title' => 'Products',
                 'original_name' => 'Products',
@@ -50,7 +50,7 @@ class MenuSeeder extends Seeder
             // ],
             [
                 'name' => 'Shops',
-                'ar_name'=> 'المتاجر',
+                'ar_name' => 'المتاجر',
                 'url' => '/shops',
                 'title' => 'Shops',
                 'original_name' => 'Shops',
@@ -61,7 +61,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'name' => 'Brands',
-                'ar_name'=> 'ماركة',
+                'ar_name' => 'ماركة',
                 'url' => '/brands',
                 'title' => 'Brands',
                 'original_name' => 'Brands',
@@ -83,7 +83,7 @@ class MenuSeeder extends Seeder
             // ],
             [
                 'name' => 'Contact',
-                'ar_name'=> 'اتصل بنا',
+                'ar_name' => 'اتصل بنا',
                 'url' => '/contact-us',
                 'title' => 'Contact',
                 'original_name' => 'Contact',
@@ -94,7 +94,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'name' => 'Blogs',
-                'ar_name'=> 'المدونات',
+                'ar_name' => 'المدونات',
                 'url' => '/blogs',
                 'title' => 'Blogs',
                 'original_name' => 'Blogs',
@@ -106,7 +106,7 @@ class MenuSeeder extends Seeder
         ];
         foreach ($data as $item) {
             $exists = Menu::where('name', $item['name'])->first();
-            if (!$exists) {
+            if (! $exists) {
                 Menu::create($item);
             }
         }
