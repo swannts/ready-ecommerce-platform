@@ -2,6 +2,29 @@ name: ricemart-ecommerce
 
 services:
   # ========================================================
+  # MANAGEMENT: Separate Next.js seller workspace
+  # ========================================================
+  management:
+    build:
+      context: ./management-frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${MANAGEMENT_NEXT_PUBLIC_API_URL:-http://localhost:8000/api}
+    container_name: ricemart-management
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      HOSTNAME: "0.0.0.0"
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - ricemart-network
+
+  # ========================================================
   # FRONTEND: Next.js App Router (RiceMart UI)
   # ========================================================
   frontend:

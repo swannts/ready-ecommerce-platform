@@ -1,6 +1,28 @@
-graphify-out/
+# Local environment files and secrets
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
+
+# JavaScript and Next.js build output
+**/node_modules/
+**/.next/
+**/out/
+**/dist/
+**/coverage/
+**/.turbo/
+**/.vercel/
+**/*.tsbuildinfo
+**/.pnp.*
+
+# Local tooling and operating system files
 .idea/
 .vscode/
+.fleet/
+.DS_Store
+Thumbs.db
+
+# Logs and generated analysis output
 *.log
-frontend/.next/
-frontend/node_modules/
+npm-debug.log*
+graphify-out/

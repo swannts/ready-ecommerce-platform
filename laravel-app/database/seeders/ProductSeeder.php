@@ -16,6 +16,7 @@ class ProductSeeder extends Seeder
     private const PRODUCTS = [
         [
             'slug' => 'royal-aged-basmati-rice-xxl',
+            'image' => 'rice-catalog/products/basmati-aged.jpg',
             'name' => 'Royal 2-Year Aged Super Kernel Basmati Rice',
             'variety' => 'Super Kernel Basmati', 'category' => 'basmati-rice',
             'brand' => 'Golden Harvest Reserve', 'supplier' => 'golden-harvest-rice-mills',
@@ -39,6 +40,7 @@ class ProductSeeder extends Seeder
         ],
         [
             'slug' => 'premium-silky-miniket-rice',
+            'image' => 'rice-catalog/products/miniket-silky.jpg',
             'name' => 'Premium Silky White Miniket Rice (Single Boiled)',
             'variety' => 'Miniket Grade A+', 'category' => 'miniket-rice',
             'brand' => 'Heritage Valley Select', 'supplier' => 'heritage-grain-cooperative',
@@ -60,6 +62,7 @@ class ProductSeeder extends Seeder
         ],
         [
             'slug' => 'heirloom-traditional-nazirshail-rice',
+            'image' => 'rice-catalog/products/nazirshail-heirloom.jpg',
             'name' => 'Heirloom Traditional Nazirshail Unpolished Long Grain',
             'variety' => 'Nazirshail', 'category' => 'nazirshail-rice',
             'brand' => 'Bengal Harvest', 'supplier' => 'heritage-grain-cooperative',
@@ -80,6 +83,7 @@ class ProductSeeder extends Seeder
         ],
         [
             'slug' => 'chinigura-fragrant-polao-rice',
+            'image' => 'rice-catalog/products/chinigura-aromatic.jpg',
             'name' => 'Sun-Dried Chinigura Aromatic Rice (Aged 1 Year)',
             'variety' => 'Chinigura / Kalijira', 'category' => 'aromatic-rice',
             'brand' => 'Shahi Dastarkhwan', 'supplier' => 'golden-harvest-rice-mills',
@@ -101,6 +105,7 @@ class ProductSeeder extends Seeder
         ],
         [
             'slug' => 'kalijira-fragrant-rice-premium',
+            'image' => 'rice-catalog/products/kalijira-fragrant.jpg',
             'name' => 'Premium Kalijira Fragrant Rice',
             'variety' => 'Kalijira', 'category' => 'aromatic-rice',
             'brand' => 'Shahi Dastarkhwan', 'supplier' => 'heritage-grain-cooperative',
@@ -122,6 +127,7 @@ class ProductSeeder extends Seeder
         ],
         [
             'slug' => 'golden-parboiled-miniket-rice',
+            'image' => 'rice-catalog/products/miniket-parboiled.jpg',
             'name' => 'Golden Parboiled Miniket Rice',
             'variety' => 'Miniket Parboiled', 'category' => 'parboiled-rice',
             'brand' => 'Golden Harvest Reserve', 'supplier' => 'golden-harvest-rice-mills',
@@ -143,6 +149,7 @@ class ProductSeeder extends Seeder
         ],
         [
             'slug' => 'heritage-steamed-parboiled-rice',
+            'image' => 'rice-catalog/products/steam-parboiled.jpg',
             'name' => 'Heritage Steamed Parboiled Rice',
             'variety' => 'Traditional Parboiled', 'category' => 'parboiled-rice',
             'brand' => 'Bengal Harvest', 'supplier' => 'heritage-grain-cooperative',
@@ -164,6 +171,7 @@ class ProductSeeder extends Seeder
         ],
         [
             'slug' => 'sweet-glutinous-sticky-rice',
+            'image' => 'rice-catalog/products/sticky-glutinous.jpg',
             'name' => 'Sweet Glutinous Sticky Rice',
             'variety' => 'Glutinous White Rice', 'category' => 'sticky-rice',
             'brand' => 'River Delta Select', 'supplier' => 'heritage-grain-cooperative',
@@ -185,6 +193,7 @@ class ProductSeeder extends Seeder
         ],
         [
             'slug' => 'royal-indus-sella-basmati-rice',
+            'image' => 'rice-catalog/products/indus-sella-basmati.jpg',
             'name' => 'Royal Indus Golden Sella Basmati Rice',
             'variety' => 'Golden Sella Basmati', 'category' => 'basmati-rice',
             'brand' => 'Royal Indus Select', 'supplier' => 'royal-indus-mills',
@@ -206,6 +215,7 @@ class ProductSeeder extends Seeder
         ],
         [
             'slug' => 'brown-miniket-wholegrain-rice',
+            'image' => 'rice-catalog/products/brown-miniket.jpg',
             'name' => 'Brown Miniket Wholegrain Rice',
             'variety' => 'Wholegrain Miniket', 'category' => 'miniket-rice',
             'brand' => 'River Delta Select', 'supplier' => 'golden-harvest-rice-mills',
@@ -227,6 +237,7 @@ class ProductSeeder extends Seeder
         ],
         [
             'slug' => 'barisal-nazirshail-family-rice',
+            'image' => 'rice-catalog/products/barisal-nazirshail.jpg',
             'name' => 'Barisal Nazirshail Family Rice',
             'variety' => 'Barisal Nazirshail', 'category' => 'nazirshail-rice',
             'brand' => 'Bengal Harvest', 'supplier' => 'heritage-grain-cooperative',
@@ -258,8 +269,12 @@ class ProductSeeder extends Seeder
             $category = Category::where('slug', $item['category'])->firstOrFail();
             $brand = Brand::where('slug', Str::slug($item['brand']))->firstOrFail();
             $media = Media::firstOrCreate(
-                ['src' => 'rice-catalog/'.basename($category->display_image)],
-                ['type' => 'image', 'name' => $item['variety'], 'extention' => 'svg']
+                ['src' => $item['image']],
+                [
+                    'type' => 'image',
+                    'name' => $item['variety'],
+                    'extention' => 'jpg',
+                ]
             );
             $unit = Unit::where('shop_id', $shop->id)->where('name', 'kg')->first()
                 ?? Unit::where('name', 'kg')->firstOrFail();

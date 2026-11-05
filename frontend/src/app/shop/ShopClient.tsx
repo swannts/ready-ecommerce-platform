@@ -4,6 +4,7 @@ import { useLocale } from "@/lib/i18n";
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import {
@@ -291,64 +292,20 @@ export default function ShopClient({
                   className="group flex flex-col rounded-2xl bg-[#FFFDF8] border border-[#E7E1D7] overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                 >
                   <div className="relative aspect-4/3 w-full bg-[#FAF6EF] p-4 flex items-center justify-center">
-                    <div className="relative w-full h-full flex items-center justify-center">
-                      <svg
-                        viewBox="0 0 200 160"
-                        className="w-32 h-32 drop-shadow-md"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <ellipse
-                          cx="100"
-                          cy="115"
-                          rx="70"
-                          ry="32"
-                          fill="#D9C3A3"
-                          opacity="0.6"
-                        />
-                        <path
-                          d="M60 55 C65 35, 135 35, 140 55 C155 80, 160 125, 140 140 C120 150, 80 150, 60 140 C40 125, 45 80, 60 55 Z"
-                          fill="#CBB597"
-                        />
-                        <path
-                          d="M65 65 Q100 75 135 65"
-                          stroke="#7E5C35"
-                          strokeWidth="4"
-                          strokeLinecap="round"
-                        />
-                        <rect
-                          x="75"
-                          y="90"
-                          width="50"
-                          height="30"
-                          rx="3"
-                          fill="#FFFDF8"
-                          opacity="0.9"
-                        />
-                        <text
-                          x="100"
-                          y="105"
-                          fontFamily="serif"
-                          fontSize="7"
-                          fontWeight="bold"
-                          fill="#183A20"
-                          textAnchor="middle"
-                        >
-                          {product.variety.split(" ")[0]}
-                        </text>
-                        <text
-                          x="100"
-                          y="114"
-                          fontFamily="sans-serif"
-                          fontSize="5"
-                          fill="#B88A35"
-                          textAnchor="middle"
-                        >
-                          {" "}
-                          {t("GRADE A+")}{" "}
-                        </text>
-                      </svg>
-                    </div>
+                    {product.images[0] ? (
+                      <Image
+                        src={product.images[0]}
+                        alt={product.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        unoptimized
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-sm text-[#686C64]">
+                        {product.variety}
+                      </div>
+                    )}
 
                     {/* Wishlist Button */}
                     <button
