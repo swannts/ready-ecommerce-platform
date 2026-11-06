@@ -64,16 +64,20 @@ export default function ProductDetailsPage() {
           </div>
         ) : (
           <div className="grid lg:grid-cols-2 gap-10 mt-8">
-            <div className="rounded-3xl border border-[#E7E1D7] bg-[#FFFDF8] p-8 flex items-center justify-center min-h-80">
-              {product.images[0] && (
+            <div className="relative aspect-[4/3] w-full self-start overflow-hidden rounded-3xl border border-[#E7E1D7] bg-[#FFFDF8]">
+              {product.images[0] ? (
                 <Image
                   src={product.images[0]}
                   alt={product.name}
-                  width={600}
-                  height={480}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   unoptimized
-                  className="max-h-96 w-full object-contain"
+                  className="object-cover object-center"
                 />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-sm text-[#686C64]">
+                  {product.variety}
+                </div>
               )}
             </div>
             <div>

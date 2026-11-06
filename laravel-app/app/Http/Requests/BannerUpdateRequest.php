@@ -24,7 +24,9 @@ class BannerUpdateRequest extends FormRequest
     {
         return [
             'id' => ['required', 'exists:banners,id'],
-            'banner' => ['required', 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:2048'],
+            // The seller API accepts the shop-scoped file path returned by
+            // /seller/filemanager/image-upload, matching BannerRepository.
+            'banner' => ['required', 'string', 'max:255'],
             'url' => ['nullable', 'string', 'max:500'],
         ];
     }

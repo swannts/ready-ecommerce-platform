@@ -35,7 +35,10 @@ class BannerController extends Controller
 
     public function update(BannerUpdateRequest $request)
     {
-        $banner = Banner::find($request->id);
+        $banner = generaleSetting('shop')?->banners()->whereKey($request->id)->first();
+        if (! $banner) {
+            return $this->json(__('Banner not found'), [], 404);
+        }
         BannerRepository::updateByRequest($request, $banner);
 
         return $this->json('banner updated successfully', [
@@ -45,6 +48,10 @@ class BannerController extends Controller
 
     public function destroy(Banner $banner)
     {
+        if (! generaleSetting('shop')?->banners()->whereKey($banner->getKey())->exists()) {
+            return $this->json(__('Banner not found'), [], 404);
+        }
+
         BannerRepository::destroy($banner);
 
         return $this->json('banner deleted successfully', [

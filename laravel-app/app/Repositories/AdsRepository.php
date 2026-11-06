@@ -24,10 +24,14 @@ class AdsRepository extends Repository
      * */
     public static function storeByRequest(BannerRequest $request): Ad
     {
+        $bannerPath = $request->banner;
+        if ($request->hasFile('banner')) {
+            $bannerPath = Storage::put('ads', $request->file('banner'));
+        }
 
         return self::create([
             'title' => $request->title,
-            'banner' => $request->banner,
+            'banner' => $bannerPath,
             'status' => true,
         ]);
     }
@@ -37,10 +41,19 @@ class AdsRepository extends Repository
      */
     public static function updateByRequest($request, Ad $ad): Ad
     {
+        $bannerPath = $ad->banner;
+        if ($request->hasFile('banner')) {
+            if ($ad->banner && Storage::exists($ad->banner)) {
+                Storage::delete($ad->banner);
+            }
+            $bannerPath = Storage::put('ads', $request->file('banner'));
+        } elseif ($request->filled('banner')) {
+            $bannerPath = $request->banner;
+        }
 
         $ad->update([
             'title' => $request->title,
-            'banner' => $request->banner,
+            'banner' => $bannerPath,
         ]);
 
         return $ad;
@@ -53,11 +66,16 @@ class AdsRepository extends Repository
     public static function destroy(Ad $ad): bool
     {
         $media = $ad->media;
-        if (Storage::exists($media->src)) {
-            Storage::delete($media->src);
+        if ($media) {
+            if (Storage::exists($media->src)) {
+                Storage::delete($media->src);
+            }
+            $media->delete();
+        }
+        if ($ad->banner && Storage::exists($ad->banner)) {
+            Storage::delete($ad->banner);
         }
         $ad->delete();
-        $media->delete();
 
         return true;
     }

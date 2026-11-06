@@ -21,6 +21,7 @@ import { useAppSelector } from "@/store/hooks";
 import { selectCartTotalQuantity } from "@/store/slices/cartSlice";
 import { selectWishlistCount } from "@/store/slices/wishlistSlice";
 import { useLocale } from "@/lib/i18n";
+import { formatCurrency } from "@/lib/currency";
 
 interface HeaderProps {
   onOpenSearch?: () => void;
@@ -33,17 +34,21 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
   const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [hasHydrated, setHasHydrated] = useState(false);
   const pathname = usePathname();
   const { locale, setLocale, t } = useLocale();
 
   // Redux store reactive cart and wishlist counts
   const cartCount = useAppSelector(selectCartTotalQuantity);
   const wishlistCount = useAppSelector(selectWishlistCount);
+  const visibleCartCount = hasHydrated ? cartCount : 0;
+  const visibleWishlistCount = hasHydrated ? wishlistCount : 0;
   const riceCategories = useAppSelector((state) => state.products.categories);
   const catalogProducts = useAppSelector((state) => state.products.items);
 
   // Sticky shadow effect on scroll
   useEffect(() => {
+    setHasHydrated(true);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 15);
     };
@@ -103,7 +108,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
               {t("Become a Supplier")}
             </Link>
             <span className="text-[#686C64]">|</span>
-            <span className="text-[#B88A35] font-semibold">USD ($)</span>
+            <span className="text-[#B88A35] font-semibold">BDT (৳)</span>
           </div>
         </div>
       </div>
@@ -116,7 +121,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
             : "bg-[#FAF6EF] py-4 border-b border-[#E7E1D7]/70"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-4">
           {/* Left: Brand Logo */}
           <div className="shrink-0">
             <RiceLogo />
@@ -255,11 +260,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
           </nav>
 
           {/* Right: Actions (Search, Wishlist, Cart, Account, Sign In) */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex shrink-0 items-center gap-0.5 sm:gap-3">
             <button
               type="button"
               onClick={() => setLocale(locale === "en" ? "bn" : "en")}
-              className="px-2.5 py-2 rounded-lg border border-[#E7E1D7] text-xs font-bold text-[#183A20]"
+              className="max-[380px]:hidden px-1.5 sm:px-2.5 py-2 rounded-lg border border-[#E7E1D7] text-xs font-bold text-[#183A20]"
               aria-label={
                 locale === "en" ? "বাংলায় দেখুন" : t("View in English")
               }
@@ -270,7 +275,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
             <button
               type="button"
               onClick={triggerSearch}
-              className="p-2.5 rounded-full text-[#19221B] hover:text-[#183A20] hover:bg-[#E7E1D7]/50 transition-colors"
+              className="p-1.5 sm:p-2.5 rounded-full text-[#19221B] hover:text-[#183A20] hover:bg-[#E7E1D7]/50 transition-colors"
               aria-label={t("Search rice products")}
               title={t("Search rice products")}
             >
@@ -280,13 +285,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
             {/* Wishlist Icon */}
             <Link
               href="/wishlist"
-              className="p-2.5 rounded-full text-[#19221B] hover:text-[#183A20] hover:bg-[#E7E1D7]/50 transition-colors relative"
-              aria-label={`Wishlist (${wishlistCount} items)`}
+              className="p-1.5 sm:p-2.5 rounded-full text-[#19221B] hover:text-[#183A20] hover:bg-[#E7E1D7]/50 transition-colors relative"
+              aria-label={`Wishlist (${visibleWishlistCount} items)`}
             >
               <Heart className="w-5 h-5" />
-              {wishlistCount > 0 && (
+              {visibleWishlistCount > 0 && (
                 <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#B88A35] text-[#FFFDF8] text-[10px] font-bold flex items-center justify-center animate-in zoom-in-50 duration-150">
-                  {wishlistCount}
+                  {visibleWishlistCount}
                 </span>
               )}
             </Link>
@@ -294,13 +299,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
             {/* Shopping Cart Icon */}
             <Link
               href="/cart"
-              className="p-2.5 rounded-full text-[#19221B] hover:text-[#183A20] hover:bg-[#E7E1D7]/50 transition-colors relative"
-              aria-label={`Cart with ${cartCount} items`}
+              className="p-1.5 sm:p-2.5 rounded-full text-[#19221B] hover:text-[#183A20] hover:bg-[#E7E1D7]/50 transition-colors relative"
+              aria-label={`Cart with ${visibleCartCount} items`}
             >
               <ShoppingCart className="w-5 h-5" />
-              {cartCount > 0 && (
+              {visibleCartCount > 0 && (
                 <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#183A20] text-[#FFFDF8] text-[10px] font-bold flex items-center justify-center animate-in zoom-in-50 duration-150">
-                  {cartCount}
+                  {visibleCartCount}
                 </span>
               )}
             </Link>
@@ -327,7 +332,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2.5 rounded-lg text-[#19221B] hover:bg-[#E7E1D7]/50 lg:hidden transition-colors"
+              className="p-1.5 sm:p-2.5 rounded-lg text-[#19221B] hover:bg-[#E7E1D7]/50 lg:hidden transition-colors"
               aria-label={t("Toggle mobile navigation")}
               aria-expanded={mobileMenuOpen}
             >
@@ -354,6 +359,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
               />
               <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-[#686C64]" />
             </div>
+
+            <button
+              type="button"
+              onClick={() => setLocale(locale === "en" ? "bn" : "en")}
+              className="hidden max-[380px]:inline-flex items-center justify-center mb-5 px-3 py-2 rounded-lg border border-[#E7E1D7] text-xs font-bold text-[#183A20]"
+            >
+              {locale === "en" ? "বাংলায় দেখুন" : t("View in English")}
+            </button>
 
             <nav className="space-y-4">
               <Link
@@ -512,11 +525,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
                       </div>
                       <div className="text-right">
                         <div className="text-sm font-bold text-[#183A20]">
-                          ${product.retailPricePerKg.toFixed(2)}/kg
+                          {formatCurrency(product.retailPricePerKg)}/kg
                         </div>
                         <div className="text-[11px] text-[#B88A35] font-semibold">
-                          Wholesale from $
-                          {product.wholesaleTiers[0].unitPricePerKg.toFixed(2)}
+                          Wholesale from {formatCurrency(product.wholesaleTiers[0].unitPricePerKg)}
                         </div>
                       </div>
                     </Link>

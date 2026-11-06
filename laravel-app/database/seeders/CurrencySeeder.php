@@ -12,15 +12,20 @@ class CurrencySeeder extends Seeder
      */
     public function run(): void
     {
-        Currency::query()->delete();
-
         $currencies = [
+            [
+                'name' => 'BDT',
+                'symbol' => '৳',
+                'rate' => 1,
+                'is_active' => true,
+                'is_default' => true,
+            ],
             [
                 'name' => 'USD',
                 'symbol' => '$',
                 'rate' => 1,
                 'is_active' => true,
-                'is_default' => true,
+                'is_default' => false,
             ],
             [
                 'name' => 'EUR',
@@ -32,10 +37,9 @@ class CurrencySeeder extends Seeder
         ];
 
         foreach ($currencies as $currency) {
-            $exists = Currency::where('name', $currency['name'])->first();
-            if (! $exists) {
-                Currency::create($currency);
-            }
+            Currency::updateOrCreate(['name' => $currency['name']], $currency);
         }
+
+        Currency::whereNotIn('name', array_column($currencies, 'name'))->update(['is_default' => false]);
     }
 }

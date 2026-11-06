@@ -1,22 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
-import { Playfair_Display, Inter } from "next/font/google";
 import StoreProvider from "@/store/StoreProvider";
 import { Locale, LocaleProvider } from "@/lib/i18n";
 import { getCategories, getProducts } from "@/lib/api";
 import "./globals.css";
-
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "RiceMart — The Complete Multi-Vendor Rice Marketplace",
@@ -54,7 +41,7 @@ export default async function RootLayout({
   ]);
 
   return (
-    <html lang={locale} className={`${playfair.variable} ${inter.variable}`}>
+    <html lang={locale}>
       <body className="antialiased min-h-screen flex flex-col bg-[#FAF6EF] text-[#19221B]">
         <StoreProvider initialCatalog={{ items, categories }}>
           <LocaleProvider initialLocale={locale}>{children}</LocaleProvider>

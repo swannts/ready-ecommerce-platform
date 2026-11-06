@@ -261,13 +261,13 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar: Copyright, Currency & Legal */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#E7E1D7]/70">
-          <div>
+        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#E7E1D7]/70">
+          <div className="text-center md:text-left">
             &copy; {new Date().getFullYear()}{" "}
             {t("RiceMart Marketplace Inc. All rights reserved.")}
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center md:justify-end gap-x-4 gap-y-2">
             <Link
               href="/legal/privacy"
               className="hover:text-[#FFFDF8] transition-colors"
@@ -289,7 +289,7 @@ export const Footer: React.FC = () => {
             <div className="flex items-center gap-1.5 text-[#B88A35]">
               <Globe className="w-3.5 h-3.5" />
               <span className="font-semibold">
-                {t("English (US) • USD ($)")}
+                {t("Bangladesh • BDT (৳)")}
               </span>
             </div>
           </div>

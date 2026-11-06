@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Bell, Boxes, ChevronRight, ClipboardList, LayoutDashboard, LogOut, Menu, X } from "lucide-react";
+import { Bell, Boxes, ChevronRight, ClipboardList, LayoutDashboard, LogOut, Menu, MessageSquare, RotateCcw, Store, Wallet, Megaphone, X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { managementApi, sessionCleared, type AppDispatch, type RootState, useSignOutMutation } from "@/lib/store";
 
@@ -11,6 +11,12 @@ const links = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/products", label: "Products", icon: Boxes },
   { href: "/orders", label: "Orders", icon: ClipboardList },
+  { href: "/returns", label: "Returns & refunds", icon: RotateCcw },
+  { href: "/wallet", label: "Wallet & withdrawals", icon: Wallet },
+  { href: "/messages", label: "Customer messages", icon: MessageSquare },
+  { href: "/notifications", label: "Notifications", icon: Bell },
+  { href: "/banners", label: "Store banners", icon: Megaphone },
+  { href: "/settings", label: "Shop settings", icon: Store },
 ];
 
 export function ManagementShell({ children }: { children: React.ReactNode }) {
@@ -22,10 +28,10 @@ export function ManagementShell({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    if (ready && !token) router.replace("/");
-  }, [ready, token, router]);
+    if (ready && (!token || !user?.shop)) router.replace(user?.roles?.some((role) => role === "root" || role === "admin") ? "/admin" : "/");
+  }, [ready, token, user, router]);
 
-  if (!ready || !token || !user) return <div className="loading">Opening your management workspace…</div>;
+  if (!ready || !token || !user?.shop) return <div className="loading">Opening your management workspace…</div>;
 
   const displayName = `${user.first_name || "Store"} ${user.last_name || ""}`.trim();
   const initials = displayName.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
@@ -56,7 +62,7 @@ export function ManagementShell({ children }: { children: React.ReactNode }) {
         <header className="topbar">
           <button className="mobile-menu" aria-label={menuOpen ? "Close menu" : "Open menu"} onClick={() => setMenuOpen((open) => !open)}>{menuOpen ? <X size={18} /> : <Menu size={18} />}</button>
           <div className="crumb">Workspace <ChevronRight size={13} style={{ margin: "0 4px", verticalAlign: "middle" }} /> <b>{links.find((link) => link.href === pathname)?.label || "Overview"}</b></div>
-          <div className="top-actions"><span className="shop-status"><i className="status-dot" />{user.shop?.name ? "Shop account" : "Seller account"}</span><Link href="/orders" className="icon-button" aria-label="View orders"><Bell size={16} /></Link></div>
+          <div className="top-actions"><span className="shop-status"><i className="status-dot" />{user.shop?.name ? "Shop account" : "Seller account"}</span><Link href="/notifications" className="icon-button" aria-label="View notifications"><Bell size={16} /></Link></div>
         </header>
         {children}
       </div>

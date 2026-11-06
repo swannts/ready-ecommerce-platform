@@ -35,6 +35,12 @@ class NotificationController extends Controller
 
     public function update(Notification $notification)
     {
+        $shop = generaleSetting('shop');
+        $notification = NotificationRepository::query()->whereShopId($shop->id)->whereKey($notification->getKey())->first();
+        if (! $notification) {
+            return $this->json(__('Notification not found'), [], 404);
+        }
+
         $notification = NotificationRepository::readUpdateByRequest($notification);
 
         return $this->json('Notification read successfully', [
@@ -44,7 +50,8 @@ class NotificationController extends Controller
 
     public function delete($notification)
     {
-        $notification = NotificationRepository::find($notification);
+        $shop = generaleSetting('shop');
+        $notification = NotificationRepository::query()->whereShopId($shop->id)->find($notification);
 
         if (! $notification) {
             return $this->json('Notification not found', [], 422);

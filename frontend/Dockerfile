@@ -7,6 +7,15 @@ FROM base AS deps
 COPY package.json package-lock.json ./
 RUN npm ci
 
+# Local development image; Compose bind-mounts the source tree and persists
+# node_modules/.next in named volumes so Next.js can hot-reload edits.
+FROM base AS development
+COPY package.json package-lock.json ./
+RUN npm ci
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+CMD ["npm", "run", "dev", "--", "--hostname", "0.0.0.0"]
+
 # 2. Rebuild the source code only when needed
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules

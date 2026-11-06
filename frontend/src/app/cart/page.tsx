@@ -336,7 +336,7 @@ export default function CartPage() {
                   </span>
                   <span className="font-semibold text-[#183A20]">
                     {deliveryFee === 0
-                      ? "FREE (Orders $100+)"
+                      ? "FREE (Orders ৳100+)"
                       : formatCurrency(deliveryFee)}
                   </span>
                 </div>

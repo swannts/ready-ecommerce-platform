@@ -8,7 +8,6 @@ use App\Http\Requests\OrderIdRequest;
 use App\Http\Requests\StatusUpdateRequest;
 use App\Http\Resources\SellerOrderResource;
 use App\Repositories\NotificationRepository;
-use App\Repositories\OrderRepository;
 use App\Services\NotificationServices;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -184,7 +183,10 @@ class OrderController extends Controller
     // show order details
     public function show(OrderIdRequest $request)
     {
-        $order = OrderRepository::find($request->order_id);
+        $order = generaleSetting('shop')?->orders()->whereKey($request->order_id)->first();
+        if (! $order) {
+            return $this->json(__('Order not found'), [], 404);
+        }
 
         return $this->json('Order details', [
             'order' => SellerOrderResource::make($order),
@@ -194,7 +196,7 @@ class OrderController extends Controller
     // status update
     public function update(StatusUpdateRequest $request)
     {
-        $order = OrderRepository::find($request->order_id);
+        $order = generaleSetting('shop')?->orders()->whereKey($request->order_id)->first();
 
         if (! $order) {
             return $this->json('Sorry, this order is not found', [], 422);

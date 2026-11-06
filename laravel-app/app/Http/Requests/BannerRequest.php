@@ -22,11 +22,14 @@ class BannerRequest extends FormRequest
      */
     public function rules(): array
     {
-        $required = $this->isMethod('POST') ? 'required' : 'nullable';
+        $required = ($this->isMethod('POST') && ! $this->routeIs('*update*')) ? 'required' : 'nullable';
+        $bannerRule = $this->hasFile('banner')
+            ? [$required, 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120']
+            : [$required, 'nullable', 'string', 'max:500'];
 
         return [
             'title' => ['nullable', 'string', 'max:255'],
-            'banner' => [$required, 'string', 'max:255'],
+            'banner' => $bannerRule,
             'url' => ['nullable', 'string', 'max:500'],
         ];
     }

@@ -13,10 +13,12 @@
   --color-muted-gray: #686c64;
   --color-warm-border: #e7e1d7;
 
-  --font-serif: var(--font-playfair), "Playfair Display", Georgia, serif;
+  --font-playfair: Georgia, "Times New Roman", serif;
+  --font-inter: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Arial, sans-serif;
+  --font-serif: var(--font-playfair);
   --font-sans:
-    var(--font-inter), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
+    var(--font-inter);
 }
 
 :root {
@@ -24,11 +26,24 @@
   --foreground: #19221b;
 }
 
+html {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
-  overflow-x: hidden;
+  width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+}
+
+main,
+section,
+footer {
+  min-width: 0;
 }
 
 button:not(:disabled),

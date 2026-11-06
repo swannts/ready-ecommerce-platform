@@ -27,7 +27,7 @@ class ShopCreateRequest extends FormRequest
     {
         $user = null;
         $required = 'required';
-        if ($this->routeIs('admin.shop.update')) {
+        if ($this->routeIs('admin.shop.update') || $this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $user = $this->shop?->user;
             $required = 'nullable';
         }

@@ -6,8 +6,8 @@ export interface CurrencyConfig {
 }
 
 export const defaultCurrency: CurrencyConfig = {
-  code: "USD",
-  symbol: "$",
+  code: "BDT",
+  symbol: "৳",
   position: "prefix",
   decimals: 2,
 };
@@ -16,7 +16,7 @@ export function formatCurrency(
   amount: number,
   config: CurrencyConfig = defaultCurrency,
 ): string {
-  const formattedNumber = amount.toLocaleString("en-US", {
+  const formattedNumber = amount.toLocaleString("en-BD", {
     minimumFractionDigits: config.decimals,
     maximumFractionDigits: config.decimals,
   });

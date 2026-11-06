@@ -1,0 +1,61 @@
+name: ricemart-ecommerce
+
+services:
+  frontend:
+    build:
+      target: development
+    command: npm run dev -- --hostname 0.0.0.0
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      HOSTNAME: 0.0.0.0
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
+      API_INTERNAL_URL: http://backend:8000/api
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+      - frontend_next:/app/.next
+
+  management:
+    build:
+      target: development
+    command: npm run dev
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      HOSTNAME: 0.0.0.0
+      NEXT_PUBLIC_API_URL: ${MANAGEMENT_NEXT_PUBLIC_API_URL:-http://localhost:8000/api}
+      NEXT_PUBLIC_ADMIN_QUICK_LOGIN: ${MANAGEMENT_ADMIN_QUICK_LOGIN:-true}
+      NEXT_PUBLIC_ADMIN_LOGIN_EMAIL: ${MANAGEMENT_ADMIN_LOGIN_EMAIL:-admin@readyecommerce.com}
+      NEXT_PUBLIC_ADMIN_LOGIN_PASSWORD: ${MANAGEMENT_ADMIN_LOGIN_PASSWORD:-secret}
+    volumes:
+      - ./management-frontend:/app
+      - management_node_modules:/app/node_modules
+      - management_next:/app/.next
+
+  backend:
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "false"
+      APP_URL: http://localhost:8000
+      DB_HOST: mysql
+      DB_PORT: 3306
+    user: "0:0"
+    entrypoint: ["sh", "./docker-entrypoint.sh"]
+    volumes:
+      - ./laravel-app:/var/www/html
+      - backend_vendor:/var/www/html/vendor
+      - backend_storage:/var/www/html/storage/app/public
+    command: php artisan serve --host=0.0.0.0 --port=8000
+
+volumes:
+  frontend_node_modules:
+    name: ricemart_frontend_dev_node_modules
+  frontend_next:
+    name: ricemart_frontend_dev_next
+  management_node_modules:
+    name: ricemart_management_dev_node_modules
+  management_next:
+    name: ricemart_management_dev_next
+  backend_vendor:
+    name: ricemart_backend_dev_vendor

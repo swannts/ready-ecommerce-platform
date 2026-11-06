@@ -34,11 +34,16 @@ class BannerRepository extends Repository
             $shopId = null;
         }
 
+        $bannerPath = $request->banner;
+        if ($request->hasFile('banner')) {
+            $bannerPath = Storage::put('banners', $request->file('banner'));
+        }
+
         return self::create([
             'shop_id' => $shopId,
             'title' => $request->title,
             'description' => $request->description,
-            'banner' => $request->banner,
+            'banner' => $bannerPath,
             'url' => $request->url,
             'status' => true,
         ]);
@@ -57,11 +62,21 @@ class BannerRepository extends Repository
             $shopId = null;
         }
 
+        $bannerPath = $banner->banner;
+        if ($request->hasFile('banner')) {
+            if ($banner->banner && Storage::exists($banner->banner)) {
+                Storage::delete($banner->banner);
+            }
+            $bannerPath = Storage::put('banners', $request->file('banner'));
+        } elseif ($request->filled('banner')) {
+            $bannerPath = $request->banner;
+        }
+
         $banner->update([
             'shop_id' => $shopId,
             'title' => $request->title,
             'description' => $request->description,
-            'banner' => $request->banner,
+            'banner' => $bannerPath,
             'url' => $request->url,
         ]);
 
@@ -75,11 +90,16 @@ class BannerRepository extends Repository
     public static function destroy(Banner $banner): bool
     {
         $media = $banner->media;
-        if (Storage::exists($media->src)) {
-            Storage::delete($media->src);
+        if ($media) {
+            if (Storage::exists($media->src)) {
+                Storage::delete($media->src);
+            }
+            $media->delete();
+        }
+        if ($banner->banner && Storage::exists($banner->banner)) {
+            Storage::delete($banner->banner);
         }
         $banner->delete();
-        $media->delete();
 
         return true;
     }

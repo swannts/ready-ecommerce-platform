@@ -32,9 +32,9 @@ class RiderRequest extends FormRequest
 
         $required = 'required';
         $userId = null;
-        if ($this->routeIs('rider.profile.update', 'admin.rider.update')) {
+        if ($this->routeIs('rider.profile.update', 'admin.rider.update') || $this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $required = 'nullable';
-            $userId = $this->routeIs('admin.rider.update') ? $this->user->id : auth()->user()->id;
+            $userId = ($this->routeIs('admin.rider.update') || $this->rider || $this->user) ? ($this->rider?->id ?? $this->user?->id) : auth()->user()?->id;
         }
 
         $verifyManage = Cache::rememberForever('verify_manage', function () {

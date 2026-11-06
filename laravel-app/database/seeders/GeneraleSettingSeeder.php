@@ -35,7 +35,7 @@ class GeneraleSettingSeeder extends Seeder
             'google_playstore_url' => null,
             'app_store_url' => null,
             'currency_id' => $currency?->id ?? null,
-            'currency' => $currency?->symbol ?? '$',
+            'currency' => $currency?->symbol ?? '৳',
             'currency_position' => 'prefix',
             'direction' => 'ltr',
             'favicon_id' => null,

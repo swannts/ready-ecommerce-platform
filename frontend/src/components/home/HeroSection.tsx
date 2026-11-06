@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useAppSelector } from "@/store/hooks";
 import { useLocale } from "@/lib/i18n";
+import { formatCurrency } from "@/lib/currency";
 
 export const HeroSection: React.FC = () => {
   const products = useAppSelector((state) => state.products.items);
@@ -129,7 +130,7 @@ export const HeroSection: React.FC = () => {
                   placeholder={t(
                     "Search rice (e.g. Basmati, Miniket, Nazirshail...)",
                   )}
-                  className="w-full bg-transparent py-3 pr-2 text-sm sm:text-base text-[#19221B] placeholder-[#686C64] focus:outline-none"
+                  className="w-full min-w-0 bg-transparent py-3 pr-2 text-sm sm:text-base text-[#19221B] placeholder-[#686C64] focus:outline-none"
                   aria-label={t(
                     "Search rice varieties, categories, or suppliers",
                   )}
@@ -156,7 +157,7 @@ export const HeroSection: React.FC = () => {
                     >
                       <span className="font-medium">{p.name}</span>
                       <span className="text-xs text-[#B88A35] font-semibold">
-                        from ${p.retailPricePerKg.toFixed(2)}/kg
+                        from {formatCurrency(p.retailPricePerKg)}/kg
                       </span>
                     </Link>
                   ))}

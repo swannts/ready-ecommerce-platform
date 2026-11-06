@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StatusUpdateRequest extends FormRequest
 {
@@ -24,7 +25,7 @@ class StatusUpdateRequest extends FormRequest
     {
         return [
             'order_id' => 'required|exists:orders,id',
-            'order_status' => 'nullable|string|max:255',
+            'order_status' => ['required', Rule::in(['confirm', 'cancel'])],
         ];
     }
 

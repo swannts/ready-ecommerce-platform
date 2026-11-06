@@ -97,6 +97,10 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        if (! $this->belongsToCurrentShop($product)) {
+            return $this->json(__('Product not found'), [], 404);
+        }
+
         return $this->json('Product details', [
             'product' => SellerProductDetailsResource::make($product),
         ]);
@@ -182,6 +186,10 @@ class ProductController extends Controller
         $user = auth()->user();
         $shop = generaleSetting('shop');
 
+        if (! $this->belongsToCurrentShop($product)) {
+            return $this->json(__('Product not found'), [], 404);
+        }
+
         $skuCode = $shop?->products()->where('code', $request->code)->where('id', '!=', $product->id)->exists();
 
         if ($skuCode) {
@@ -225,9 +233,15 @@ class ProductController extends Controller
      */
     public function thumbnailDestroy(AdditionThumbnailDeleteRequest $request)
     {
-        $product = Product::find($request->product_id);
+        $product = generaleSetting('shop')?->products()->whereKey($request->product_id)->first();
+        if (! $product) {
+            return $this->json(__('Product not found'), [], 404);
+        }
 
-        $media = Media::find($request->thumbnail_id);
+        $media = $product->medias()->whereKey($request->thumbnail_id)->first();
+        if (! $media) {
+            return $this->json(__('Product image not found'), [], 404);
+        }
 
         $product->medias()->detach($media->id);
 
@@ -247,6 +261,10 @@ class ProductController extends Controller
      */
     public function statusToggle(Product $product)
     {
+        if (! $this->belongsToCurrentShop($product)) {
+            return $this->json(__('Product not found'), [], 404);
+        }
+
         if (! $product->is_approve) {
             return $this->json(__('Sorry! Your Product is not approved yet!'), [], 422);
         }
@@ -260,5 +278,29 @@ class ProductController extends Controller
         return $this->json(__('Status updated successfully'), [
             'product' => SellerProductResource::make($product),
         ]);
+    }
+
+    public function destroy(Product $product)
+    {
+        if (! $this->belongsToCurrentShop($product)) {
+            return $this->json(__('Product not found'), [], 404);
+        }
+
+        foreach ($product->attachments as $media) {
+            if (Storage::exists($media->src)) {
+                Storage::delete($media->src);
+            }
+        }
+        $product->attachments()->detach();
+        $product->delete();
+
+        return $this->json(__('Product deleted successfully'));
+    }
+
+    private function belongsToCurrentShop(Product $product): bool
+    {
+        $shop = generaleSetting('shop');
+
+        return $shop !== null && $shop->products()->whereKey($product->getKey())->exists();
     }
 }

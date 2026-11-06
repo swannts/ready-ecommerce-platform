@@ -9,8 +9,30 @@ const API_URL = (
       "http://localhost:8000/api"
     : process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
 ).replace(/\/$/, "");
+const PUBLIC_API_ORIGIN = (() => {
+  try {
+    return new URL(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api").origin;
+  } catch {
+    return "http://localhost:8000";
+  }
+})();
 type Envelope<T> = { data?: T; message?: string };
 type ApiRow = Record<string, unknown>;
+
+function normalizeMediaUrl(value: unknown): string {
+  if (typeof value !== "string" || !value.trim()) return "";
+  try {
+    const url = new URL(value, PUBLIC_API_ORIGIN);
+    const isLocalHost = ["localhost", "127.0.0.1", "backend"].includes(url.hostname)
+      || url.hostname.endsWith(".localhost");
+    if (isLocalHost && (url.pathname.startsWith("/rice-catalog/") || url.pathname.startsWith("/storage/"))) {
+      return `${url.pathname}${url.search}${url.hash}`;
+    }
+    return url.toString();
+  } catch {
+    return value;
+  }
+}
 
 async function request<T>(path: string, locale?: "en" | "bn"): Promise<T> {
   const response = await fetch(`${API_URL}${path}`, {
@@ -56,7 +78,9 @@ export async function getLegalPage(slug: string, locale?: "en" | "bn") {
 }
 
 export function mapProduct(dto: ApiRow): RiceProduct {
-  const images = Array.isArray(dto.images) ? dto.images.map(String) : [];
+  const images = Array.isArray(dto.images)
+    ? dto.images.map(normalizeMediaUrl).filter(Boolean)
+    : [];
   const packages = Array.isArray(dto.packaging_options)
     ? (dto.packaging_options as ApiRow[])
     : [];
@@ -86,7 +110,7 @@ export function mapProduct(dto: ApiRow): RiceProduct {
     images: images.length
       ? images
       : dto.thumbnail
-        ? [String(dto.thumbnail)]
+        ? [normalizeMediaUrl(dto.thumbnail)]
         : [],
     retailPricePerKg: Number(dto.retail_price_per_kg ?? dto.price ?? 0),
     packagingOptions: packages.map((p) => ({
@@ -120,7 +144,7 @@ function mapCategory(dto: ApiRow): RiceCategory {
     name: String(dto.name || ""),
     tagline: String(dto.tagline || ""),
     description: String(dto.description || ""),
-    image: String(dto.image || dto.thumbnail || ""),
+    image: normalizeMediaUrl(dto.image || dto.thumbnail),
     grainDetail: String(dto.grain_detail || ""),
     colorBg: String(dto.color_bg || "from-[#F7F3EA] to-[#EFE7D8]"),
     popularUses: String(dto.popular_uses || ""),
@@ -143,8 +167,8 @@ function mapSupplier(dto: ApiRow): Supplier {
     certifications: Array.isArray(dto.certifications)
       ? dto.certifications.map(String)
       : [],
-    bannerImage: String(dto.banner_image || dto.banner || ""),
-    avatarImage: String(dto.avatar_image || dto.logo || ""),
+    bannerImage: normalizeMediaUrl(dto.banner_image || dto.banner),
+    avatarImage: normalizeMediaUrl(dto.avatar_image || dto.logo),
   };
 }
 

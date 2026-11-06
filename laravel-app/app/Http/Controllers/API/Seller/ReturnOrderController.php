@@ -39,9 +39,8 @@ class ReturnOrderController extends Controller
         $shop = auth()->user()->shop;
 
         $returnOrder = $shop->returnOrders()->where('id', $returnOrder->id)->first();
-
-        if ($returnOrder->shop_id != $shop->id) {
-            return $this->json('error', __('You do not have permission to view this order'));
+        if (! $returnOrder) {
+            return $this->json('error', __('Return order not found'), 404);
         }
 
         return $this->json('returnOrders', [
@@ -53,14 +52,13 @@ class ReturnOrderController extends Controller
     {
         $request->validate(['status' => ['required', new Enum(ReturnOderStatus::class)]]);
 
-        if ($returnOrder->payment_status == 1) {
-            return $this->json('error', __('Already paid for this order'));
-        }
-
         $shop = auth()->user()->shop;
-
-        if ($returnOrder->shop_id != $shop->id) {
-            return $this->json('error', __('You do not have permission to update this order'));
+        $returnOrder = $shop->returnOrders()->whereKey($returnOrder->getKey())->first();
+        if (! $returnOrder) {
+            return $this->json('error', __('Return order not found'), 404);
+        }
+        if ($returnOrder->payment_status == 1) {
+            return $this->json(__('Already paid for this order'), [], 422);
         }
 
         $returnOrder->update(['status' => $request->status]);
