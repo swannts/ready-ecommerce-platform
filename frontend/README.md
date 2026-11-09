@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RiceMart frontend showcase
 
-## Getting Started
+This branch provides a frontend-only storefront showcase. Catalog, category, supplier, policy, order-tracking, and form-response data are local demonstration data. Cart, wishlist, and checkout interactions are for preview only; the app does not call Laravel, create real accounts or orders, process payments, or send support and quote requests.
 
-First, run the development server:
+## Run with Docker
+
+From the repository root:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker compose -f docker-compose.showcase.yml up --build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). This compose file builds and runs only the Next.js storefront; it does not start Laravel or a database.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+If port 3000 is already in use, choose another host port:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+SHOWCASE_PORT=3002 docker compose -f docker-compose.showcase.yml up --build -d
+```
 
-## Learn More
+Then open [http://localhost:3002](http://localhost:3002).
 
-To learn more about Next.js, take a look at the following resources:
+Stop it with:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+docker compose -f docker-compose.showcase.yml down
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Run locally
 
-## Deploy on Vercel
+```bash
+npm ci
+npm run dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open [http://localhost:3000](http://localhost:3000).

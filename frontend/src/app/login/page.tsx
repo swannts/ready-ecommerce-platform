@@ -2,7 +2,7 @@
 
 import { useLocale } from "@/lib/i18n";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { RiceLogo } from "@/components/ui/RiceLogo";
 import { LocaleToggle } from "@/components/layout/LocaleToggle";
@@ -10,6 +10,7 @@ import { ArrowLeft, Building2, User } from "lucide-react";
 
 export default function LoginPage() {
   const { t } = useLocale();
+  const [notice, setNotice] = useState("");
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#FAF6EF] p-4 sm:p-6">
       <div className="w-full max-w-md bg-[#FFFDF8] rounded-3xl border border-[#E7E1D7] p-8 shadow-xl">
@@ -35,7 +36,7 @@ export default function LoginPage() {
           )}{" "}
         </p>
 
-        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+        <form onSubmit={(e) => { e.preventDefault(); setNotice(t("Showcase only: sign-in is not connected to an account service.")); }} className="space-y-4">
           <div>
             <label className="block text-xs font-bold text-[#19221B] uppercase tracking-wider mb-1.5">
               {" "}
@@ -55,13 +56,9 @@ export default function LoginPage() {
                 {" "}
                 {t("Password")}{" "}
               </label>
-              <a
-                href="#"
-                className="text-xs font-semibold text-[#B88A35] hover:underline"
-              >
-                {" "}
-                {t("Forgot?")}{" "}
-              </a>
+              <button type="button" onClick={() => setNotice(t("Showcase only: password recovery is not connected."))} className="text-xs font-semibold text-[#B88A35] hover:underline">
+                {t("Forgot?")}
+              </button>
             </div>
             <input
               type="password"
@@ -79,6 +76,7 @@ export default function LoginPage() {
             {t("Sign In")}{" "}
           </button>
         </form>
+        {notice && <p role="status" className="mt-3 rounded-lg bg-[#B88A35]/10 p-3 text-xs text-[#686C64]">{notice}</p>}
 
         <div className="mt-6 pt-6 border-t border-[#E7E1D7] space-y-3 text-center">
           <div className="text-xs text-[#686C64]">

@@ -31,7 +31,7 @@ export default function WholesaleRfqPage() {
         <p className="mt-3 mb-8 max-w-2xl text-[#686C64]">
           {" "}
           {t(
-            "Share your volume, destination, and packaging needs. Your request will be recorded by the backend support system for RiceMart follow-up.",
+            "Share sample volume, destination, and packaging details to preview the quote request. This showcase does not send or store requests.",
           )}{" "}
         </p>
         <SupportRequestForm mode="rfq" />

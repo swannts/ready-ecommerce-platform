@@ -159,7 +159,7 @@ export const FeaturedProductsSection: React.FC = () => {
                   {product.images[0] ? (
                     <Image
                       src={product.images[0]}
-                      alt={product.name}
+                      alt={`Illustrative rice photo for ${product.name}`}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                       unoptimized

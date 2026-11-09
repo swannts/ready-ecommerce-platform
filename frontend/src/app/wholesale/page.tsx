@@ -155,7 +155,7 @@ export default function WholesalePage() {
             <div className="max-w-3xl">
               <span className="text-xs font-bold text-[#B88A35] uppercase tracking-widest">
                 {" "}
-                {t("Redux Thunk RFQ Pipeline")}{" "}
+                {t("Sample wholesale request")}{" "}
               </span>
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#19221B] mt-1 mb-2">
                 {" "}
@@ -188,11 +188,9 @@ export default function WholesalePage() {
                     </div>
                   </div>
                   <p className="text-xs text-[#FAF6EF]/90 mb-4">
-                    Thank you,{" "}
+                    {t("Showcase only: this sample request was not sent to any supplier.")} {t("Request details for")} {" "}
                     <span className="font-bold">{lastQuote.contactPerson}</span>
-                    . A formal quote for {lastQuote.quantityKg.toLocaleString()}{" "}
-                    kg of {lastQuote.riceVariety} has been forwarded to verified
-                    mills servicing {lastQuote.deliveryDestination}.
+                    {": "}{lastQuote.quantityKg.toLocaleString()} kg {t("of")} {lastQuote.riceVariety} {t("for")} {lastQuote.deliveryDestination}.
                   </p>
                   <button
                     type="button"

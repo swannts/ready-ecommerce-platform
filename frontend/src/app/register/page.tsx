@@ -2,7 +2,7 @@
 
 import { useLocale } from "@/lib/i18n";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { RiceLogo } from "@/components/ui/RiceLogo";
 import { LocaleToggle } from "@/components/layout/LocaleToggle";
@@ -10,6 +10,7 @@ import { ArrowLeft, User, Building2 } from "lucide-react";
 
 export default function RegisterPage() {
   const { t } = useLocale();
+  const [notice, setNotice] = useState("");
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#FAF6EF] p-4 sm:p-6 py-12">
       <div className="w-full max-w-md bg-[#FFFDF8] rounded-3xl border border-[#E7E1D7] p-8 shadow-xl">
@@ -39,7 +40,7 @@ export default function RegisterPage() {
           )}{" "}
         </p>
 
-        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+        <form onSubmit={(e) => { e.preventDefault(); setNotice(t("Showcase only: a customer account was not created.")); }} className="space-y-4">
           <div>
             <label className="block text-xs font-bold text-[#19221B] uppercase tracking-wider mb-1">
               {" "}
@@ -87,6 +88,7 @@ export default function RegisterPage() {
             {t("Create Customer Account")}{" "}
           </button>
         </form>
+        {notice && <p role="status" className="mt-3 rounded-lg bg-[#B88A35]/10 p-3 text-xs text-[#686C64]">{notice}</p>}
 
         <div className="mt-6 pt-6 border-t border-[#E7E1D7] text-center space-y-2">
           <div className="text-xs text-[#686C64]">

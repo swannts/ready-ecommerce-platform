@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
 import StoreProvider from "@/store/StoreProvider";
+import { ShowcaseNotice } from "@/components/layout/ShowcaseNotice";
 import { Locale, LocaleProvider } from "@/lib/i18n";
 import { getCategories, getProducts } from "@/lib/api";
 import "./globals.css";
@@ -44,7 +45,10 @@ export default async function RootLayout({
     <html lang={locale}>
       <body className="antialiased min-h-screen flex flex-col bg-[#FAF6EF] text-[#19221B]">
         <StoreProvider initialCatalog={{ items, categories }}>
-          <LocaleProvider initialLocale={locale}>{children}</LocaleProvider>
+          <LocaleProvider initialLocale={locale}>
+            <ShowcaseNotice />
+            {children}
+          </LocaleProvider>
         </StoreProvider>
       </body>
     </html>

@@ -27,7 +27,7 @@ export default function ContactPage() {
         <p className="mt-3 mb-8 max-w-2xl text-[#686C64]">
           {" "}
           {t(
-            "Send our team a question about products, suppliers, orders, or business purchasing. Your message is submitted to the RiceMart support system.",
+            "Use this sample form to preview a support message. This showcase does not send or store messages.",
           )}{" "}
         </p>
         <SupportRequestForm />

@@ -253,7 +253,7 @@ export default function ShopClient({
           <ProductGridSkeleton />
         ) : status === "failed" ? (
           <div className="py-16 text-center text-sm text-red-700">
-            Could not load products from the marketplace API. {error}
+            Could not load showcase products. {error}
           </div>
         ) : visibleItems.length === 0 ? (
           <div className="bg-[#FFFDF8] rounded-3xl border border-[#E7E1D7] p-12 text-center max-w-lg mx-auto">
@@ -295,7 +295,7 @@ export default function ShopClient({
                     {product.images[0] ? (
                       <Image
                         src={product.images[0]}
-                        alt={product.name}
+                        alt={`Illustrative rice photo for ${product.name}`}
                         fill
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                         unoptimized

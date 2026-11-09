@@ -155,6 +155,9 @@ export default function CartPage() {
                 {" "}
                 {t("Thank You for Your Order!")}{" "}
               </h2>
+              <p className="mx-auto mb-3 max-w-lg rounded-lg bg-[#B88A35]/10 px-3 py-2 text-xs text-[#686C64]">
+                {t("Showcase only: this sample confirmation did not create a real order or payment.")}
+              </p>
               <p className="text-sm text-[#686C64] mt-1">
                 Order Reference:{" "}
                 <span className="font-mono font-bold text-[#183A20]">

@@ -45,7 +45,7 @@ export default function LegalPageClient({
           >
             {error ||
               t(
-                "This policy has not been published in the backend yet. Please contact support for the current version.",
+                "This policy page is not included in the showcase demo.",
               )}
           </p>
         )}
