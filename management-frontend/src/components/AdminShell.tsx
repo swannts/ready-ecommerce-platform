@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Boxes, ClipboardList, LayoutDashboard, LogOut, Store, Users, Tags, ShieldCheck, BadgePercent, BadgeCheck, Truck, MessageSquareWarning, Image, Megaphone, Ticket, Percent } from "lucide-react";
+import { Boxes, ClipboardList, LayoutDashboard, LogOut, Store, Users, Tags, ShieldCheck, BadgePercent, BadgeCheck, Truck, MessageSquareWarning, Image, Megaphone, Ticket, Percent, UserCog, Bell, MessageCircle, Send, ListChecks, CreditCard, Files, BookOpen, Waypoints, Languages, Settings } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { managementApi, sessionCleared, type AppDispatch, type RootState, useAdminSignOutMutation } from "@/lib/store";
 
@@ -22,6 +22,19 @@ const links = [
   { href: "/admin/withdrawals", label: "Withdrawals", icon: BadgePercent, permission: "admin.withdraw.index" },
   { href: "/admin/reviews", label: "Reviews", icon: MessageSquareWarning, permission: "admin.review.index" },
   { href: "/admin/riders", label: "Delivery riders", icon: Truck, permission: "admin.rider.index" },
+  { href: "/admin/employees", label: "Employees", icon: UserCog, permission: "admin.employee.index" },
+  { href: "/admin/roles", label: "Roles & permissions", icon: ShieldCheck, permission: "admin.role.index" },
+  { href: "/admin/support-tickets", label: "Support tickets", icon: MessageCircle, permission: "admin.supportTicket.index" },
+  { href: "/admin/ticket-issue-types", label: "Ticket issue types", icon: ListChecks, permission: "admin.ticketIssueType.index" },
+  { href: "/admin/notifications", label: "System notifications", icon: Bell, permission: "admin.notification.index" },
+  { href: "/admin/customer-notifications", label: "Customer push", icon: Send, permission: "admin.customerNotification.index" },
+  { href: "/admin/support", label: "Support content", icon: MessageSquareWarning, permission: "admin.support-item.index" },
+  { href: "/admin/subscriptions", label: "Subscriptions", icon: CreditCard, permission: "admin.subscription-plan.index" },
+  { href: "/admin/pages", label: "Content pages", icon: Files, permission: "admin.page.index" },
+  { href: "/admin/blogs", label: "Blog articles", icon: BookOpen, permission: "admin.blog.index" },
+  { href: "/admin/navigation", label: "Navigation & footer", icon: Waypoints, permission: "admin.menu.index" },
+  { href: "/admin/languages", label: "Languages", icon: Languages, permission: "admin.language.index" },
+  { href: "/admin/settings", label: "Store & integrations", icon: Settings, permission: "admin.generale-setting.index" },
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {

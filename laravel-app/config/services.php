@@ -33,6 +33,13 @@ return [
     'google_maps' => [
         'key' => env('GOOGLE_MAPS_AI_PKEY'),
     ],
+    'steadfast' => [
+        'api_key' => env('STEADFAST_API_KEY'),
+        'secret_key' => env('STEADFAST_SECRET_KEY'),
+        'base_url' => env('STEADFAST_BASE_URL'),
+        'default_delivery_type' => env('STEADFAST_DEFAULT_DELIVERY_TYPE', '0'),
+        'active' => env('STEADFAST_ACTIVE', false),
+    ],
 
     'meta' => [
         'pixel_id' => env('META_PIXEL_ID'),

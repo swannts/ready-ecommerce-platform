@@ -1,6 +1,6 @@
 # Admin Route & Permission Parity Inventory (Phase 0)
 
-**Generated:** 2026-11-05
+**Generated:** 2026-11-06
 **Coverage:** 58 Admin Controllers across 320 Blade routes mapped to API implementations, permissions, side effects, and frontend screens.
 
 ---
@@ -129,6 +129,12 @@ Each route has one of four dispositions:
 | `Filemanager / Addon / Command Exec` | `admin/laravel-filemanager/*`, `admin/addon/*` | `root` | Raw filesystem & zip extraction | ⛔ **Out of Scope / Security Restricted** |
 
 ---
+
+### Continuation status — 2026-11-06
+
+Management APIs and screens now cover the listed employee/role, support, subscriptions, CMS/localization metadata, store, delivery, payment, mail, courier, maps, Pusher, Firebase, reCAPTCHA, and social login groups. The new screens live in `management-frontend/src/app/(admin)/admin/`. Settings routes are registered under `/api/admin-workspace/settings/*` and use existing web-guard permissions. Secret fields are masked on read and preserved when submitted blank. This work was validated by TypeScript checking, PHP lint, and Laravel route listing; actions were not individually exercised through HTTP.
+
+Remaining parity work includes Telnyx (the existing Blade controller has no complete provider handler), integration audit history, Meta Pixel event-log management, per-session language preference switching, and some existing Blade settings/edit workflows. Arbitrary shell, filemanager, and add-on package actions remain excluded.
 
 ## 3. Route Summary
 

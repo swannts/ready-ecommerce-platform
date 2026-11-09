@@ -1,9 +1,13 @@
 # Admin API implementation plan
 
-**Status checked:** 2026-11-05
+**Status checked:** 2026-11-06
 **Goal:** Make the management frontend use authenticated Laravel APIs for the workflows available in the existing Laravel admin.
 
 ## Current baseline
+
+**Continuation update (2026-11-06):** Added admin screens and authenticated APIs for staff and roles, subscriptions, support, notifications, CMS, languages, navigation/footer, store settings, delivery charges, weight charges, areas, countries, currencies, payment gateways, mail/courier/maps/Pusher/Meta Pixel configuration, Firebase upload, reCAPTCHA, social login, and supported SMS gateways. The corresponding admin routes were added to the real Next.js `(admin)` route group (they had previously been under a literal quote-named directory). The local `AdminManagementSeeder` was rerun to grant the development admin the new permissions, and the SMS config migration was applied to the local development database. Frontend TypeScript checking passes; Laravel PHP syntax and route registration checks pass. This is source and route validation, not end-to-end validation of every mutation.
+
+**Still open:** Integration change auditing, Meta Pixel event-log management, locale preference switching for already-existing sessions, and some edit flows for logistics records need follow-up. Telnyx is not included because the existing Blade controller has no complete provider implementation. The management workspace has not been run through a complete permission-by-permission workflow audit or an automated regression suite.
 
 - Docker reports 308 routes handled by `App\\Http\\Controllers\\Admin` and 66 routes under `/api/admin-workspace`.
 - The API already covers login/profile/logout, dashboard, shops listing/status/details and related shop records, product review/approval/deletion, order listing/details/status/payment/courier assignment, customer listing/details/status/password reset, catalog CRUD, returns/refunds, withdrawals, reviews, riders listing/status, banners listing/status, coupon CRUD, flash sale CRUD, employee listing/permissions/password reset, role and role-permission management, support ticket conversations/status/pinning, and page CRUD.
@@ -182,3 +186,10 @@
 6. Connect remaining screens and perform parity verification.
 
 Work should be delivered in small groups. After each group, update this plan with completed endpoints, remaining exceptions, and the validation performed; do not mark overall parity complete until the final exit condition is met.
+
+### Continuation update — 2026-11-06
+- Implemented and wired management pages for staff/roles, support/notifications, subscriptions, pages/blogs/navigation/languages, and store settings.
+- Added API-backed store/business configuration, quantity/weight delivery rules, areas/countries/currencies, payment gateway config, mail/courier/maps/Pusher settings, Firebase service-account upload, reCAPTCHA, social login, supported SMS gateway management (with a new guarded migration), Meta Pixel/Conversions API settings, and a server-default locale action. Secret fields are masked on reads and blank secret submissions preserve stored values. API authorization uses configured web permissions; the local admin development seeder now grants the new management permissions.
+- Fixed the route group directory so the added admin pages are discovered by Next.js.
+- Verification performed: `npx tsc --noEmit`; Docker PHP syntax checks; `php artisan route:list --path=admin-workspace/settings`; local `AdminManagementSeeder` run. No automated tests or complete workflow exercise were run.
+- Open items are recorded above; do not treat Phase 6–8 as fully complete.
